@@ -89,7 +89,7 @@
     }
 
     .prayer-times-section {
-        display: none;
+        display: block;
 
     }
 
@@ -121,6 +121,7 @@
 }
 
 /* Ensure Fonts Load */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Montserrat:wght@400;500&display=swap');
 
 
 /* New Navigation Bar Styles */
@@ -172,7 +173,7 @@ nav {
   }
   
   .hamburger {
-    display: block;
+    display: none;
     cursor: pointer;
   }
   
@@ -254,3 +255,5 @@ nav {
       display: none;
     }
   }
+  
+  
