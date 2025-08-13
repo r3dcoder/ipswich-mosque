@@ -1,5 +1,5 @@
 <div class="header">
-<div class="overlay"></div>
+    <div class="overlay"></div>
 
     <div class="prayer-times-section   ">
         <div class="prayer-left">
@@ -45,6 +45,7 @@
         <div class="logo">
             <img src="{{ asset("images/logo.png") }}" alt="logo" />
             <h1>Ipswich Mosque</h1>
+             
         </div>
         <ul>
             <li>
@@ -58,6 +59,9 @@
             </li>
             <li>
                 <a href="#">Contact Us</a>
+            </li>
+            <li>
+                <a href="#" class="donate-btn">Donate</a>
             </li>
         </ul>
         <div class="hamburger">
@@ -67,7 +71,14 @@
         </div>
     </nav>
     <div class="menubar">
+
+
         <ul>
+            <li>
+                <div class="logo">
+                    <img src="{{ asset("images/logo.png") }}" alt="logo" />
+                </div>
+            </li>
             <li>
                 <a href="#">Home</a>
             </li>
@@ -80,9 +91,12 @@
             <li>
                 <a href="#">Contact Us</a>
             </li>
+            <li>
+                <a href="#" class="donate-btn">Donate</a>
+            </li>
         </ul>
     </div>
-    </div>
+</div>
 
 <script>
     const mobileNav = document.querySelector(".hamburger");

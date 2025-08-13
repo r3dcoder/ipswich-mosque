@@ -116,10 +116,13 @@
     }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-     
-}
+@media (min-width: 791px)   {
 
+    
+}
+.menubar{
+    display: none ;
+ }
 /* Ensure Fonts Load */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Montserrat:wght@400;500&display=swap');
 
@@ -211,17 +214,31 @@ nav {
   .menubar {
     position: absolute;
     top: 0;
-    left: -60%;
+    left: -70%;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    justify-content: left;
+     align-items: flex-start;
     width: 60%;
     height: 100vh;
-    padding: 20% 0;
+    padding-left: 40px;
+    padding: 10% 20px;
     background: rgba(255, 255, 255);
     transition: all 0.5s ease-in;
     z-index: 2;
   }
+  .donate-btn {
+    background: linear-gradient(to right, #b927fc, #2c64fc);
+    color: white !important;
+    padding: 6px 14px;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .donate-btn:hover {
+    background: linear-gradient(to right, #9a1ce0, #214fcf);
+  }
+  
   .active {
     left: 0;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -229,6 +246,7 @@ nav {
   
   .menubar ul {
     padding: 0;
+    width: 90%;
     list-style: none;
   }
   .menubar ul li {
