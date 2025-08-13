@@ -1,4 +1,5 @@
 <div class="header">
+<div class="overlay"></div>
 
     <div class="prayer-times-section   ">
         <div class="prayer-left">
@@ -86,11 +87,16 @@
 <script>
     const mobileNav = document.querySelector(".hamburger");
     const navbar = document.querySelector(".menubar");
+    const overlay = document.querySelector(".overlay");
+
 
     const toggleNav = () => {
         navbar.classList.toggle("active");
         mobileNav.classList.toggle("hamburger-active");
+        overlay.classList.toggle("active");
+
     };
     mobileNav.addEventListener("click", () => toggleNav());
+    overlay.addEventListener("click", () => toggleNav());
 
 </script>

@@ -256,4 +256,21 @@ nav {
     }
   }
   
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 1; /* less than .menubar so menu sits above */
+  }
+  
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
   
