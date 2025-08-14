@@ -1,0 +1,32 @@
+.welcome-section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    background-color: #f3f4f6;
+}
+
+.feature-card {
+    transition: box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .welcome-section {
+        padding: 2rem 1rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .text-3xl {
+        font-size: 1.875rem;
+    }
+
+    .text-lg {
+        font-size: 1.125rem;
+    }
+}

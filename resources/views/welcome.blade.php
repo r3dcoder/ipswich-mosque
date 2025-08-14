@@ -9,6 +9,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
         <!-- <link rel="stylesheet" href="{{ asset('css/header.css') }}"> -->
 
 
@@ -23,6 +24,7 @@
     </head>
     <body >
     @include('partials.header')
+    @include('partials.welcome-section')
  
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>

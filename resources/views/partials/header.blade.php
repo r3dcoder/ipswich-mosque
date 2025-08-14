@@ -41,13 +41,13 @@
         </div>
     </div>
 
-    <nav>
+    <nav class="items-center">
         <div class="logo">
             <img src="{{ asset("images/logo.png") }}" alt="logo" />
             <h1>Ipswich Mosque</h1>
              
         </div>
-        <ul>
+        <ul class="">
             <li>
                 <a href="#">Home</a>
             </li>
@@ -60,8 +60,9 @@
             <li>
                 <a href="#">Contact Us</a>
             </li>
-            <li>
-                <a href="#" class="donate-btn">Donate</a>
+            <li >
+                <a href="#" class="donate-btn flex gap-1"><div>Donate</div> @include('./icons.donation')</a>
+                
             </li>
         </ul>
         <div class="hamburger">

@@ -143,21 +143,23 @@ nav {
     align-items: center;
   }
   nav .logo img {
-    height: 25px;
+    height: 65px;
     width: auto;
-    margin-right: 10px;
+    margin-right: 5px;
   }
   nav .logo h1 {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     background: linear-gradient(to right, #b927fc 0%, #2c64fc 100%);
     -webkit-background-clip: text;
     background-clip: text;
+    font-weight: 500;
     -webkit-text-fill-color: transparent;
   }
   
   nav ul {
     list-style: none;
     display: flex;
+    align-items: center;
   }
   nav ul li {
     margin-left: 1.5rem;
@@ -168,7 +170,7 @@ nav {
     font-size: 95%;
     font-weight: 400;
     padding: 4px 8px;
-    border-radius: 5px;
+     border-radius: 5px;
   }
   
   nav ul li a:hover {
@@ -229,9 +231,10 @@ nav {
   .donate-btn {
     background: linear-gradient(to right, #b927fc, #2c64fc);
     color: white !important;
-    padding: 6px 14px;
-    border-radius: 5px;
+    padding: 8px 16px;
+    border-radius: 8px;
     font-weight: 500;
+    font-size: 1.3rem;
     transition: background 0.3s ease-in-out;
   }
   
