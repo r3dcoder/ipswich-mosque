@@ -24,6 +24,7 @@
     </head>
     <body >
     @include('partials.header')
+    @include('partials.top-section')
     @include('partials.welcome-section')
  
         @if (Route::has('login'))
