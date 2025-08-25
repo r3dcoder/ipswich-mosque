@@ -46,10 +46,10 @@
 }
 
 /* Donation Type Options */
-.type-options {
-    display: flex;
-    gap: 20px;
+.type-options input[type="radio"] {
+    display: none; /* hides the default blue radio circle */
 }
+ 
 /* Donation Type - Styled as toggle buttons */
 .type-options {
     display: flex;
@@ -57,10 +57,7 @@
     margin-top: 8px;
 }
 
-.type-options input[type="radio"] {
-    display: none;
-}
-
+/* Style labels as buttons */
 .type-options label {
     flex: 1;
     text-align: center;
@@ -73,11 +70,20 @@
     transition: all 0.3s ease;
 }
 
-.type-options input[type="radio"]:checked + label {
+/* Active style when input is checked */
+.type-options label:has(input[type="radio"]:checked) {
     background: #0a5134;
     color: #fff;
     border-color: #0a5134;
     box-shadow: 0 2px 8px rgba(10, 81, 52, 0.2);
+}
+
+.type-options label:hover {
+    background: #eaeaea;
+}
+/* Hover */
+.type-options label:hover {
+    background: #eaeaea;
 }
 
 .type-options label:hover {
@@ -116,6 +122,38 @@
     box-shadow: 0 2px 8px rgba(10, 81, 52, 0.2);
 }
 
+/* Gift Aid Section */
+.gift-aid {
+    background: #f5fdf9;
+    border: 1px solid #cde8d5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.gift-aid label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-weight: 600;
+    color: #0a5134;
+    cursor: pointer;
+}
+
+.gift-aid input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #0a5134; /* modern browsers */
+    margin-top: 3px;
+}
+
+.gift-aid-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #444;
+    margin-top: 10px;
+}
+
 /* Responsive: Amount buttons stack on small screens */
 @media (max-width: 600px) {
     .amount-buttons {
@@ -137,7 +175,42 @@
     border-radius: 8px;
     font-size: 1rem;
 }
+/* Donation Frequency Buttons */
+.frequency-options {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+}
 
+.frequency-options input[type="radio"] {
+    display: none; /* hide native radio */
+}
+
+.frequency-options label {
+    flex: 1;
+    text-align: center;
+    background: #f1f1f1;
+    border: 1px solid #dcdcdc;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Active style */
+.frequency-options label:has(input[type="radio"]:checked) {
+    background: #0a5134;
+    color: #fff;
+    border-color: #0a5134;
+    box-shadow: 0 2px 8px rgba(10, 81, 52, 0.2);
+}
+
+/* Hover effect */
+.frequency-options label:hover {
+    background: #eaeaea;
+}
 /* Donation Amount */
 .amount-buttons {
     display: flex;

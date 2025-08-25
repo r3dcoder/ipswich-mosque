@@ -1,20 +1,22 @@
 <div class="donationForm">
-    <div class="donationFormItems"   aria-label="Donate">
+    <div class="donationFormItems" aria-label="Donate">
         <div class="contentBlockWrapper">
             <!-- Stripe Donation Form -->
             <div class="donation-form">
                 <h3>Online Donation</h3>
-                <form id="payment-form" >
+                <form id="payment-form">
                     @csrf
                     <!-- Step 1: Donation Type -->
                     <div class="form-group donation-type">
                         <label>Donation Type</label>
                         <div class="type-options">
                             <label>
-                                <input type="radio" name="donation_type" value="one-off" checked> One-off
+                                <input type="radio" name="donation_type" value="one-off" checked>
+                                One-off
                             </label>
                             <label>
-                                <input type="radio" name="donation_type" value="regular"> Regular
+                                <input type="radio" name="donation_type" value="regular">
+                                Regular
                             </label>
                         </div>
                     </div>
@@ -22,14 +24,23 @@
 
                     <!-- Step 3: Frequency for Regular Donations -->
                     <div class="form-group donation-frequency" style="display: none;">
-                        <label for="frequency">Donation Frequency</label>
-                        <select id="frequency" name="frequency" class="form-control">
-                            <option value="monthly">Monthly</option>
-                            <option value="quarterly">Quarterly</option>
-                            <option value="annually">Annually</option>
-                        </select>
+                        <label>Donation Frequency</label>
+                        <div class="frequency-options">
+                            <label>
+                                <input type="radio" name="frequency" value="monthly" checked>
+                                Monthly
+                            </label>
+                            <label>
+                                <input type="radio" name="frequency" value="quarterly">
+                                Quarterly
+                            </label>
+                            <label>
+                                <input type="radio" name="frequency" value="annually">
+                                Annually
+                            </label>
+                        </div>
                     </div>
-                    
+
                     <!-- Step 2: Donation Amount -->
                     <div class="form-group donation-amount">
                         <label for="amount">Donation Amount (£)</label>
@@ -41,14 +52,28 @@
                         <input type="number" id="amount" name="amount" class="form-control"
                             placeholder="Or enter custom amount" min="1" required>
                     </div>
-
+                    <div class="form-group gift-aid">
+                        <label>
+                            <input type="checkbox" id="gift_aid" name="gift_aid">
+                            <strong>Yes - I am a UK taxpayer and would like to Gift Aid my donations</strong>
+                        </label>
+                        <p class="gift-aid-text">
+                            If you are a UK taxpayer your donation could be worth <strong>£6.25 at no extra cost to
+                                you</strong>.<br><br>
+                            I understand I must pay enough income tax and/or capital gains tax each tax year to cover
+                            the amount of Gift Aid that all charities and community amateur sports clubs claim on my
+                            donations in that tax year, and I am responsible for paying any difference.<br><br>
+                            Please remember to let us know if your tax status, name or address change or if you wish to
+                            cancel your Gift Aid declaration.
+                        </p>
+                    </div>
 
                     <!-- Stripe Payment Element -->
                     <div id="payment-element"></div>
                     <div id="payment-message" class="hidden"></div>
                     <button type="submit" id="submit" class="btn">Donate Now</button>
                 </form>
-                
+
 
                 <!-- Loading Animation -->
                 <div class="lds-ellipsis" style="display: none;">
@@ -95,10 +120,10 @@
     // const paymentElement = elements.create('payment');
     // paymentElement.mount('#payment-element');
 
-// Handle Donation Type Toggle
+    // Handle Donation Type Toggle
     const donationTypeRadios = document.querySelectorAll('input[name="donation_type"]');
     const frequencySection = document.querySelector('.donation-frequency');
-    
+
     function toggleFrequencyDropdown() {
         console.log("selectedType");
         const selectedType = document.querySelector('input[name="donation_type"]:checked').value;
