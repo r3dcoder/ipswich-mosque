@@ -61,7 +61,7 @@
                 <a href="#">Contact Us</a>
             </li>
             <li >
-                <a href="#" class="donate-btn flex gap-1"><div>Donate</div> @include('./icons.donation')</a>
+                <a href="/donate" class="donate-btn flex gap-1"><div>Donate</div> @include('./icons.donation')</a>
                 
             </li>
         </ul>

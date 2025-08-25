@@ -24,8 +24,7 @@
     </head>
     <body >
     @include('partials.header')
-    @include('partials.top-section')
-    @include('partials.welcome-section')
+    @include('partials.donation-top-section')
     @include('partials.footer')
  
         @if (Route::has('login'))

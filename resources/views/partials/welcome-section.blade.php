@@ -1,6 +1,6 @@
 <div class="welcome-section py-12 bg-gray-100 z-0" id="welcome-section">
     <div class="container mx-auto px-4 text-center  ">
-        <h2 class="text-3xl font-bold text-gray-700 mb-4">Welcome to the Ipswich Mosque</h2>
+        <h2 class="text-3xl font-bold text-gray-700 mb-4">Our Activities</h2>
         <p class="text-lg text-gray-600 mb-6">
             Ipswich & Suffolk Bangladeshi Muslim Community Centre and Mosque.
             The Ipswich Mosque offers a wide range of services; in addition to the Daily Prayers.
