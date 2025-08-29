@@ -24,8 +24,13 @@
     </head>
     <body >
     @include('partials.header')
+    @include('partials.carousel')
     @include('partials.top-section')
     @include('partials.welcome-section')
+    @include('partials.courses')
+    @include('partials.daily-hadis')
+    @include('partials.donation-hom-page-section')
+    @include('partials.events')
     @include('partials.footer')
  
         @if (Route::has('login'))

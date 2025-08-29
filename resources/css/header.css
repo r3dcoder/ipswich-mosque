@@ -41,7 +41,7 @@
 
 .prayer-left .date {
     font-size: 0.8rem;
-    color: #9d426b;
+    color: #0a5134;
     font-weight: bold;
 }
 
@@ -61,14 +61,14 @@
 }
 
 .prayer-right th {
-    color: #9d426b;
+    color: #0a5134;
     padding: 0 10px;
     text-align: center;
 }
 
 .prayer-right td {
     padding: 0 8px;
-    color: #9d426b;
+    color: #0a5134;
     text-align: center;
     border-bottom: 1px solid #c8c1c1;
 }

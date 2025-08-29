@@ -8,9 +8,13 @@
 
 @import 'tailwindcss';
 @import './header.css';
+@import './carousel.css';
 @import './welcome-section.css';
 @import './donation.css';
-
+@import './courses.css';
+@import './event.css';
+@import './daily-hadis.css';
+@import './donation-home-page-section.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';

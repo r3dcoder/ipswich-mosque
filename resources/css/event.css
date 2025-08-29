@@ -1,0 +1,107 @@
+/* Events Section */
+.events-section {
+    max-width: 1100px;
+    margin: 60px auto;
+    text-align: center;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    padding: 20px;
+}
+
+.events-section .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0a5134;
+    margin-bottom: 10px;
+}
+
+.events-section .section-subtitle {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 40px;
+}
+
+/* Events Grid */
+.events-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 25px;
+}
+
+/* Event Card */
+.event-card {
+    display: flex;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: left;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Event Date Box */
+.event-date {
+    background: #0a5134;
+    color: #fff;
+    padding: 20px 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 80px;
+}
+
+.event-date .day {
+    font-size: 1.8rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.event-date .month {
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+/* Event Details */
+.event-details {
+    padding: 15px 20px;
+}
+
+.event-details h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #0a5134;
+}
+
+.event-time {
+    font-size: 0.95rem;
+    color: #777;
+    margin-bottom: 8px;
+}
+
+.event-desc {
+    font-size: 0.95rem;
+    color: #444;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .events-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .event-card {
+        flex-direction: row;
+    }
+}
