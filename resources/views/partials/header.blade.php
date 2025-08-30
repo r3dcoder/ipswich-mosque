@@ -3,7 +3,8 @@
 
     <div class="prayer-times-section   ">
         <div class="prayer-left">
-            <p class="date">13th August 2025 · 19 Safar 1447</p>
+         
+            <p class="date">{{ $todayGregorian }} · {{ $todayHijri }}</p>
             <p class="juma">JUM'A 13:15 & 14:15 PRAYER TIMES</p>
         </div>
 
