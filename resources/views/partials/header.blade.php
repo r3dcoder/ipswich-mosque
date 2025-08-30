@@ -3,50 +3,49 @@
 
     <div class="prayer-times-section   ">
         <div class="prayer-left">
-         
-            <p class="date">{{ $todayGregorian }} · {{ $todayHijri }}</p>
-            <p class="juma">JUM'A 13:15 & 14:15 PRAYER TIMES</p>
+
+            <p class="date"> {{ $dailyPrayerHeader['gregorianDate'] }} · {{ $dailyPrayerHeader['hijriDate'] }}</p>
+            <p class="juma">JUM'A {{ implode(' & ', $dailyPrayerHeader['jumah']) }} PRAYER TIMES</p>
         </div>
 
-        <div class="prayer-right bg-amber-500">
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Fajr</th>
-                        <th>Zuhr</th>
-                        <th>‘Asr</th>
-                        <th>Maghrib</th>
-                        <th>‘Ishā</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Begins</td>
-                        <td>4:02</td>
-                        <td>1:11</td>
-                        <td>5:06</td>
-                        <td>8:30</td>
-                        <td>9:36</td>
-                    </tr>
-                    <tr>
-                        <td>Jamā‘ah</td>
-                        <td>4:22</td>
-                        <td>1:30</td>
-                        <td>6:30</td>
-                        <td>8:37</td>
-                        <td>10:00</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        @if(!empty($dailyPrayerHeader))
+            <div class="prayer-right text-xl  p-2 rounded-sm shadow-sm">
+                <table class="w-full text-center border border-gray-100 ">
+                    <thead class="  text-white">
+                        <tr>
+                            <th></th>
+                            @foreach($dailyPrayerHeader['prayers'] as $name => $times)
+                                <th>{{ $name }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-semibold">Begins</td>
+                            @foreach($dailyPrayerHeader['prayers'] as $times)
+                                <td>{{ $times['Begins'] }}</td>
+                            @endforeach
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Jamā‘ah</td>
+                            @foreach($dailyPrayerHeader['prayers'] as $times)
+                                <td>{{ $times['Jamaat'] }}</td>
+                            @endforeach
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        @endif
+
     </div>
+
+
 
     <nav class="items-center">
         <div class="logo">
             <img src="{{ asset("images/logo.png") }}" alt="logo" />
             <h1>Ipswich Mosque</h1>
-             
+
         </div>
         <ul class="">
             <li>
@@ -61,9 +60,11 @@
             <li>
                 <a href="#">Contact Us</a>
             </li>
-            <li >
-                <a href="/donate" class="donate-btn flex gap-1"><div>Donate</div></a>
-                
+            <li>
+                <a href="/donate" class="donate-btn flex gap-1">
+                    <div>Donate</div>
+                </a>
+
             </li>
         </ul>
         <div class="hamburger">
