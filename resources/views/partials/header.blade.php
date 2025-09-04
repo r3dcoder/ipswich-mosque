@@ -4,19 +4,20 @@
     <div class="prayer-times-section   ">
         <div class="prayer-left">
 
-            <p class="date"> {{ $dailyPrayerHeader['gregorianDate'] }} · {{ $dailyPrayerHeader['hijriDate'] }}</p>
-            <p class="juma">JUM'A {{ implode(' & ', $dailyPrayerHeader['jumah']) }} PRAYER TIMES</p>
+            <p class="date"> {{ $dailyPrayerHeader['date'] }} · {{ $dailyPrayerHeader['hijri_date'] }}</p>
+            <p class="juma">JUM'A 1.30PM PRAYER TIMES</p>
+            
         </div>
-
-        @if(!empty($dailyPrayerHeader))
+         @if(!empty($dailyPrayerHeader))
             <div class="prayer-right text-xl  p-2 rounded-sm shadow-sm">
                 <table class="w-full text-center border border-gray-100 ">
                     <thead class="  text-white">
                         <tr>
                             <th></th>
                             @foreach($dailyPrayerHeader['prayers'] as $name => $times)
-                                <th>{{ $name }}</th>
+                                <th  class="{{ $dailyPrayerHeader['highlighted'] === $name ? 'bg-teal-100 rounded-2xl text-white' : '' }}">{{ $name }}</th>
                             @endforeach
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -25,15 +26,21 @@
                             @foreach($dailyPrayerHeader['prayers'] as $times)
                                 <td>{{ $times['Begins'] }}</td>
                             @endforeach
+
                         </tr>
+                        
                         <tr>
                             <td class="font-semibold">Jamā‘ah</td>
                             @foreach($dailyPrayerHeader['prayers'] as $times)
                                 <td>{{ $times['Jamaat'] }}</td>
                             @endforeach
+                            
                         </tr>
                     </tbody>
+                    
                 </table>
+                <a href={{ url('/prayer-times') }}><p class="text-base">Full Timetable & Calendar</p></a>
+
             </div>
         @endif
 
@@ -49,7 +56,7 @@
         </div>
         <ul class="">
             <li>
-                <a href="#">Home</a>
+                <a href={{ url('/') }}>Home</a>
             </li>
             <li>
                 <a href="#">Services</a>
@@ -61,7 +68,7 @@
                 <a href="#">Contact Us</a>
             </li>
             <li>
-                <a href="/donate" class="donate-btn flex gap-1">
+                <a href={{ url('/donate') }} class="donate-btn flex gap-1">
                     <div>Donate</div>
                 </a>
 

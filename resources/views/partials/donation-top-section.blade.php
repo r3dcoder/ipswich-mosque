@@ -90,12 +90,11 @@
             <h3>Other Ways to Donate</h3>
             <div class="method">
                 <h4>Bank Transfer</h4>
-                <p><strong>Account Name:</strong> Ipswich Mosque Trust</p>
-                <p><strong>Bank Name:</strong> HSBC</p>
-                <p><strong>Account No.:</strong> 12345678</p>
-                <p><strong>Sort Code:</strong> 40-16-08</p>
-                <p><strong>IBAN:</strong> GB12 HBUK 4016 0812 3456 78</p>
-                <p><strong>Branch Identifier Code:</strong> HBUKGB4103J</p>
+                <p><strong>Account Name:</strong> Ipswich Mosque </p>
+                <p><strong>Bank Name:</strong>  Lloyd's Bank Plc</p>
+                <p><strong>Account No.:</strong> 04910428</p>
+                <p><strong>Sort Code:</strong> 30-94-55</p>
+                 
             </div>
             <div class="method">
                 <h4>Post</h4>
