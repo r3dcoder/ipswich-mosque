@@ -26,7 +26,8 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    /* padding: 20px; */
+    padding-top: 4px;
     background: white;
     font-family: Arial, sans-serif;
  }
@@ -36,18 +37,19 @@
     flex: 1;
     width: 30%;
     text-align: left;
+    align-items: center;
     padding: 10px;
 }
 
 .prayer-left .date {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #0a5134;
     font-weight: bold;
 }
 
 .prayer-left .juma {
     font-weight: normal;
-    font-size: 0.8rem; /* Fixed typo: 0.8 instead of 0.8 */
+    font-size: 1rem; /* Fixed typo: 0.8 instead of 0.8 */
     margin-top: 5px;
     color: #444;
 }
@@ -62,7 +64,7 @@
 
 .prayer-right th {
     color: #0a5134;
-    padding: 0 10px;
+    padding: 0 14px;
     text-align: center;
 }
 
@@ -90,6 +92,8 @@
 
     .prayer-times-section {
         display: block;
+        padding: 4px;
+        
 
     }
 
@@ -97,6 +101,7 @@
         width: 100%;
         padding: 5px;
         text-align: center;
+        font-size:0.7rem;
     }
 
     .prayer-right table {

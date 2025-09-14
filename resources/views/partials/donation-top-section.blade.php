@@ -38,6 +38,7 @@
                                 <input type="radio" name="frequency" value="annually">
                                 Annually
                             </label>
+                            
                         </div>
                     </div>
 
@@ -51,6 +52,8 @@
                         </div>
                         <input type="number" id="amount" name="amount" class="form-control"
                             placeholder="Or enter custom amount" min="1" required>
+                            <input type="hidden" id="stripe_key" value="{{ config('services.stripe.key') }}">
+     
                     </div>
                     <div class="form-group gift-aid">
                         <label>
@@ -91,10 +94,10 @@
             <div class="method">
                 <h4>Bank Transfer</h4>
                 <p><strong>Account Name:</strong> Ipswich Mosque </p>
-                <p><strong>Bank Name:</strong>  Lloyd's Bank Plc</p>
+                <p><strong>Bank Name:</strong> Lloyd's Bank Plc</p>
                 <p><strong>Account No.:</strong> 04910428</p>
                 <p><strong>Sort Code:</strong> 30-94-55</p>
-                 
+
             </div>
             <div class="method">
                 <h4>Post</h4>
@@ -149,4 +152,56 @@
         });
     });
 
+</script>
+
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+
+    document.getElementById('payment-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const stripe = Stripe("{{ env('STRIPE_KEY') }}"); // ✅ publishable key only
+    let elements;
+
+
+        const amount = document.getElementById('amount').value;
+        const donationType = document.querySelector('input[name="donation_type"]:checked').value;
+        const frequency = document.querySelector('input[name="frequency"]:checked')?.value;
+        const giftAid = document.getElementById('gift_aid').checked;
+
+        // 1. Ask backend for PaymentIntent
+        const res = await fetch("/create-payment-intent", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ amount, donation_type: donationType, frequency, gift_aid: giftAid })
+        });
+
+        const { clientSecret, error } = await res.json();
+        if (error) {
+            alert(error);
+            return;
+        }
+
+        // 2. Mount Stripe Payment Element
+        if (!elements) {
+            elements = stripe.elements({ clientSecret });
+            const paymentElement = elements.create("payment");
+            paymentElement.mount("#payment-element");
+        }
+
+        // 3. Confirm Payment
+        const { error: submitError } = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+                return_url: "{{ url('/donation-success') }}", // redirect after payment
+            }
+        });
+
+        if (submitError) {
+            document.querySelector("#payment-message").textContent = submitError.message;
+        }
+    });
 </script>

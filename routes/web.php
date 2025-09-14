@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PrayerTimesController;
 use App\Imports\PrayerTimesImport;
@@ -14,7 +15,14 @@ Route::get('/', [HomeController::class, 'index']);
 Route::get('/donate', function () {
     return view('donate');
 });
+Route::post('/create-checkout-session', [DonationController::class, 'createCheckoutSession']);
 
+// routes/web.php
+Route::post('/create-payment-intent', [DonationController::class, 'createPaymentIntent']);
+
+Route::get('/donation-success', [DonationController::class, 'success'])->name('donation.success');
+
+Route::view('/donate', 'donate');
 Route::get('/prayer-times', [PrayerTimesController::class, 'index']);
 
 Route::get('/clear-cache', function() {

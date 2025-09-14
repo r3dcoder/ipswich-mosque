@@ -9,7 +9,7 @@
             
         </div>
          @if(!empty($dailyPrayerHeader))
-            <div class="prayer-right text-xl  p-2 rounded-sm shadow-sm">
+            <div class="prayer-right text-xl   rounded-sm shadow-sm">
                 <table class="w-full text-center border border-gray-100 ">
                     <thead class="  text-white">
                         <tr>
@@ -39,7 +39,7 @@
                     </tbody>
                     
                 </table>
-                <a href={{ url('/prayer-times') }}><p class="text-base">Full Timetable & Calendar</p></a>
+                <a href={{ url('/prayer-times') }}><p class="text-[10px]">Full Timetable & Calendar</p></a>
 
             </div>
         @endif

@@ -41,7 +41,7 @@ class PrayerServiceProvider extends ServiceProvider
                 $names = array_keys($prayers);
 
                 foreach ($names as $i => $name) {
-                    $begin = str_replace('.', ':', $prayers[$name]['Begins']);
+                    $begin = str_replace('.', ':', $prayers[$name]['Begins']); // begin: "4:37"
                 
                     if ($name === 'Fajr') {
                         $begin .= ' AM';
@@ -76,7 +76,7 @@ class PrayerServiceProvider extends ServiceProvider
                         $endTime = (clone $beginTime)->addHours(3);
                     }
                 
-                    // 🔴 Special rule for Zuhr: 1h before → Asr
+                    // 🔴 Special rule for Zuhr: 1h before 
                     if ($name === 'Zuhr') {
                         $beginTime->subHour();
                      }
@@ -92,9 +92,9 @@ class PrayerServiceProvider extends ServiceProvider
                     // ✅ Otherwise, normal logic
                     if ($now->between($beginTime, $endTime)) {
                         $highlightedPrayer = $name;
-                        dump('name '. $name);
-                        dump('beginTime '. $beginTime);
-                        dump('endTime '. $endTime);
+                        // dump('name '. $name);
+                        // dump('beginTime '. $beginTime);
+                        // dump('endTime '. $endTime);
                         break;
                     }
                 }

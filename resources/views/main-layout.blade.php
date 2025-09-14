@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
 
-    <title>Ipswich Mosque</title>
+    <title>@yield('title', 'Ipswich Mosque')</title>
+    @stack('styles')
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -1544,21 +1544,17 @@
         </style>
     @endif
 </head>
+@yield( 'header')
 
 <body>
-    @include('partials.header')
-    @include('partials.carousel')
-    @include('partials.welcome-section')
-    @include('partials.courses')
-    @include('partials.daily-hadis')
-    @include('partials.donation-hom-page-section')
-    @include('partials.events')
-    @include('partials.map-section')
-    @include('partials.footer')
+    @yield('content')
+
 
     @if (Route::has('login'))
         <div class="h-14.5 hidden lg:block"></div>
     @endif
 </body>
+
+@yield('footer')
 
 </html>

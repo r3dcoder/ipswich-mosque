@@ -8,6 +8,7 @@ use Alkoumi\LaravelHijriDate\Hijri;
 
 use App\Models\PrayerTime;
 use Carbon\Carbon;
+use URL;
 
 
 
@@ -19,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        if (env('APP_ENV') !== 'local') {
+            URL::forceScheme('https');
+        }
     }
 
     /**
@@ -26,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        if ($this->app->environment('local')) {
+            error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+        }
+        
         // View::composer('*', function ($view) {
         //     $today = Carbon::now()->format('Y-m-d');
         //     $currentPrayer = PrayerTime::whereDate('date', $today)->first();
