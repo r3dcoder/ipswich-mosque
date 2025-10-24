@@ -49,11 +49,12 @@
 
 
     <nav class="items-center">
-        <div class="logo">
+        <a href={{ url('/') }}><div class="logo">
             <img src="{{ asset("images/logo.png") }}" alt="logo" />
             <h1>Ipswich Mosque</h1>
 
-        </div>
+        </div></a>
+        
         <ul class="">
             <li>
                 <a href={{ url('/') }}>Home</a>
@@ -85,12 +86,14 @@
 
         <ul>
             <li>
+            <a href={{ url('/') }}>
                 <div class="logo">
                     <img src="{{ asset("images/logo.png") }}" alt="logo" />
                 </div>
+                </a>
             </li>
             <li>
-                <a href="#">Home</a>
+                <a href={{ url('/') }}>Home</a>
             </li>
             <li>
                 <a href="#">Services</a>
@@ -102,7 +105,7 @@
                 <a href="#">Contact Us</a>
             </li>
             <li>
-                <a href="#" class="donate-btn">Donate</a>
+                <a href={{ url('/donate') }} class="donate-btn">Donate</a>
             </li>
         </ul>
     </div>

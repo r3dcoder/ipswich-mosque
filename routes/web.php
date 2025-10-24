@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\DuaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PrayerTimesController;
 use App\Imports\PrayerTimesImport;
@@ -24,6 +25,11 @@ Route::get('/donation-success', [DonationController::class, 'success'])->name('d
 
 Route::view('/donate', 'donate');
 Route::get('/prayer-times', [PrayerTimesController::class, 'index']);
+
+Route::get('/duas', [DuaController::class, 'index'])->name('duas.index');
+Route::get('/duas/{id}', [DuaController::class, 'show'])->name('duas.show');
+
+
 
 Route::get('/clear-cache', function() {
     \Artisan::call('config:clear');

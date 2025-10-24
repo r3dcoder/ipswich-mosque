@@ -31,7 +31,7 @@
         <div class="caption-box">
           <h2>Support Your Mosque</h2>
           <p>Your donations help us grow and serve the ummah.</p>
-          <a href="#donate" class="donate-btn">Donate Now</a>
+          <a href={{ url('/donate') }} class="donate-btn">Donate Now</a>
         </div>
       </div>
     </div>

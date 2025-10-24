@@ -157,12 +157,13 @@
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
+    const stripe = Stripe("{{ env('STRIPE_KEY') }}"); // ✅ publishable key only
+    let elements;
+
 
     document.getElementById('payment-form').addEventListener('submit', async function(e) {
         e.preventDefault();
-        const stripe = Stripe("{{ env('STRIPE_KEY') }}"); // ✅ publishable key only
-    let elements;
-
+       
 
         const amount = document.getElementById('amount').value;
         const donationType = document.querySelector('input[name="donation_type"]:checked').value;

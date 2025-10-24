@@ -6,7 +6,7 @@
                     <div class="slide-text">
                         <h2>Welcome to Ipswich Mosque</h2>
                         <p>A sanctuary of faith and community in the heart of Ipswich.</p>
-                        <a href="/donate" class="cta-button">Donate Now</a>
+                        <a href={{ url('/donate') }}  class="cta-button">Donate Now</a>
                     </div>
                 </div>
             </div>
