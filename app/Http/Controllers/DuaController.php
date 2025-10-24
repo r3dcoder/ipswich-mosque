@@ -19,7 +19,7 @@ class DuaController extends Controller
         $dua = Dua::with('category')->findOrFail($id);
 
         // return view('duas.show', compact('dua'));
-        
+
         // Get related duas from the same category (excluding current one)
         $relatedDuas = Dua::where('dua_category_id', $dua->dua_category_id)
             ->where('id', '!=', $dua->id)
@@ -31,4 +31,15 @@ class DuaController extends Controller
 
         return view('duas.show', compact('dua', 'relatedDuas', 'allCategories'));
     }
+    public function category($id)
+{
+    $category = DuaCategory::with('duas')->findOrFail($id);
+    $categories = DuaCategory::all();
+
+    return view('duas.index', [
+        'categories' => $categories,
+        'selectedCategory' => $category,
+    ]);
+}
+
 }
