@@ -49,11 +49,14 @@
 
 
     <nav class="items-center">
-        <a href={{ url('/') }}><div class="logo">
-            <img src="{{ asset("images/logo.png") }}" alt="logo" />
-            <h1>Ipswich Mosque</h1>
+        <a href={{ url('/') }}>
 
-        </div></a>
+            <div class="logo">
+                <img src="{{ asset("images/logo.png") }}" alt="logo" />
+                <h1>Ipswich Mosque.</h1>
+
+             </div>
+        </a>
         
         <ul class="">
             <li>
@@ -99,7 +102,7 @@
                 <a href="#">Services</a>
             </li>
             <li>
-                <a href="#">Blog</a>
+            <a href={{ url('/Duas') }}>Duas</a>
             </li>
             <li>
                 <a href="#">Contact Us</a>

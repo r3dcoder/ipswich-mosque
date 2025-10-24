@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('duas', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('dua_category_id')->constrained()->onDelete('cascade');
-            $table->string('title');
-            $table->text('arabic');
-            $table->text('pronunciation')->nullable();
-            $table->text('translation');
-            $table->string('keywords')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('duas')) {
+            Schema::create('duas', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('dua_category_id')->constrained()->onDelete('cascade');
+                $table->string('title');
+                $table->text('arabic');
+                $table->text('pronunciation')->nullable();
+                $table->text('translation');
+                $table->string('keywords')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
