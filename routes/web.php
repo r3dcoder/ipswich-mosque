@@ -28,6 +28,7 @@ Route::get('/prayer-times', [PrayerTimesController::class, 'index']);
 
 Route::get('/duas', [DuaController::class, 'index'])->name('duas.index');
 Route::get('/duas/{id}', [DuaController::class, 'show'])->name('duas.show');
+Route::get('/duas/category/{id}', [DuaController::class, 'category'])->name('duas.category');
 
 
 

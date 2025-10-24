@@ -66,7 +66,7 @@
                 <a href="#">Services</a>
             </li>
             <li>
-                <a href="#">Blog</a>
+            <a href={{ url('/duas') }}>Duas</a>
             </li>
             <li>
                 <a href="#">Contact Us</a>
@@ -102,7 +102,7 @@
                 <a href="#">Services</a>
             </li>
             <li>
-            <a href={{ url('/Duas') }}>Duas</a>
+            <a href={{ url('/duas') }}>Duas</a>
             </li>
             <li>
                 <a href="#">Contact Us</a>
