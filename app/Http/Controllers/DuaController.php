@@ -11,7 +11,12 @@ class DuaController extends Controller
     public function index()
     {
         $categories = DuaCategory::with('duas')->get();
-        return view('duas.index', compact('categories'));
+
+        
+        return view('duas.index', [
+            'categories' => $categories,
+            'selectedCategory' => null,
+        ]);
     }
 
     public function show($id)
@@ -32,14 +37,14 @@ class DuaController extends Controller
         return view('duas.show', compact('dua', 'relatedDuas', 'allCategories'));
     }
     public function category($id)
-{
-    $category = DuaCategory::with('duas')->findOrFail($id);
-    $categories = DuaCategory::all();
-
-    return view('duas.index', [
-        'categories' => $categories,
-        'selectedCategory' => $category,
-    ]);
-}
+    {
+        $category = DuaCategory::with('duas')->findOrFail($id);
+        $categories = DuaCategory::all();
+        
+        return view('duas.index', [
+            'categories' => $categories,
+            'selectedCategory' => $category,
+        ]);
+    }
 
 }
