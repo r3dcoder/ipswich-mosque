@@ -6612,9 +6612,7 @@
             "type": "library",
             "extra": {
                 "laravel": {
-                    "providers": [
-                        "Laravel\\Pail\\PailServiceProvider"
-                    ]
+                     
                 },
                 "branch-alias": {
                     "dev-main": "1.x-dev"
