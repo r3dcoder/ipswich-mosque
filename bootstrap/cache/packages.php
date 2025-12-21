@@ -6,13 +6,6 @@
       0 => 'Alkoumi\\LaravelHijriDate\\LaravelHijriDateServiceProvider',
     ),
   ),
-  'laravel/pail' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Laravel\\Pail\\PailServiceProvider',
-    ),
-  ),
   'laravel/sail' => 
   array (
     'providers' => 
