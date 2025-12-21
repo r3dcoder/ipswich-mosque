@@ -1,10 +1,20 @@
+@php
+    $dailyPrayerHeader = $dailyPrayerHeader ?? [];
+@endphp
+
+
 <div class="header">
     <div class="overlay"></div>
 
     <div class="prayer-times-section   ">
         <div class="prayer-left">
 
-            <p class="date"> {{ $dailyPrayerHeader['date'] }} · {{ $dailyPrayerHeader['hijri_date'] }}</p>
+             <p class="date">
+                {{ $dailyPrayerHeader['date'] ?? '' }}
+                ·
+                {{ $dailyPrayerHeader['hijri_date'] ?? '' }}
+            </p>
+
             <p class="juma">JUM'A 1.30PM PRAYER TIMES</p>
             
         </div>
