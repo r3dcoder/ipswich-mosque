@@ -1,3 +1,9 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 @import "./carousel.css";
 @import "./courses.css";
 @import "./daily-hadis.css";
@@ -7,7 +13,3 @@
 @import "./header.css";
 @import "./carousel.css";
 @import "./welcome-section.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
