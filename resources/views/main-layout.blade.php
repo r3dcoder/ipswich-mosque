@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    
     <title>@yield('title', 'Ipswich Mosque')</title>
     @stack('styles')
 
@@ -30,12 +30,8 @@
     <meta name="twitter:title" content="Ipswich Mosque">
     <meta name="twitter:description" content="Learn Quran, attend events, and support the community.">
     <meta name="twitter:image" content="{{ asset('images/ipswichmosque_front.jpg') }}">
-    <!-- <link rel="stylesheet" href="{{ asset('css/header.css') }}"> -->
-
-    <link rel="stylesheet" href={{ asset('css/header.css') }}>
-    <link rel="stylesheet" href={{ asset('css/carousel.css') }}>
-    <link rel="stylesheet" href={{ asset('css/event.css') }}>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+        
+    <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
 
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
