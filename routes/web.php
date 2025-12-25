@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\JummahScheduleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DuaController;
@@ -79,6 +80,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/payments', [DashboardController::class, 'payments'])->name('payments');
         Route::get('/contacts', [DashboardController::class, 'contacts'])->name('contacts');
     });
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('jummah', JummahScheduleController::class)->except(['show']);
 });
 
 Route::middleware('auth')->group(function () {
