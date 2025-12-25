@@ -39,7 +39,7 @@
                 <tr>
                     <td class="px-4 py-3 max-h-12 max-w-20 overflow-hidden">
                         <img class="h-10 w-16 object-cover rounded overflow-hidden"
-                        src="{{ Storage::url($s->image_path) }}" alt="">
+                        src="{{ asset('storage/'.$s->image_path) }}" alt="">
                     </td>
                     <td class="px-4 py-3">{{ $s->page }}</td>
                     <td class="px-4 py-3 truncate">
