@@ -22,7 +22,7 @@ use Illuminate\Support\Str;
   <div class="carousel-container">
     @foreach($slides as $i => $s)
       <div class="carousel-slide {{ $i === 0 ? 'active' : '' }}">
-        <img src="{{ asset('storage/'.$s->image_path) }}" alt="{{ $s->title }}">
+        <img src="{{ Storage::url($s->image_path) }}" alt="{{ $s->title }}">
         <div class="carousel-caption">
           <div class="caption-box">
             <h2>{{ $s->title }}</h2>
