@@ -38,10 +38,11 @@ return [
             'report' => false,
         ],
 
+
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('storage'),
-            'url' => env('APP_URL').'/storage',
+            'root' => public_path('storage'),           // ✅ save directly into public/storage
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
