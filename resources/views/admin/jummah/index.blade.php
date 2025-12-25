@@ -11,7 +11,7 @@
     </div>
 
     <a href="{{ route('admin.jummah.create') }}"
-       class="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm hover:bg-gray-800">
+       class="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm hover:bg-gray-800 whitespace-nowrap">
         + Add Schedule
     </a>
 </div>
@@ -24,45 +24,62 @@
 
 <div class="bg-white border rounded-xl overflow-hidden w-full">
     <div class="overflow-x-auto w-full">
-        <table class="min-w-full text-sm w-full">
+        <table class="w-full text-sm table-fixed">
             <thead class="bg-gray-50 border-b">
                 <tr>
-                    <th class="text-left px-4 py-3">Effective From</th>
-                    <th class="text-left px-4 py-3">Effective Till</th>
-                    <th class="text-left px-4 py-3">Khutbah</th>
-                    <th class="text-left px-4 py-3">Salah</th>
-                    <th class="text-left px-4 py-3">Active</th>
-                    <th class="text-right px-4 py-3">Actions</th>
+                    <th class="w-1/6 text-left px-4 py-3 whitespace-nowrap">Effective From</th>
+                    <th class="w-1/6 text-left px-4 py-3 whitespace-nowrap">Effective Till</th>
+                    <th class="w-1/6 text-left px-4 py-3 whitespace-nowrap">Khutbah</th>
+                    <th class="w-1/6 text-left px-4 py-3 whitespace-nowrap">Salah</th>
+                    <th class="w-1/6 text-left px-4 py-3 whitespace-nowrap">Active</th>
+                    <th class="w-[180px] text-right px-4 py-3 whitespace-nowrap">Actions</th>
                 </tr>
             </thead>
+
             <tbody class="divide-y">
             @forelse ($schedules as $s)
                 <tr>
-                    <td class="px-4 py-3">{{ $s->effective_from?->format('d M Y') }}</td>
-                    <td class="px-4 py-3">{{ $s->effective_till?->format('d M Y') ?? '—' }}</td>
-                    <td class="px-4 py-3">{{ $s->khutbah_time ?? '—' }}</td>
-                    <td class="px-4 py-3">{{ $s->salah_time ?? '—' }}</td>
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-3 truncate">
+                        {{ $s->effective_from?->format('d M Y') }}
+                    </td>
+                    <td class="px-4 py-3 truncate">
+                        {{ $s->effective_till?->format('d M Y') ?? '—' }}
+                    </td>
+                    <td class="px-4 py-3 truncate">
+                        {{ $s->khutbah_time ?? '—' }}
+                    </td>
+                    <td class="px-4 py-3 truncate">
+                        {{ $s->salah_time ?? '—' }}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
                         @if($s->is_active)
-                            <span class="px-2 py-1 rounded bg-green-50 text-green-700 border border-green-200">Yes</span>
+                            <span class="inline-flex items-center px-2 py-1 rounded bg-green-50 text-green-700 border border-green-200">
+                                Yes
+                            </span>
                         @else
-                            <span class="px-2 py-1 rounded bg-gray-50 text-gray-600 border">No</span>
+                            <span class="inline-flex items-center px-2 py-1 rounded bg-gray-50 text-gray-600 border">
+                                No
+                            </span>
                         @endif
                     </td>
-                    <td class="px-4 py-3 text-right space-x-2">
-                        <a href="{{ route('admin.jummah.edit', $s) }}"
-                           class="inline-flex px-3 py-1.5 rounded-lg border text-sm hover:bg-gray-50">
-                            Edit
-                        </a>
 
-                        <form action="{{ route('admin.jummah.destroy', $s) }}" method="POST" class="inline"
-                              onsubmit="return confirm('Delete this schedule?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="inline-flex px-3 py-1.5 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 text-sm">
-                                Delete
-                            </button>
-                        </form>
+                    <td class="px-4 py-3 text-right whitespace-nowrap">
+                        <div class="inline-flex items-center gap-2">
+                            <a href="{{ route('admin.jummah.edit', $s) }}"
+                               class="inline-flex items-center px-3 py-1.5 rounded-lg border text-sm hover:bg-gray-50">
+                                Edit
+                            </a>
+
+                            <form action="{{ route('admin.jummah.destroy', $s) }}" method="POST"
+                                  onsubmit="return confirm('Delete this schedule?')" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="inline-flex items-center px-3 py-1.5 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 text-sm">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
 
