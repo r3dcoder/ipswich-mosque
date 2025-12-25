@@ -1545,9 +1545,11 @@
 </head>
 
 <body>
+ 
     @include('partials.header')
-    @include('partials.carousel')
-    @include('partials.welcome-section')
+    <x-carousel page="home" interval="5000" />
+
+     @include('partials.welcome-section')
     @include('partials.courses')
     @include('partials.daily-hadis')
     @include('partials.donation-hom-page-section')

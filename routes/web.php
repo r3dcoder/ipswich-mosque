@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CarouselSlideController;
 use App\Http\Controllers\Admin\JummahScheduleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
@@ -84,6 +85,9 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('jummah', JummahScheduleController::class)->except(['show']);
+    
+    Route::resource('carousel-slides', CarouselSlideController::class)->except(['show']);
+
 });
 
 Route::middleware('auth')->group(function () {

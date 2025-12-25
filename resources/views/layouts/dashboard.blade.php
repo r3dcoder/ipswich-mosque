@@ -1531,6 +1531,15 @@
                         <span>🏠</span><span>Home</span>
                     </a>
 
+                    <a href="{{ route('admin.carousel-slides.index') }}"
+                        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition
+   {{ request()->routeIs('admin.carousel-slides.*') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <span>🎞️</span>
+                        <span>Carousel Slides</span>
+                    </a>
+
+
+
                     <a href="{{ route('dashboard.pages') }}"
                         class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
                   {{ request()->routeIs('dashboard.pages') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">

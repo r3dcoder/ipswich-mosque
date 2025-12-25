@@ -1,104 +1,109 @@
 .professional-carousel {
-    position: relative;
-    width: 100%;
-    height: 500px;
-    overflow: hidden;
-  }
-  
-  .carousel-slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-  }
-  /* Force carousel height and center content */
-.carousel-item {
-  min-height: 400px; /* or fixed height */
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
 }
-  
-  .carousel-slide.active {
-    opacity: 1;
-  }
-  
-  .carousel-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(70%);
-  }
-  
-  /* Caption Container */
-  .carousel-caption {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    width: 80%; /* keep same on mobile */
-    /* background: rgba(0, 0, 0, 0.5); */
-     /* opacity box */
-    border-radius: 12px;
-    padding: 20px;
-  }
-  
-  /* Semi-transparent text box */
-  .caption-box {
-    background: rgba(0, 0, 0, 0.6);
-    padding: 30px 40px;
-    border-radius: 12px;
-    display: inline-block;
-    color: #fff;
-  }
-  
-  .caption-box h2 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-  }
-  
-  .caption-box p {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-  }
-  
-  /* Donation Button */
-  .donate-btn {
-    display: inline-block;
-    background: #0a5134;
-    /* color: #0a5134; */
-    padding: 12px 25px;
-    font-weight: 600;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: background 0.3s ease;
-  }
-  
-  .donate-btn:hover {
-    background: #e6c200;
-  }
-  
-  /* Navigation Dots */
-  .carousel-nav {
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-  }
-  
-  .carousel-nav .dot {
-    height: 14px;
-    width: 14px;
-    margin: 0 6px;
-    background-color: rgba(255,255,255,0.6);
-    border-radius: 50%;
-    display: inline-block;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .carousel-nav .dot.active,
-  .carousel-nav .dot:hover {
-    background-color: #ffd700;
-  }
-  
+
+/* ✅ Make all slides fill container and NOT clickable by default */
+.carousel-slide {
+  position: absolute;
+  inset: 0;                 /* replaces width/height; more reliable */
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  pointer-events: none;     /* ✅ IMPORTANT: stop clicks on hidden slides */
+  z-index: 0;
+}
+
+/* ✅ Only active slide is visible AND clickable */
+.carousel-slide.active {
+  opacity: 1;
+  pointer-events: auto;     /* ✅ only active slide clickable */
+  z-index: 2;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(70%);
+}
+
+/* Caption Container */
+.carousel-caption {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 80%;
+  border-radius: 12px;
+  padding: 20px;
+
+  /* ✅ ensures caption/button stays above image */
+  z-index: 3;
+}
+
+/* Semi-transparent text box */
+.caption-box {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 30px 40px;
+  border-radius: 12px;
+  display: inline-block;
+  color: #fff;
+
+  /* ✅ ensure button inside is clickable */
+  pointer-events: auto;
+}
+
+.caption-box h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.caption-box p {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+/* Donation Button */
+.donate-btn {
+  display: inline-block;
+  background: #0a5134;
+  padding: 12px 25px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+  color: #fff;
+}
+
+.donate-btn:hover {
+  background: #e6c200;
+}
+
+/* Navigation Dots */
+.carousel-nav {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  z-index: 4; /* ✅ keep dots clickable */
+}
+
+.carousel-nav .dot {
+  height: 14px;
+  width: 14px;
+  margin: 0 6px;
+  background-color: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.carousel-nav .dot.active,
+.carousel-nav .dot:hover {
+  background-color: #ffd700;
+}
