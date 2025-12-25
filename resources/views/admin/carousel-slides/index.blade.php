@@ -37,7 +37,7 @@
             <tbody class="divide-y">
             @forelse($slides as $s)
                 <tr>
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-3 max-h-10 max-w-16 overflow-hidden">
                         <img class="h-10 w-16 object-cover rounded"
                              src="{{ asset('storage/'.$s->image_path) }}" alt="">
                     </td>
