@@ -22,9 +22,9 @@
     </div>
 @endif
 
-<div class="bg-white border rounded-xl overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="min-w-full text-sm">
+<div class="bg-white border rounded-xl overflow-hidden w-full">
+    <div class="overflow-x-auto w-full">
+        <table class="min-w-full text-sm w-full">
             <thead class="bg-gray-50 border-b">
                 <tr>
                     <th class="text-left px-4 py-3">Effective From</th>

@@ -1593,7 +1593,7 @@
             </header>
 
             <main class="p-4 md:p-6">
-                <div class="max-w-6xl mx-auto">
+                <div class="w-full mx-auto">
                     @yield('content')
                 </div>
             </main>
