@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DuaController;
 use App\Http\Controllers\HomeController;
@@ -63,9 +64,22 @@ Route::get('/import', function () {
     return 'Imported!';
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'home'])->name('dashboard');
+
+    Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('/pages', [DashboardController::class, 'pages'])->name('pages');
+        Route::get('/duas', [DashboardController::class, 'duas'])->name('duas');
+        Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
+        Route::get('/payments', [DashboardController::class, 'payments'])->name('payments');
+        Route::get('/contacts', [DashboardController::class, 'contacts'])->name('contacts');
+    });
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
