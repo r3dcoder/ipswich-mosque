@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CarouselSlideController;
+use App\Http\Controllers\Admin\CoursesController;
 use App\Http\Controllers\Admin\JummahScheduleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
@@ -94,6 +95,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+Route::middleware(['auth','admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('courses', [CoursesController::class, 'index'])->name('courses.index');
+    Route::get('courses/create', [CoursesController::class, 'create'])->name('courses.create');
+    Route::post('courses', [CoursesController::class, 'store'])->name('courses.store');
+    Route::delete('courses/{section}', [CoursesController::class, 'destroy'])
+    ->name('courses.destroy');
+
+
+    Route::get('courses/{section}/edit', [CoursesController::class, 'edit'])->name('courses.edit');
+    Route::put('courses/{section}', [CoursesController::class, 'update'])->name('courses.update');
+
+    Route::post('courses/{section}/courses', [CoursesController::class, 'storeCourse'])->name('courses.courses.store');
+    Route::put('courses/course/{course}', [CoursesController::class, 'updateCourse'])->name('courses.courses.update');
+    Route::delete('courses/course/{course}', [CoursesController::class, 'destroyCourse'])->name('courses.courses.destroy');
+
+    Route::post('courses/course/{course}/features', [CoursesController::class, 'addFeature'])->name('courses.features.store');
+    Route::put('courses/feature/{feature}', [CoursesController::class, 'updateFeature'])->name('courses.features.update');
+    Route::delete('courses/feature/{feature}', [CoursesController::class, 'destroyFeature'])->name('courses.features.destroy');
 });
 
 require __DIR__.'/auth.php';

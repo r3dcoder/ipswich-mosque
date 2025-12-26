@@ -14,7 +14,10 @@ return new class extends Migration
         if (!Schema::hasTable('duas')) {
             Schema::create('duas', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('dua_category_id')->constrained()->onDelete('cascade');
+                $table->foreignId('dua_category_id')
+                ->constrained('dua_categories')
+                ->cascadeOnDelete();
+
                 $table->string('title');
                 $table->text('arabic');
                 $table->text('pronunciation')->nullable();

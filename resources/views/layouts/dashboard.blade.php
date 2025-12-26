@@ -1538,6 +1538,10 @@
                         <span>Carousel Slides</span>
                     </a>
 
+                    <a href="{{ route('admin.courses.index') }}"
+                    class="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100">
+                    Courses
+                    </a>
 
 
                     <a href="{{ route('dashboard.pages') }}"
