@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yield('title', 'Dashboard')</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -1538,9 +1539,13 @@
                         <span>Carousel Slides</span>
                     </a>
 
+                     
+
+
                     <a href="{{ route('admin.courses.index') }}"
-                    class="block w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100">
-                    Courses
+                        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
+                  {{ request()->routeIs('dashboard.pages') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <span>📖</span><span>Courses</span>
                     </a>
 
 
@@ -1558,11 +1563,18 @@
 
 
 
-                    <a href="{{ route('dashboard.duas') }}"
+                    <a href="{{ route('admin.duas.index') }}"
                         class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
-                  {{ request()->routeIs('dashboard.duas') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                  {{ request()->routeIs('admin.duas.index') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
                         <span>🤲</span><span>Duas</span>
                     </a>
+
+                    <a href="{{ route('admin.dua_categories.index') }}"
+                        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
+                  {{ request()->routeIs('admin.dua_categories.index') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <span>🤲</span><span>Duas Category</span>
+                    </a>
+
 
                     <a href="{{ route('dashboard.settings') }}"
                         class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm

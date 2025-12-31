@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDuaController;
 use App\Http\Controllers\Admin\CarouselSlideController;
 use App\Http\Controllers\Admin\CoursesController;
 use App\Http\Controllers\Admin\JummahScheduleController;
@@ -13,7 +14,9 @@ use App\Imports\PrayerTimesImport;
 use App\Models\PrayerTime;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
-
+use App\Http\Controllers\Admin\DuaCategoryController;
+ 
+ 
 Route::get('/', [HomeController::class, 'index']);
 
 
@@ -99,23 +102,56 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth','admin'])->prefix('admin')->name('admin.')->group(function () {
+    
+    // Sections
     Route::get('courses', [CoursesController::class, 'index'])->name('courses.index');
     Route::get('courses/create', [CoursesController::class, 'create'])->name('courses.create');
     Route::post('courses', [CoursesController::class, 'store'])->name('courses.store');
-    Route::delete('courses/{section}', [CoursesController::class, 'destroy'])
-    ->name('courses.destroy');
-
-
     Route::get('courses/{section}/edit', [CoursesController::class, 'edit'])->name('courses.edit');
     Route::put('courses/{section}', [CoursesController::class, 'update'])->name('courses.update');
+    Route::delete('courses/{section}', [CoursesController::class, 'destroy'])->name('courses.destroy');
 
+    // Courses inside a section
     Route::post('courses/{section}/courses', [CoursesController::class, 'storeCourse'])->name('courses.courses.store');
     Route::put('courses/course/{course}', [CoursesController::class, 'updateCourse'])->name('courses.courses.update');
     Route::delete('courses/course/{course}', [CoursesController::class, 'destroyCourse'])->name('courses.courses.destroy');
 
+    // Features
     Route::post('courses/course/{course}/features', [CoursesController::class, 'addFeature'])->name('courses.features.store');
     Route::put('courses/feature/{feature}', [CoursesController::class, 'updateFeature'])->name('courses.features.update');
     Route::delete('courses/feature/{feature}', [CoursesController::class, 'destroyFeature'])->name('courses.features.destroy');
+
+    // NEW: reorder + ajax
+    Route::post('courses/{section}/courses/reorder', [CoursesController::class, 'reorderCourses'])
+        ->name('courses.courses.reorder');
+
+    Route::post('courses/course/{course}/features/reorder', [CoursesController::class, 'reorderFeatures'])
+        ->name('courses.features.reorder');
+
+    Route::post('courses/course/{course}/features/ajax', [CoursesController::class, 'addFeatureAjax'])
+        ->name('courses.features.ajax');
+        
 });
+
+
+Route::middleware(['auth','admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    // Dua categories
+    Route::get('dua-categories', [DuaCategoryController::class, 'index'])->name('dua_categories.index');
+    Route::get('dua-categories/create', [DuaCategoryController::class, 'create'])->name('dua_categories.create');
+    Route::post('dua-categories', [DuaCategoryController::class, 'store'])->name('dua_categories.store');
+    Route::get('dua-categories/{duaCategory}/edit', [DuaCategoryController::class, 'edit'])->name('dua_categories.edit');
+    Route::put('dua-categories/{duaCategory}', [DuaCategoryController::class, 'update'])->name('dua_categories.update');
+    Route::delete('dua-categories/{duaCategory}', [DuaCategoryController::class, 'destroy'])->name('dua_categories.destroy');
+
+    // Duas
+    Route::get('duas', [AdminDuaController::class, 'index'])->name('duas.index');
+    Route::get('duas/create', [AdminDuaController::class, 'create'])->name('duas.create');
+    Route::post('duas', [AdminDuaController::class, 'store'])->name('duas.store');
+    Route::get('duas/{dua}/edit', [AdminDuaController::class, 'edit'])->name('duas.edit');
+    Route::put('duas/{dua}', [AdminDuaController::class, 'update'])->name('duas.update');
+    Route::delete('duas/{dua}', [AdminDuaController::class, 'destroy'])->name('duas.destroy');
+});
+
 
 require __DIR__.'/auth.php';

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DuaCategory extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'category'];
 
     public function duas()
     {
