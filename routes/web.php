@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDuaController;
 use App\Http\Controllers\Admin\CarouselSlideController;
 use App\Http\Controllers\Admin\CoursesController;
+use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\JummahScheduleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
@@ -152,6 +153,13 @@ Route::middleware(['auth','admin'])->prefix('admin')->name('admin.')->group(func
     Route::put('duas/{dua}', [AdminDuaController::class, 'update'])->name('duas.update');
     Route::delete('duas/{dua}', [AdminDuaController::class, 'destroy'])->name('duas.destroy');
 });
+
+Route::middleware(['auth','admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::resource('events', EventController::class)->except(['show']);
+    });
 
 
 require __DIR__.'/auth.php';

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Alkoumi\LaravelHijriDate\Hijri;
+use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -39,6 +40,13 @@ class HomeController extends Controller
 
         $todayHijri = $hijriDay . ' ' . $hijriMonthEnglish . ' ' . $hijriYear;
 
-        return view('welcome', compact('todayGregorian', 'todayHijri'));
+        $events = Event::where('is_active', true)
+            ->where('starts_at', '>=', now()->subDay())
+            ->orderBy('starts_at')
+            ->orderBy('sort_order')
+            ->take(6)
+            ->get();
+
+        return view('welcome', compact('todayGregorian', 'todayHijri', 'events'));
     }
 }

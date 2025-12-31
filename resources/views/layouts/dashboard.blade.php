@@ -1574,7 +1574,11 @@
                   {{ request()->routeIs('admin.dua_categories.index') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
                         <span>🤲</span><span>Duas Category</span>
                     </a>
-
+                    <a href="{{ route('admin.events.index') }}"
+                        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
+                  {{ request()->routeIs('admin.events.index') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <span>🕌 </span><span>Events</span>
+                    </a>
 
                     <a href="{{ route('dashboard.settings') }}"
                         class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
