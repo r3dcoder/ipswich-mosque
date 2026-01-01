@@ -8,6 +8,7 @@
     
     <title>@yield('title', 'Ipswich Mosque')</title>
     @stack('styles')
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
