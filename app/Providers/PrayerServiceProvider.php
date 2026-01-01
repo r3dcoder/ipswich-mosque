@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\JummahSchedule;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Carbon\Carbon;
@@ -109,6 +110,12 @@ class PrayerServiceProvider extends ServiceProvider
                 $dateDisplay = $gregorianDate . " · " . $hijriDate;
 
                 // Jumuah times (hardcoded here, can also fetch from DB/config)
+
+                $jummah = JummahSchedule::query()
+                    ->where('is_active', true)
+                    ->orderByDesc('effective_from')   // latest active range first
+                    ->first();
+
                 $jumuahTimes = "JUM'A 13:15 & 14:15 · PRAYER TIMES";
 
                 $dailyPrayerHeader = [
@@ -120,6 +127,7 @@ class PrayerServiceProvider extends ServiceProvider
                     'prayers'    => $prayers,
                     'highlighted'=> $highlightedPrayer,
                     'time'       => $now->format('H:i'),
+                    'jummah' => $jummah
                 ];
             }
 

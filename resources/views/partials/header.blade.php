@@ -15,7 +15,11 @@
                 {{ $dailyPrayerHeader['hijri_date'] ?? '' }}
             </p>
 
-            <p class="juma">JUM'A 1.30PM PRAYER TIMES</p>
+            <p class="juma"><span class="font-medium">Jummah Khutbah: </span>{{ $dailyPrayerHeader['jummah']->khutbah_formatted ?? '—' }}</p>
+            <p class="juma"><span class="font-medium">And Salah: </span>{{ $dailyPrayerHeader['jummah']->salah_formatted ?? '—' }}</p>
+            <p class="juma"><span class="font-medium"> </span>{{ $dailyPrayerHeader['jummah']->note ?? '' }}</p>
+
+             
             
         </div>
          @if(!empty($dailyPrayerHeader))

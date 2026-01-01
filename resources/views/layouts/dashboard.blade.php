@@ -1580,10 +1580,22 @@
                         <span>🕌 </span><span>Events</span>
                     </a>
 
+                    <a href="{{ route('admin.prayer-times.index') }}"
+                        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
+                  {{ request()->routeIs('admin.prayer-times.index') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <span>⚙️</span><span>Prayer Time</span>
+                    </a>
+
                     <a href="{{ route('dashboard.settings') }}"
                         class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
                   {{ request()->routeIs('dashboard.settings') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
                         <span>⚙️</span><span>Settings</span>
+                    </a>
+
+                    <a href="{{ route('admin.pages.index') }}"
+                        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
+                  {{ request()->routeIs('admin.pages.index') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <span>💳</span><span>Pages</span>
                     </a>
 
                     <a href="{{ route('dashboard.payments') }}"
@@ -1591,6 +1603,8 @@
                   {{ request()->routeIs('dashboard.payments') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
                         <span>💳</span><span>Payments</span>
                     </a>
+
+
 
                     <a href="{{ route('dashboard.contacts') }}"
                         class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm

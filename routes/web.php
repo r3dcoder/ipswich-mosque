@@ -3,14 +3,19 @@
 use App\Http\Controllers\Admin\AdminDuaController;
 use App\Http\Controllers\Admin\CarouselSlideController;
 use App\Http\Controllers\Admin\CoursesController;
+use App\Http\Controllers\Admin\EditorController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\JummahScheduleController;
+use App\Http\Controllers\Admin\PageBlockController;
+use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\PrayerTimeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DuaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PrayerTimesController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicPageController;
 use App\Imports\PrayerTimesImport;
 use App\Models\PrayerTime;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +26,12 @@ use App\Http\Controllers\Admin\DuaCategoryController;
 Route::get('/', [HomeController::class, 'index']);
 
 
+Route::get('/clear-cache', function() {
+    \Artisan::call('config:clear');
+    \Artisan::call('cache:clear');
+    \Artisan::call('view:clear');
+    return 'Caches cleared!';
+});
 
 Route::get('/donate', function () {
     return view('donate');
@@ -40,13 +51,11 @@ Route::get('/duas/{id}', [DuaController::class, 'show'])->name('duas.show');
 Route::get('/duas/category/{id}', [DuaController::class, 'category'])->name('duas.category');
 
 
+Route::get('/{slug}', [PublicPageController::class, 'show'])
+    ->where('slug', '^(?!admin|login|register|storage|api|css|js).*$')
+    ->name('page.show');
+    
 
-Route::get('/clear-cache', function() {
-    \Artisan::call('config:clear');
-    \Artisan::call('cache:clear');
-    \Artisan::call('view:clear');
-    return 'Caches cleared!';
-});
 
 
 
@@ -161,5 +170,27 @@ Route::middleware(['auth','admin'])
         Route::resource('events', EventController::class)->except(['show']);
     });
 
+    Route::middleware(['auth','admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::resource('prayer-times', PrayerTimeController::class)->except(['show']);
+    });
+    
+
+    Route::middleware(['auth','admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::resource('pages', PageController::class)->except(['show']);
+        Route::post('pages/{page}/blocks', [PageBlockController::class, 'store'])->name('pages.blocks.store');
+        Route::put('pages/{page}/blocks/{block}', [PageBlockController::class, 'update'])->name('pages.blocks.update');
+        Route::delete('pages/{page}/blocks/{block}', [PageBlockController::class, 'destroy'])->name('pages.blocks.destroy');
+
+        // reorder blocks (drag drop)
+        Route::post('pages/{page}/blocks/reorder', [PageBlockController::class, 'reorder'])->name('pages.blocks.reorder');
+
+    });
+    Route::post('editor/upload', [EditorController::class, 'upload'])->name('admin.editor.upload');
 
 require __DIR__.'/auth.php';
