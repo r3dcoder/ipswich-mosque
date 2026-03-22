@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\JummahScheduleController;
 use App\Http\Controllers\Admin\PageBlockController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PrayerTimeController;
+use App\Http\Controllers\Admin\RamadanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DuaController;
@@ -36,6 +37,12 @@ Route::get('/clear-cache', function() {
 Route::get('/donate', function () {
     return view('donate');
 });
+
+
+Route::get('/ramadan', function () {
+    return view('ramadan');
+});
+
 Route::post('/create-checkout-session', [DonationController::class, 'createCheckoutSession']);
 
 // routes/web.php
@@ -55,8 +62,7 @@ Route::get('/{slug}', [PublicPageController::class, 'show'])
     ->where('slug', '^(?!admin|login|register|storage|api|css|js).*$')
     ->name('page.show');
     
-
-
+ 
 
 
 Route::get('/import', function () {
@@ -94,6 +100,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
         Route::get('/payments', [DashboardController::class, 'payments'])->name('payments');
         Route::get('/contacts', [DashboardController::class, 'contacts'])->name('contacts');
+        // Ramadan CRUD
+ 
+    });
+});
+
+ 
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::resource('ramadan', RamadanController::class)
+        
+            ->names('ramadan'); // 👈 this is key
     });
 });
 
@@ -163,6 +180,7 @@ Route::middleware(['auth','admin'])->prefix('admin')->name('admin.')->group(func
     Route::delete('duas/{dua}', [AdminDuaController::class, 'destroy'])->name('duas.destroy');
 });
 
+ 
 Route::middleware(['auth','admin'])
     ->prefix('admin')
     ->name('admin.')
@@ -176,6 +194,8 @@ Route::middleware(['auth','admin'])
     ->group(function () {
         Route::resource('prayer-times', PrayerTimeController::class)->except(['show']);
     });
+    Route::prefix('admin')->middleware('auth')->group(function () {
+});
     
 
     Route::middleware(['auth','admin'])
@@ -192,5 +212,6 @@ Route::middleware(['auth','admin'])
 
     });
     Route::post('editor/upload', [EditorController::class, 'upload'])->name('admin.editor.upload');
+    
 
 require __DIR__.'/auth.php';
