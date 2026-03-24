@@ -16,6 +16,9 @@ class RamadanSetting extends Model
         'hero_message',
         'countdown_target',
         'timetable_image',
+        'fitrana',
+        'eid_jamat',
+        'esha_and_taraweeh' 
     ];
 
     /**

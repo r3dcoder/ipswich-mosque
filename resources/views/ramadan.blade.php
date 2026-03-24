@@ -55,12 +55,13 @@
         <div class="grid md:grid-cols-3 gap-6">
             <div class="bg-white p-8 shadow-2xl border-b-8 border-amber-500" style="border-radius: 30px;">
                 <h4 class="text-2xl font-black text-gray-900 uppercase mb-3" style="color: #0f172a;">⭐ Isha & Tarawih</h4>
-                <p class="text-gray-600 font-bold text-lg">Please see calendar for updated time.</p>
+                <p class="text-gray-600 font-bold text-lg">{{ $setting->esha_and_taraweeh ?? 
+                'Please see calendar for updated time.' }}</p>
             </div>
             
             <div class="p-8 shadow-2xl text-white" style="background-color: #0d9488; border-radius: 30px;">
                 <h4 class="text-2xl font-black uppercase mb-3">🕌 Eid Jamat</h4>
-                <p class="text-xl font-black">1st: 8:00 | 2nd: 9:00 | 3rd: 10:30</p>
+                <p class="text-xl font-black">{{ $setting->eid_jamat ?? '1st: 8:00 | 2nd: 9:00 | 3rd: 10:30' }}</p>
             </div>
 
             <div class="bg-gray-900 p-8 shadow-2xl text-gray-300 flex items-center" style="border-radius: 30px;">
@@ -144,8 +145,8 @@
                             
                             <div class="p-8 rounded-[2rem] mb-10 flex justify-between items-center border-2 border-white/10" 
                                  style="background-color: rgba(255,255,255,0.05);">
-                                <span class="text-xl font-bold opacity-80 uppercase tracking-widest">Rate 2027</span>
-                                <span class="text-6xl font-black text-white" style="color: #2dd4bf;">£5.00</span>
+                                <span class="text-xl font-bold opacity-80 uppercase tracking-widest">Rate {{ $setting->year??2027 }}</span>
+                                <span class="text-6xl font-black text-white" style="color: #2dd4bf;">£{{ $setting->fitrana??10 }}</span>
                             </div>
                             
                             <a href="/donate" class="block w-full py-6 text-center bg-white font-black text-2xl hover:bg-teal-50 transition shadow-xl uppercase tracking-tighter" 

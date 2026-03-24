@@ -20,7 +20,7 @@
                            name="title" 
                            value="{{ old('title', $event->title) }}" 
                            required
-                           class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                           class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-teal-500 focus:border-transparent">
                     @error('title')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -85,7 +85,7 @@
                     Cancel
                 </a>
                 <button type="submit" 
-                        class="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-medium transition">
+                        class="flex-1 py-4 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-medium transition">
                     Update Event
                 </button>
             </div>
