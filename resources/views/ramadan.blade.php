@@ -13,11 +13,11 @@
                     ->first();
     @endphp
 
-    <section class="relative text-white py-24 md:py-32 overflow-hidden" style="background: linear-gradient(to bottom right, #022c22, #064e3b);">
+    <section class="relative text-white py-24 md:py-32 overflow-hidden" style="background: linear-gradient(135deg, #022c22 0%, #064e3b 100%);">
         <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 50px 50px;"></div>
         
         <div class="container mx-auto px-6 text-center relative z-10">
-            <span class="inline-block px-4 py-1 mb-6 border border-emerald-400/30 rounded-full bg-emerald-500/10 text-emerald-200 text-sm font-medium tracking-widest uppercase">
+            <span class="inline-block px-4 py-1 mb-6 border border-emerald-400/30 rounded-full bg-emerald-500/10 text-emerald-100 text-sm font-medium tracking-widest uppercase">
                 Ipswich Mosque & Islamic Centre
             </span>
             <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
@@ -40,31 +40,31 @@
 
     <div class="relative z-20 -mt-10 container mx-auto px-6">
         <div class="grid md:grid-cols-3 gap-4">
-            <div class="bg-amber-50 border-l-4 border-amber-500 p-5 shadow-lg rounded-r-xl">
-                <h4 class="font-bold text-amber-900 flex items-center gap-2">🌙 Isha & Tarawih</h4>
-                <p class="text-sm text-amber-800">Please check the calendar below for daily updated times.</p>
+            <div class="p-5 shadow-lg rounded-r-xl border-l-4 border-amber-500" style="background-color: #fffbeb;">
+                <h4 class="font-bold flex items-center gap-2" style="color: #78350f;">🌙 Isha & Tarawih</h4>
+                <p class="text-sm" style="color: #92400e;">Please check the calendar below for daily updated times.</p>
             </div>
-            <div class="bg-emerald-600 text-white p-5 shadow-lg rounded-xl">
+            <div class="text-white p-5 shadow-lg rounded-xl" style="background-color: #059669;">
                 <h4 class="font-bold flex items-center gap-2">🕌 Eid Jamat Times</h4>
                 <p class="text-xs opacity-90">1st: 8:00am | 2nd: 9:00am | 3rd: 10:30am</p>
             </div>
             <div class="bg-white border p-5 shadow-lg rounded-xl flex items-center">
-                <p class="text-xs text-gray-500 italic">* All Islamic dates are subject to the sighting of the moon.</p>
+                <p class="text-xs text-gray-500 italic">* All Islamic dates and festivals are subject to the sighting of the moon.</p>
             </div>
         </div>
     </div>
 
     @if($setting && $setting->timetable_image)
-    <section class="py-20 bg-gray-50">
+    <section class="py-20" style="background-color: #f9fafb;">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
                 <div>
-                    <h2 class="text-4xl font-bold text-gray-900">Ramadan Timetable</h2>
-                    <p class="text-emerald-700 font-medium">Ipswich Mosque Official Prayer Times</p>
+                    <h2 class="text-4xl font-bold text-gray-900">Ramadan Timetable 2027</h2>
+                    <p class="font-medium" style="color: #047857;">Official prayer times for Ipswich Mosque</p>
                 </div>
                 <div class="flex gap-3">
                     <a href="{{ Storage::url($setting->timetable_image) }}" target="_blank" class="px-6 py-3 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition shadow-sm font-medium">View Full Size</a>
-                    <a href="{{ Storage::url($setting->timetable_image) }}" download class="px-6 py-3 bg-emerald-700 text-white rounded-xl hover:bg-emerald-800 transition shadow-md font-medium">Download Image</a>
+                    <a href="{{ Storage::url($setting->timetable_image) }}" download class="px-6 py-3 text-white rounded-xl transition shadow-md font-medium" style="background-color: #047857;">Download Image</a>
                 </div>
             </div>
 
@@ -82,70 +82,76 @@
                 <div class="space-y-12">
                     <div>
                         <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                            <span class="text-emerald-600 text-4xl">01</span> What is Ramadan?
+                            <span style="color: #059669;" class="text-4xl">01</span> What is Ramadan?
                         </h2>
                         <p class="text-gray-600 leading-relaxed mb-4">
-                            The month of Ramadan is the ninth month of the Islamic calendar and it is observed by Muslims all over the world as a month of <strong>Sawm (fasting)</strong>. As Holy Prophet Muhammad ﷺ said: "It is Allah's Own month."
+                            The month of Ramadan is the ninth month of the Islamic calendar and it is observed by Muslims all over the world as a month of <strong>Sawm (fasting)</strong>. It begins immediately upon the end of the eighth month and lasts for 29 to 30 days.
                         </p>
+                        <blockquote class="border-l-4 border-emerald-500 pl-4 py-2 italic text-gray-700 bg-emerald-50/50">
+                            As Holy Prophet Muhammad ﷺ said: "It is Allah's Own month". It is the chief of all months and the most glorious one.
+                        </blockquote>
                     </div>
 
-                    <div class="bg-emerald-50 p-8 rounded-3xl border border-emerald-100">
-                        <h3 class="text-xl font-bold text-emerald-900 mb-4">The Sunnah of Fasting</h3>
-                        <ul class="grid md:grid-cols-2 gap-4 text-sm text-emerald-800">
-                            <li class="flex items-start gap-2"><span>✔</span> Taking pre-dawn meal (Suhoor)</li>
+                    <div class="p-8 rounded-3xl border" style="background-color: #ecfdf5; border-color: #d1fae5;">
+                        <h3 class="text-xl font-bold mb-4" style="color: #064e3b;">Sunnah of Fasting</h3>
+                        <ul class="grid md:grid-cols-2 gap-4 text-sm" style="color: #065f46;">
+                            <li class="flex items-start gap-2"><span>✔</span> Pre-dawn meal (Suhoor)</li>
+                            <li class="flex items-start gap-2"><span>✔</span> Delaying Suhoor is Sunnah</li>
                             <li class="flex items-start gap-2"><span>✔</span> Hastening in Iftar</li>
+                            <li class="flex items-start gap-2"><span>✔</span> Breaking fast before Maghrib</li>
                             <li class="flex items-start gap-2"><span>✔</span> Virtues of Dua at Iftar</li>
                             <li class="flex items-start gap-2"><span>✔</span> Studying the Qur’an</li>
-                            <li class="flex items-start gap-2"><span>✔</span> Being extra generous</li>
-                            <li class="flex items-start gap-2"><span>✔</span> Striving in the last 10 days</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="space-y-8">
-                    <div class="bg-amber-50 p-8 rounded-3xl border border-amber-100 relative overflow-hidden">
-                        <div class="relative z-10">
-                            <h3 class="text-2xl font-bold text-amber-900 mb-4">Why break fast with Dates?</h3>
-                            <p class="text-amber-800 text-sm leading-relaxed">
-                                Prophet Mohammed ﷺ said: "When one of you is fasting, he should break his fast with dates, but if he cannot get any, then he should break his fast with water as that is very purifying." Dates are rich in nutrients and help increase glucose levels quickly after a long day of fasting.
-                            </p>
-                        </div>
-                        <span class="absolute -bottom-4 -right-4 text-7xl opacity-10">🌴</span>
+                    <div class="p-8 rounded-3xl border relative overflow-hidden" style="background-color: #fffbeb; border-color: #fef3c7;">
+                        <h3 class="text-2xl font-bold mb-4" style="color: #78350f;">Breaking Fast With Dates</h3>
+                        <p class="text-sm leading-relaxed" style="color: #92400e;">
+                            "When one of you is fasting, he should break his fast with dates, but if he cannot get any, then he should break his fast with water as that is very purifying." (Prophet Mohammed ﷺ)
+                        </p>
+                        <p class="text-xs mt-4" style="color: #b45309;">Dates are rich in sugar and nutrients, helping to increase glucose levels quickly after a long day of fasting.</p>
                     </div>
 
-                    <div class="bg-emerald-900 text-white p-8 rounded-[2rem] shadow-2xl">
+                    <div class="text-white p-8 rounded-[2rem] shadow-2xl" style="background-color: #064e3b;">
                         <div class="flex justify-between items-start mb-6">
                             <div>
-                                <h3 class="text-2xl font-bold uppercase tracking-wider">Zakat-ul-Fitr</h3>
-                                <p class="text-emerald-300 text-xs">Fitrana 1448 AH</p>
+                                <h3 class="text-2xl font-bold uppercase tracking-wider">ZAKAT-UL-FITR</h3>
+                                <p class="text-emerald-300 text-xs">Required before Eid Prayers</p>
                             </div>
-                            <div class="bg-emerald-500 text-white px-4 py-2 rounded-2xl font-bold text-2xl">
+                            <div class="text-white px-4 py-2 rounded-2xl font-bold text-3xl shadow-inner" style="background-color: #059669;">
                                 £5.00
                             </div>
                         </div>
-                        <p class="text-sm opacity-80 mb-6">Every adult Muslim who possesses food in excess of their needs must pay this before Eid prayer. The head of household can pay for all dependants.</p>
-                        <a href="/donate" class="block w-full text-center bg-white text-emerald-900 font-bold py-4 rounded-xl hover:bg-emerald-50 transition">Pay Fitrana Online</a>
+                        <p class="text-sm opacity-90 mb-6 leading-relaxed">
+                            Every adult Muslim who possesses food in excess of their needs must pay Fitrana. This can be paid during Ramadan so that the poor can enjoy the day of Eid.
+                        </p>
+                        <a href="/donate" class="block w-full text-center bg-white font-bold py-4 rounded-xl hover:bg-emerald-50 transition" style="color: #064e3b;">
+                            Pay Fitrana Online
+                        </a>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 
     @if($setting && $setting->events->isNotEmpty())
-    <section class="py-20 bg-gray-50 border-t">
+    <section class="py-20 border-t" style="background-color: #f9fafb;">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">Masjid Programs</h2>
-                <div class="w-20 h-1 bg-emerald-600 mx-auto rounded-full"></div>
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Ramadan Events</h2>
+                <div class="w-20 h-1 mx-auto rounded-full" style="background-color: #059669;"></div>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($setting->events->sortBy('event_date') as $event)
-                    <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition">
-                        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase">{{ $event->event_date->format('l, d M') }}</span>
-                        <h3 class="text-xl font-bold mt-4 mb-2">{{ $event->title }}</h3>
-                        <p class="text-gray-800 text-sm mb-4">{{ Str::limit($event->description) }}</p>
-                        <div class="flex items-center text-xs text-red-800 gap-4">
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                        <span class="text-xs font-bold px-3 py-1 rounded-full uppercase" style="background-color: #ecfdf5; color: #059669;">
+                            {{ $event->event_date->format('l, d M') }}
+                        </span>
+                        <h3 class="text-xl font-bold mt-4 mb-2 text-gray-800">{{ $event->title }}</h3>
+                        <p class="text-gray-500 text-sm mb-4">{{ Str::limit($event->description, 120) }}</p>
+                        <div class="flex items-center text-xs text-gray-400 gap-4">
                             <span>🕒 {{ $event->start_time->format('H:i') }}</span>
                             @if($event->location)<span>📍 {{ $event->location }}</span>@endif
                         </div>
@@ -155,6 +161,11 @@
         </div>
     </section>
     @endif
+
+@endsection
+
+@section('footer')
+    @include('partials.footer')
 @endsection
 
 <script>
