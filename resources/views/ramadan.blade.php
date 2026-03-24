@@ -14,7 +14,7 @@
                     ->first();
     @endphp
 
-    <!-- Hero Section -->
+    <!---git Hero Section -->
     <section 
     class="relative text-white py-28 md:py-36 overflow-hidden" 
     style="background: linear-gradient(to bottom right, #022c22, #042f2e);"
