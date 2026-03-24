@@ -1,3 +1,7 @@
+/bootstrap/cache/*.php
+ 
+.env
+
 *.log
 .DS_Store
 .env
