@@ -6923,9 +6923,7 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Laravel\\git add composer.lock
-git commit -m "Fix: Regenerate corrupted composer.lock file"
-git push origin main\\PailServiceProvider"
+                        "Laravel\\Pail\\PailServiceProvider"
                     ]
                 },
                 "branch-alias": {
