@@ -1,6 +1,11 @@
-@extends('layouts.app')
+@extends('main-layout')
 
 @section('title', $setting->title ?? 'Ramadan 2027 - Ipswich Mosque')
+
+@section('header')
+    @include('partials.header')
+@endsection
+
 
 @section('content')
     @php
