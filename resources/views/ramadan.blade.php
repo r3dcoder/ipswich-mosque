@@ -15,7 +15,7 @@
     @endphp
 
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-emerald-950 to-teal-950 text-white py-28 md:py-36 overflow-hidden">
+    <section class="relative bg-gradient-to-br from-[#0a5134] to-[#0a5134] text-white py-28 md:py-36 overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] bg-[length:50px_50px]"></div>
 
         <div class="container mx-auto px-6 text-center relative z-10">
