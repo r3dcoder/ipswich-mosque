@@ -1580,6 +1580,13 @@
                         <span>🕌 </span><span>Events</span>
                     </a>
 
+                    <a href="{{ route('admin.ramadan.index') }}"
+                        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
+                  {{ request()->routeIs('admin.ramadan.index') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <span>🕌 </span><span>ramadan</span>
+                    </a>
+
+
                     <a href="{{ route('admin.prayer-times.index') }}"
                         class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
                   {{ request()->routeIs('admin.prayer-times.index') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">

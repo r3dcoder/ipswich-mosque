@@ -77,7 +77,7 @@
                 <a href={{ url('/') }}>Home</a>
             </li>
             <li>
-                <a href="#">Services</a>
+            <a href={{ url('/ramadan') }}>Ramadan</a>
             </li>
             <li>
             <a href={{ url('/duas') }}>Duas</a>
@@ -113,7 +113,7 @@
                 <a href={{ url('/') }}>Home</a>
             </li>
             <li>
-                <a href="#">Services</a>
+                <a href={{ url('/ramadan') }}>Ramadan</a>
             </li>
             <li>
             <a href={{ url('/duas') }}>Duas</a>

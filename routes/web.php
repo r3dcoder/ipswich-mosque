@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PageBlockController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PrayerTimeController;
 use App\Http\Controllers\Admin\RamadanController;
+use App\Http\Controllers\Admin\RamadanEventController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DuaController;
@@ -108,9 +109,22 @@ Route::middleware(['auth'])->group(function () {
  
 Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::resource('ramadan', RamadanController::class)
-        
-            ->names('ramadan'); // 👈 this is key
+        Route::resource('ramadan', RamadanController::class)->names('ramadan'); // 👈 this is key
+    
+        Route::resource('ramadan.events', RamadanEventController::class)
+             ->names([
+                 'index'   => 'ramadan.events.index',
+                 'create'  => 'ramadan.events.create',
+                 'store'   => 'ramadan.events.store',
+                 'edit'    => 'ramadan.events.edit',
+                 'update'  => 'ramadan.events.update',
+                 'destroy' => 'ramadan.events.destroy',
+             ])
+             ->parameters([
+                 'ramadan' => 'ramadan',
+                 'events'  => 'event'
+             ]);
+    
     });
 });
 
