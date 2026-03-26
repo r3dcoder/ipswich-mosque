@@ -26,4 +26,17 @@ class PrayerTimesController extends Controller
 
     return view('prayer-times', compact('months', 'prayerTimes', 'selectedMonth', 'today', 'currentMonth'));
 }
+
+    public function timingScreen()
+    {
+        // Get today's prayer times
+        $today = Carbon::now()->day;
+        $currentMonth = Carbon::now()->format('M');
+        
+        $prayerTimes = PrayerTime::where('month', $currentMonth)
+                    ->where('date', $today)
+                    ->first();
+
+        return view('prayer-timing-screen', compact('prayerTimes'));
+    }
 }

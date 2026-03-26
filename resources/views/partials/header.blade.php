@@ -96,7 +96,8 @@
             </li>
 
             <li><a href="{{ url('/duas') }}">Duas</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a href="{{ url('/people') }}">Our Team</a></li>
+            <li><a href="{{ url('/contact') }}">Contact Us</a></li>
             <li>
                 <a href="{{ url('/donate') }}" class="donate-btn flex gap-1">
                     <div>Donate</div>
@@ -129,7 +130,8 @@
             <li><a href="{{ url('/services/visit') }}" class="mobile-sub">Visit Mosque</a></li>
 
             <li><a href="{{ url('/duas') }}">Duas</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a href="{{ url('/people') }}">Our Team</a></li>
+            <li><a href="{{ url('/contact') }}">Contact Us</a></li>
             <li><a href="{{ url('/donate') }}" class="donate-btn">Donate</a></li>
         </ul>
     </div>

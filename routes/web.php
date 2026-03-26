@@ -44,6 +44,39 @@ Route::get('/ramadan', function () {
     return view('ramadan');
 });
 
+
+Route::get('/prayer-timing-screen', function () {
+    return view('prayer-timing-screen');
+});
+
+Route::get('/people', function () {
+    return view('people');
+});
+
+// Contact Routes
+Route::get('/contact', [App\Http\Controllers\ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
+
+// Admin Contact Routes
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class)
+             ->except(['create', 'edit', 'update'])
+             ->names([
+                 'index'   => 'contacts.index',
+                 'show'    => 'contacts.show',
+                 'destroy' => 'contacts.destroy',
+             ]);
+        
+        Route::post('contacts/{contact}/mark-as-read', [\App\Http\Controllers\Admin\ContactController::class, 'markAsRead'])
+             ->name('contacts.markAsRead');
+        
+        Route::get('contacts/unread/count', [\App\Http\Controllers\Admin\ContactController::class, 'getUnreadCount'])
+             ->name('contacts.unreadCount');
+    });
+
 Route::post('/create-checkout-session', [DonationController::class, 'createCheckoutSession']);
 
 // routes/web.php
@@ -53,6 +86,7 @@ Route::get('/donation-success', [DonationController::class, 'success'])->name('d
 
 Route::view('/donate', 'donate');
 Route::get('/prayer-times', [PrayerTimesController::class, 'index']);
+Route::get('/prayer-timing-screen', [PrayerTimesController::class, 'timingScreen']);
 
 Route::get('/duas', [DuaController::class, 'index'])->name('duas.index');
 Route::get('/duas/{id}', [DuaController::class, 'show'])->name('duas.show');
@@ -227,5 +261,15 @@ Route::middleware(['auth','admin'])
     });
     Route::post('editor/upload', [EditorController::class, 'upload'])->name('admin.editor.upload');
     
+
+// Admin People Routes
+Route::prefix('admin/people')->middleware(['auth', 'verified'])->name('admin.people.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Admin\PeopleController::class, 'index'])->name('index');
+    Route::get('/create', [\App\Http\Controllers\Admin\PeopleController::class, 'create'])->name('create');
+    Route::post('/', [\App\Http\Controllers\Admin\PeopleController::class, 'store'])->name('store');
+    Route::get('/{person}/edit', [\App\Http\Controllers\Admin\PeopleController::class, 'edit'])->name('edit');
+    Route::put('/{person}', [\App\Http\Controllers\Admin\PeopleController::class, 'update'])->name('update');
+    Route::delete('/{person}', [\App\Http\Controllers\Admin\PeopleController::class, 'destroy'])->name('destroy');
+});
 
 require __DIR__.'/auth.php';

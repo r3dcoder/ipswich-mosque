@@ -1613,10 +1613,16 @@
 
 
 
-                    <a href="{{ route('dashboard.contacts') }}"
+                    <a href="{{ route('admin.contacts.index') }}"
                         class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
-                  {{ request()->routeIs('dashboard.contacts') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                  {{ request()->routeIs('admin.contacts.*') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
                         <span>📞</span><span>Contacts</span>
+                    </a>
+
+                    <a href="{{ route('admin.people.index') }}"
+                        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm
+                  {{ request()->routeIs('admin.people.index') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <span>👥</span><span>People</span>
                     </a>
                 </div>
             </nav>
