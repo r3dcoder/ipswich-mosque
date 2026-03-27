@@ -1,5 +1,4 @@
-<link rel="stylesheet" href="{{ secure_asset('css/header.css') }}">
-
+ 
 <header class="header-root">
     <div class="prayer-ribbon">
         <div class="ribbon-container">
