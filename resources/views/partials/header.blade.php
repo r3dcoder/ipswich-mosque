@@ -44,7 +44,7 @@
                     </div>
                 </li>
                 <li><a href="{{ url('/duas') }}">Duas</a></li>
-                <li><a href="{{ url('/team') }}">Our Team</a></li>
+                <li><a href="{{ url('/people') }}">Our people</a></li>
                 <li><a href="{{ url('/contact') }}">Contact Us</a></li>
                 <li><a href="{{ url('/donate') }}" class="btn-donate-green">Donate Now</a></li>
             </ul>
@@ -64,7 +64,7 @@
             <li><a href="{{ url('/services/marriage') }}">Marriage Service</a></li>
             <li><a href="{{ url('/services/janaza') }}">Janaza Service</a></li>
             <li><a href="{{ url('/duas') }}">Duas</a></li>
-            <li><a href="{{ url('/team') }}">Our Team</a></li>
+            <li><a href="{{ url('/people') }}">Our people</a></li>
             <li><a href="{{ url('/contact') }}">Contact Us</a></li>
             <li><a href="{{ url('/donate') }}" class="mobile-donate">Donate Now</a></li>
         </ul>
