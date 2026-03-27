@@ -1,3 +1,106 @@
-php artisan serve
+﻿php artisan serve
 
 npm run dev
+
+# Project Summary: Ipswich Mosque Website
+
+## Overview
+This is a **Laravel-based website for Ipswich Mosque**, a comprehensive web application that serves as an online hub for the mosque community. The project provides information about prayer times, events, courses, donations, and other mosque-related services.
+
+## Technology Stack
+- **Backend**: Laravel 11 (PHP framework)
+- **Frontend**: Blade templates with Tailwind CSS
+- **Database**: MySQL (with Eloquent ORM)
+- **Payment Processing**: Stripe integration
+- **Additional Libraries**:
+  - `alkoumi/laravel-hijri-date` - Islamic/Hijri date calculations
+  - `maatwebsite/excel` - Excel import/export functionality
+  - `stripe/stripe-php` - Payment processing
+
+## Key Features
+
+### 1. **Prayer Times Management**
+- Complete prayer times system with Gregorian and Hijri dates
+- Database stores daily prayer times (Fajr, Zuhr, Asr, Maghrib, Isha)
+- Automatic Hijri date conversion and display
+- Admin interface for managing prayer schedules
+
+### 2. **Ramadan Module**
+- Comprehensive Ramadan management system
+- Daily Ramadan times and events
+- Ramadan settings configuration (year, start date, themes)
+- Admin CRUD operations for Ramadan content
+
+### 3. **Event Management**
+- Event creation and management system
+- Events with dates, locations, and descriptions
+- Admin dashboard for event administration
+- Public event display on homepage
+
+### 4. **Course Management**
+- Course sections and individual courses
+- Course features and descriptions
+- Admin interface for course administration
+- Public course display
+
+### 5. **Donation System**
+- Stripe integration for online donations
+- Payment intent creation and checkout flow
+- Donation success tracking and confirmation
+- Secure payment processing
+
+### 6. **Content Management**
+- Page management system with blocks
+- Carousel slide management
+- Jummah prayer schedule management
+- Admin dashboard with comprehensive navigation
+
+### 7. **User Authentication**
+- Laravel authentication system
+- Admin role-based access control
+- User registration and login functionality
+
+## Database Structure
+The application has a well-organized database schema with tables for:
+- Users and authentication
+- Prayer times (with Hijri date support)
+- Events and event management
+- Courses and course sections
+- Pages and content blocks
+- Ramadan settings and daily times
+- Donation transactions
+- Carousel slides
+- Jummah schedules
+
+## Admin Dashboard
+The application includes a comprehensive admin dashboard with:
+- Navigation sidebar with all management sections
+- User-friendly interface for content management
+- Role-based access control
+- Sections for managing all aspects of the website
+
+## Frontend Features
+- Responsive design using Tailwind CSS
+- Modern, clean interface
+- Date display showing both Gregorian and Hijri dates
+- Event and course displays
+- Donation functionality
+- Prayer times display
+- SEO-optimized with proper meta tags
+
+## Key Controllers and Routes
+- **HomeController**: Main landing page with date displays and events
+- **PrayerTimesController**: Prayer times display
+- **DonationController**: Stripe payment processing
+- **Admin Controllers**: Comprehensive admin functionality for all modules
+- **PublicPageController**: Dynamic page routing
+
+## Notable Features
+- **Dual Date System**: Shows both Gregorian and Hijri dates
+- **Excel Import**: Prayer times can be imported from Excel files
+- **Stripe Integration**: Secure online donations
+- **Admin Dashboard**: Complete content management system
+- **Responsive Design**: Works on all devices
+- **SEO Optimized**: Proper meta tags and social media integration
+
+This is a production-ready mosque management website that provides all essential functionality for a modern Islamic center's online presence, including prayer times, events, donations, courses, and comprehensive content management.

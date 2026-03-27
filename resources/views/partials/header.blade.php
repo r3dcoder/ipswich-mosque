@@ -1,153 +1,97 @@
-@php
-    $dailyPrayerHeader = $dailyPrayerHeader ?? [];
-@endphp
-
-<style>
-    .dropdown { position: relative; }
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #fff;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
-        z-index: 100;
-        border-radius: 4px;
-        top: 100%;
-    }
-    .dropdown-content a {
-        color: #000 !important;
-        padding: 12px 16px !important;
-        display: block !important;
-        text-decoration: none;
-        font-size: 14px;
-    }
-    .dropdown-content a:hover { background-color: #f1f1f1; }
-    .dropdown:hover .dropdown-content { display: block; }
-
-    /* Mobile Menu Dropdown Adjustment */
-    .mobile-sub { padding-left: 20px !important; font-size: 0.9rem !important; opacity: 0.8; }
-</style>
-
-<div class="header">
-    <div class="overlay"></div>
-
-    <div class="prayer-times-section">
-        <div class="prayer-left">
-             <p class="date">
-                {{ $dailyPrayerHeader['date'] ?? '' }}
-                ·
-                {{ $dailyPrayerHeader['hijri_date'] ?? '' }}
-            </p>
-            <p class="juma"><span class="font-medium">Jummah Khutbah: </span>{{ $dailyPrayerHeader['jummah']->khutbah_formatted ?? '—' }}</p>
-            <p class="juma"><span class="font-medium">And Salah: </span>{{ $dailyPrayerHeader['jummah']->salah_formatted ?? '—' }}</p>
-            <p class="juma"><span class="font-medium"> </span>{{ $dailyPrayerHeader['jummah']->note ?? '' }}</p>
-        </div>
-
-         @if(!empty($dailyPrayerHeader))
-            <div class="prayer-right text-xl rounded-sm shadow-sm">
-                <table class="w-full text-center border border-gray-100">
-                    <thead class="text-white">
-                        <tr>
-                            <th></th>
-                            @foreach($dailyPrayerHeader['prayers'] as $name => $times)
-                                <th class="{{ ($dailyPrayerHeader['highlighted'] ?? '') === $name ? 'bg-teal-100 rounded-2xl text-white' : '' }}">{{ $name }}</th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="font-semibold">Begins</td>
-                            @foreach($dailyPrayerHeader['prayers'] as $times)
-                                <td>{{ $times['Begins'] }}</td>
-                            @endforeach
-                        </tr>
-                        <tr>
-                            <td class="font-semibold">Jamā‘ah</td>
-                            @foreach($dailyPrayerHeader['prayers'] as $times)
-                                <td>{{ $times['Jamaat'] }}</td>
-                            @endforeach
-                        </tr>
-                    </tbody>
-                </table>
-                <a href="{{ url('/prayer-times') }}"><p class="text-[10px]">Full Timetable & Calendar</p></a>
+<header class="header-root">
+    <div class="prayer-ribbon">
+        <div class="ribbon-container">
+            <div class="jummah-box">
+                <span class="jummah-label">Jummah Prayer</span>
+                <span class="jummah-time">{{ $dailyPrayerHeader['jummah']->time1 ?? '1.15 PM' }}</span>
             </div>
-        @endif
+            
+            <div class="prayer-grid-table">
+                @if(isset($dailyPrayerHeader['prayers']))
+                    @foreach($dailyPrayerHeader['prayers'] as $name => $times)
+                        <div class="prayer-column {{ (isset($dailyPrayerHeader['highlighted']) && $dailyPrayerHeader['highlighted'] == $name) ? 'is-active' : '' }}">
+                            <div class="p-name">{{ $name }}</div>
+                            <div class="time-group">
+                                <span class="t-begin">{{ $times['Begins'] }}</span>
+                                <span class="t-jamaat">Jamā‘ah {{ $times['Jamaat'] }}</span> 
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
     </div>
 
-    <nav class="items-center">
-        <a href="{{ url('/') }}">
-            <div class="logo">
+    <nav class="header-nav">
+        <div class="main-nav-container">
+            <a href="{{ url('/') }}" class="logo-wrap">
                 <img src="{{ asset('images/logo.png') }}" alt="logo" />
-                <h1>Ipswich Mosque.</h1>
-             </div>
-        </a>
-        
-        <ul>
-            <li><a href="{{ url('/') }}">Home</a></li>
-            <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
-            
-            <li class="dropdown">
-                <a href="#">Services ▼</a>
-                <div class="dropdown-content">
-                    <a href="{{ url('/services/marriage') }}">Marriage</a>
-                    <a href="{{ url('/services/janaza') }}">Janaza</a>
-                    <a href="{{ url('/services/visit') }}">Visit Mosque</a>
-                </div>
-            </li>
+                <h1>Ipswich Mosque</h1>
+            </a>
 
-            <li><a href="{{ url('/duas') }}">Duas</a></li>
-            <li><a href="{{ url('/people') }}">Our Team</a></li>
-            <li><a href="{{ url('/contact') }}">Contact Us</a></li>
-            <li>
-                <a href="{{ url('/donate') }}" class="donate-btn flex gap-1">
-                    <div>Donate</div>
-                </a>
-            </li>
-        </ul>
+            <div class="nav-spacer"></div>
 
-        <div class="hamburger">
-            <span class="line"></span>
-            <span class="line"></span>
-            <span class="line"></span>
+            <ul class="nav-links-wrap">
+                <li><a href="{{ url('/') }}">Home</a></li>
+                <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
+                <li class="dropdown-item">
+                    <a href="javascript:void(0)" class="drop-trigger">Services ▼</a>
+                    <div class="dropdown-content">
+                        <a href="{{ url('/services/marriage') }}">Marriage</a>
+                        <a href="{{ url('/services/janaza') }}">Janaza</a>
+                        <a href="{{ url('/services/visit') }}">Visit Mosque</a>
+                    </div>
+                </li>
+                <li><a href="{{ url('/duas') }}">Duas</a></li>
+                <li><a href="{{ url('/team') }}">Our Team</a></li>
+                <li><a href="{{ url('/contact') }}">Contact Us</a></li>
+                <li><a href="{{ url('/donate') }}" class="btn-donate-green">Donate Now</a></li>
+            </ul>
+
+            <div class="hamburger-icon" id="mobile-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </div>
     </nav>
 
-    <div class="menubar">
-        <ul>
-            <li>
-                <a href="{{ url('/') }}">
-                    <div class="logo">
-                        <img src="{{ asset('images/logo.png') }}" alt="logo" />
-                    </div>
-                </a>
-            </li>
+    <div class="mobile-drawer" id="mobile-menu">
+        <ul class="mobile-nav-list">
             <li><a href="{{ url('/') }}">Home</a></li>
             <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
-            
-            <li><a href="#" style="font-weight: bold; color: #0a5134;">Services:</a></li>
-            <li><a href="{{ url('/services/marriage') }}" class="mobile-sub">Marriage</a></li>
-            <li><a href="{{ url('/services/janaza') }}" class="mobile-sub">Janaza</a></li>
-            <li><a href="{{ url('/services/visit') }}" class="mobile-sub">Visit Mosque</a></li>
-
+            <li><a href="{{ url('/services/marriage') }}">Marriage Service</a></li>
+            <li><a href="{{ url('/services/janaza') }}">Janaza Service</a></li>
             <li><a href="{{ url('/duas') }}">Duas</a></li>
-            <li><a href="{{ url('/people') }}">Our Team</a></li>
+            <li><a href="{{ url('/team') }}">Our Team</a></li>
             <li><a href="{{ url('/contact') }}">Contact Us</a></li>
-            <li><a href="{{ url('/donate') }}" class="donate-btn">Donate</a></li>
+            <li><a href="{{ url('/donate') }}" class="mobile-donate">Donate Now</a></li>
         </ul>
     </div>
-</div>
+
+    <div class="nav-overlay" id="overlay"></div>
+</header>
 
 <script>
-    const mobileNav = document.querySelector(".hamburger");
-    const navbar = document.querySelector(".menubar");
-    const overlay = document.querySelector(".overlay");
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggle = document.getElementById('mobile-toggle');
+        const menu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('overlay');
 
-    const toggleNav = () => {
-        navbar.classList.toggle("active");
-        mobileNav.classList.toggle("hamburger-active");
-        overlay.classList.toggle("active");
-    };
+        if(toggle) {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('is-open');
+                menu.classList.toggle('is-visible');
+                overlay.classList.toggle('is-visible');
+            });
+        }
 
-    mobileNav.addEventListener("click", () => toggleNav());
-    overlay.addEventListener("click", () => toggleNav());
+        if(overlay) {
+            overlay.addEventListener('click', function() {
+                toggle.classList.remove('is-open');
+                menu.classList.remove('is-visible');
+                this.classList.remove('is-visible');
+            });
+        }
+    });
 </script>
