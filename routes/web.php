@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CoursesController;
 use App\Http\Controllers\Admin\EditorController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\JummahScheduleController;
+use App\Http\Controllers\Admin\MarriageBookingController as AdminMarriageBookingController;
 use App\Http\Controllers\Admin\PageBlockController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PrayerTimeController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DuaController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MarriageBookingController;
 use App\Http\Controllers\PrayerTimesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicPageController;
@@ -57,6 +59,12 @@ Route::get('/people', function () {
 Route::get('/contact', [App\Http\Controllers\ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
 
+// Marriage Booking Routes
+Route::get('/services/marriage', [MarriageBookingController::class, 'show'])->name('marriage.show');
+Route::post('/services/marriage/booking', [MarriageBookingController::class, 'store'])->name('marriage.booking.store');
+Route::get('/services/janaza', function () { return view('services.janaza'); })->name('janaza.show');
+Route::get('/services/visit', function () { return view('services.visit'); })->name('visit.show');
+
 // Admin Contact Routes
 Route::middleware(['auth', 'admin'])
     ->prefix('admin')
@@ -94,7 +102,7 @@ Route::get('/duas/category/{id}', [DuaController::class, 'category'])->name('dua
 
 
 Route::get('/{slug}', [PublicPageController::class, 'show'])
-    ->where('slug', '^(?!admin|login|register|storage|api|css|js).*$')
+    ->where('slug', '^(?!admin|login|register|storage|api|css|js|services).*$')
     ->name('page.show');
     
  
@@ -270,6 +278,16 @@ Route::prefix('admin/people')->middleware(['auth', 'verified'])->name('admin.peo
     Route::get('/{person}/edit', [\App\Http\Controllers\Admin\PeopleController::class, 'edit'])->name('edit');
     Route::put('/{person}', [\App\Http\Controllers\Admin\PeopleController::class, 'update'])->name('update');
     Route::delete('/{person}', [\App\Http\Controllers\Admin\PeopleController::class, 'destroy'])->name('destroy');
+});
+
+// Admin Marriage Booking Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('marriage-bookings', [AdminMarriageBookingController::class, 'index'])->name('marriage-bookings.index');
+    Route::get('marriage-bookings/{marriageBooking}', [AdminMarriageBookingController::class, 'show'])->name('marriage-bookings.show');
+    Route::put('marriage-bookings/{marriageBooking}', [AdminMarriageBookingController::class, 'update'])->name('marriage-bookings.update');
+    Route::delete('marriage-bookings/{marriageBooking}', [AdminMarriageBookingController::class, 'destroy'])->name('marriage-bookings.destroy');
+    Route::post('marriage-bookings/{marriageBooking}/mark-as-read', [AdminMarriageBookingController::class, 'markAsRead'])->name('marriage-bookings.mark-as-read');
+    Route::get('marriage-bookings/unread/count', [AdminMarriageBookingController::class, 'getUnreadCount'])->name('marriage-bookings.unreadCount');
 });
 
 require __DIR__.'/auth.php';

@@ -27,7 +27,8 @@ body { font-family: 'Roboto', sans-serif; overflow-x: hidden; }
 
 /* Active Prayer State */
 .prayer-column.is-active { background-color: rgba(10, 81, 52, 0.07); border: 1px solid var(--brand-green); }
-.prayer-column.is-active .p-name { color: var(--brand-green) !important; font-weight: 900; }
+.prayer-column.is-active .p-name{ color: var(--brand-green) !important; font-weight: 900; }
+.prayer-column.is-active .t-jamaat{ color: var(--brand-green) !important; font-weight: 900; }
 
 .p-name { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 2px; }
 .t-begin { font-size: 1rem; font-weight: 700; color: var(--text-dark); display: block; }
