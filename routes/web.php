@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CarouselSlideController;
 use App\Http\Controllers\Admin\CoursesController;
 use App\Http\Controllers\Admin\EditorController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\FuneralBookingController as AdminFuneralBookingController;
 use App\Http\Controllers\Admin\JummahScheduleController;
 use App\Http\Controllers\Admin\MarriageBookingController as AdminMarriageBookingController;
 use App\Http\Controllers\Admin\PageBlockController;
@@ -296,6 +297,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('marriage-bookings/{marriageBooking}', [AdminMarriageBookingController::class, 'destroy'])->name('marriage-bookings.destroy');
     Route::post('marriage-bookings/{marriageBooking}/mark-as-read', [AdminMarriageBookingController::class, 'markAsRead'])->name('marriage-bookings.mark-as-read');
     Route::get('marriage-bookings/unread/count', [AdminMarriageBookingController::class, 'getUnreadCount'])->name('marriage-bookings.unreadCount');
+});
+
+// Admin Funeral Booking Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('funeral-bookings', [AdminFuneralBookingController::class, 'index'])->name('funeral-bookings.index');
+    Route::get('funeral-bookings/{funeralBooking}', [AdminFuneralBookingController::class, 'show'])->name('funeral-bookings.show');
+    Route::put('funeral-bookings/{funeralBooking}', [AdminFuneralBookingController::class, 'update'])->name('funeral-bookings.update');
+    Route::delete('funeral-bookings/{funeralBooking}', [AdminFuneralBookingController::class, 'destroy'])->name('funeral-bookings.destroy');
+    Route::post('funeral-bookings/{funeralBooking}/mark-as-read', [AdminFuneralBookingController::class, 'markAsRead'])->name('funeral-bookings.mark-as-read');
+    Route::get('funeral-bookings/unread/count', [AdminFuneralBookingController::class, 'getUnreadCount'])->name('funeral-bookings.unreadCount');
 });
 
 require __DIR__.'/auth.php';

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\FuneralBooking; // Import the Model you just created
+use App\Models\FuneralBooking;
+use App\Mail\FuneralBookingNotification;
+use Illuminate\Support\Facades\Mail;
 
 class FuneralController extends Controller
 {
@@ -13,7 +15,6 @@ class FuneralController extends Controller
     public function show()
     {
         return view('services.janazah');
-        // return view('services.marriage');
     }
 
     /**
@@ -31,9 +32,18 @@ class FuneralController extends Controller
         ]);
 
         // 2. Save to database using the Model
-        FuneralBooking::create($validated);
+        $booking = FuneralBooking::create($validated);
 
-        // 3. Redirect back with a success message
+        // 3. Send email notification to admin
+        try {
+            $adminEmail = config('mail.from.address', 'admin@ipswichmosque.com');
+            Mail::to($adminEmail)->send(new FuneralBookingNotification($booking));
+        } catch (\Exception $e) {
+            // Log the error but don't fail the request
+            \Log::error('Failed to send funeral booking notification: ' . $e->getMessage());
+        }
+
+        // 4. Redirect back with a success message
         return back()->with('success', 'Your inquiry has been received. Our team will contact you shortly. Inna Lillahi wa inna ilayhi raji\'un.');
     }
 }
