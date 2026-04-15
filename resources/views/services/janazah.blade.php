@@ -131,6 +131,8 @@
     </section>
 </div>
 
+@include('partials.janazah-terms')
+
 <style>
     .modern-input {
         width: 100%;
