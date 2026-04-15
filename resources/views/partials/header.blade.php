@@ -39,7 +39,7 @@
                     <a href="javascript:void(0)" class="drop-trigger">Services ▼</a>
                     <div class="dropdown-content">
                         <a href="{{ url('/services/marriage') }}">Marriage</a>
-                        <a href="{{ url('/services/janaza') }}">Janaza</a>
+                        <a href="{{ url('/services/janazah') }}">Janazah.</a>
                         <a href="{{ url('/services/visit') }}">Visit Mosque</a>
                     </div>
                 </li>
@@ -62,7 +62,7 @@
             <li><a href="{{ url('/') }}">Home</a></li>
             <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
             <li><a href="{{ url('/services/marriage') }}">Marriage Service</a></li>
-            <li><a href="{{ url('/services/janaza') }}">Janaza Service</a></li>
+            <li><a href="{{ url('/services/janazah') }}">Janaza Service</a></li>
             <li><a href="{{ url('/duas') }}">Duas</a></li>
             <li><a href="{{ url('/people') }}">Our people</a></li>
             <li><a href="{{ url('/contact') }}">Contact Us</a></li>

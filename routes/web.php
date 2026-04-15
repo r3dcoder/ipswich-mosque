@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\RamadanEventController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DuaController;
+use App\Http\Controllers\FuneralController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MarriageBookingController;
 use App\Http\Controllers\PrayerTimesController;
@@ -62,8 +63,15 @@ Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store']
 // Marriage Booking Routes
 Route::get('/services/marriage', [MarriageBookingController::class, 'show'])->name('marriage.show');
 Route::post('/services/marriage/booking', [MarriageBookingController::class, 'store'])->name('marriage.booking.store');
-Route::get('/services/janaza', function () { return view('services.janaza'); })->name('janaza.show');
+// Route::get('/services/janaza', function () { return view('services.janaza'); })->name('janaza.show');
 Route::get('/services/visit', function () { return view('services.visit'); })->name('visit.show');
+
+// Route::get('/services/janazah', [MarriageBookingController::class, 'show'])->name('marriage.show');
+
+
+Route::get('/services/janazah', [FuneralController::class, 'show'])->name('janazah.show');
+Route::post('/services/janazah', [FuneralController::class, 'store'])->name('janazah.store');
+
 
 // Admin Contact Routes
 Route::middleware(['auth', 'admin'])
@@ -104,7 +112,7 @@ Route::get('/duas/category/{id}', [DuaController::class, 'category'])->name('dua
 Route::get('/{slug}', [PublicPageController::class, 'show'])
     ->where('slug', '^(?!admin|login|register|storage|api|css|js|services).*$')
     ->name('page.show');
-    
+
  
 
 

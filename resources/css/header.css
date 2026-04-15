@@ -6,6 +6,27 @@
     --border-light: #f1f5f9;
     --max-width: 1250px;
 }
+/* Fix for invisible text while typing */
+input, 
+select, 
+textarea {
+    color: #1e293b !important; /* var(--text-dark) */
+    background-color: #ffffff !important;
+}
+
+/* Optional: Improve placeholder visibility */
+input::placeholder, 
+textarea::placeholder {
+    color: #94a3b8 !important; /* Light slate color */
+}
+
+/* Ensure text remains visible during autofill (Chrome/Safari) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #1e293b !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Roboto', sans-serif; overflow-x: hidden; }
