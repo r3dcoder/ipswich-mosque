@@ -68,7 +68,9 @@ Route::post('/services/marriage/booking', [MarriageBookingController::class, 'st
 Route::get('/services/visit', function () { return view('services.visit'); })->name('visit.show');
 
 // Route::get('/services/janazah', [MarriageBookingController::class, 'show'])->name('marriage.show');
-
+Route::get('/khutbah', function () {
+    return view('khutbah');
+})->name('khutbah');
 
 Route::get('/services/janazah', [FuneralController::class, 'show'])->name('janazah.show');
 Route::post('/services/janazah', [FuneralController::class, 'store'])->name('janazah.store');

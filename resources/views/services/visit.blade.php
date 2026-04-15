@@ -46,7 +46,7 @@
                         </ul>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="mailto:info@ipswichmosque.org" class="px-8 py-4 rounded-xl text-white font-bold text-center shadow-lg transition hover:opacity-90" style="background-color: var(--brand-green);">
+                        <a href={{ url('/contact') }} class="px-8 py-4 rounded-xl text-white font-bold text-center shadow-lg transition hover:opacity-90" style="background-color: var(--brand-green);">
                             Book via Email
                         </a>
                         <div class="p-4 border border-dashed border-gray-300 rounded-xl text-xs text-gray-500">

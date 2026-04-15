@@ -35,6 +35,7 @@
             <ul class="nav-links-wrap">
                 <li><a href="{{ url('/') }}">Home</a></li>
                 <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
+                <li><a href="{{ url('/khutbah') }}">Khutbah</a></li>
                 <li class="dropdown-item">
                     <a href="javascript:void(0)" class="drop-trigger">Services ▼</a>
                     <div class="dropdown-content">
@@ -61,6 +62,7 @@
         <ul class="mobile-nav-list">
             <li><a href="{{ url('/') }}">Home</a></li>
             <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
+            <li><a href="{{ url('/khutbah') }}">Khutbah</a></li>
             <li><a href="{{ url('/services/marriage') }}">Marriage Service</a></li>
             <li><a href="{{ url('/services/janazah') }}">Janaza Service</a></li>
             <li><a href="{{ url('/duas') }}">Duas</a></li>
