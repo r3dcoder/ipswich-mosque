@@ -7,17 +7,19 @@ use App\Http\Controllers\Admin\EditorController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FuneralBookingController as AdminFuneralBookingController;
 use App\Http\Controllers\Admin\JummahScheduleController;
+use App\Http\Controllers\Admin\KhutbahController as AdminKhutbahController;
 use App\Http\Controllers\Admin\MarriageBookingController as AdminMarriageBookingController;
 use App\Http\Controllers\Admin\PageBlockController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PrayerTimeController;
 use App\Http\Controllers\Admin\RamadanController;
 use App\Http\Controllers\Admin\RamadanEventController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DuaController;
 use App\Http\Controllers\FuneralController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KhutbahController;
 use App\Http\Controllers\MarriageBookingController;
 use App\Http\Controllers\PrayerTimesController;
 use App\Http\Controllers\ProfileController;
@@ -68,9 +70,7 @@ Route::post('/services/marriage/booking', [MarriageBookingController::class, 'st
 Route::get('/services/visit', function () { return view('services.visit'); })->name('visit.show');
 
 // Route::get('/services/janazah', [MarriageBookingController::class, 'show'])->name('marriage.show');
-Route::get('/khutbah', function () {
-    return view('khutbah');
-})->name('khutbah');
+Route::get('/khutbah', [KhutbahController::class, 'index'])->name('khutbah.index');
 
 Route::get('/services/janazah', [FuneralController::class, 'show'])->name('janazah.show');
 Route::post('/services/janazah', [FuneralController::class, 'store'])->name('janazah.store');
@@ -146,14 +146,14 @@ Route::get('/import', function () {
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'home'])->name('dashboard');
+    Route::get('/admin', [AdminController::class, 'home'])->name('admin');
 
-    Route::prefix('dashboard')->name('dashboard.')->group(function () {
-        Route::get('/pages', [DashboardController::class, 'pages'])->name('pages');
-        Route::get('/duas', [DashboardController::class, 'duas'])->name('duas');
-        Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
-        Route::get('/payments', [DashboardController::class, 'payments'])->name('payments');
-        Route::get('/contacts', [DashboardController::class, 'contacts'])->name('contacts');
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/pages', [AdminController::class, 'pages'])->name('pages');
+        Route::get('/duas', [AdminController::class, 'duas'])->name('duas');
+        Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
+        Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
+        // Note: contacts routes are defined earlier as resource routes (admin.contacts.index, etc.)
         // Ramadan CRUD
  
     });
@@ -309,6 +309,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('funeral-bookings/{funeralBooking}', [AdminFuneralBookingController::class, 'destroy'])->name('funeral-bookings.destroy');
     Route::post('funeral-bookings/{funeralBooking}/mark-as-read', [AdminFuneralBookingController::class, 'markAsRead'])->name('funeral-bookings.mark-as-read');
     Route::get('funeral-bookings/unread/count', [AdminFuneralBookingController::class, 'getUnreadCount'])->name('funeral-bookings.unreadCount');
+});
+
+// Admin Khutbah Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('khutbahs', [AdminKhutbahController::class, 'index'])->name('khutbahs.index');
+    Route::get('khutbahs/create', [AdminKhutbahController::class, 'create'])->name('khutbahs.create');
+    Route::post('khutbahs', [AdminKhutbahController::class, 'store'])->name('khutbahs.store');
+    Route::get('khutbahs/{khutbah}/edit', [AdminKhutbahController::class, 'edit'])->name('khutbahs.edit');
+    Route::put('khutbahs/{khutbah}', [AdminKhutbahController::class, 'update'])->name('khutbahs.update');
+    Route::delete('khutbahs/{khutbah}', [AdminKhutbahController::class, 'destroy'])->name('khutbahs.destroy');
+    Route::post('khutbahs/{khutbah}/toggle-featured', [AdminKhutbahController::class, 'toggleFeatured'])->name('khutbahs.toggle-featured');
+    Route::post('khutbahs/{khutbah}/toggle-active', [AdminKhutbahController::class, 'toggleActive'])->name('khutbahs.toggle-active');
 });
 
 require __DIR__.'/auth.php';
