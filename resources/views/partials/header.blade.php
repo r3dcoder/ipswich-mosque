@@ -4,7 +4,13 @@
         <div class="ribbon-container">
             <div class="jummah-box">
                 <span class="jummah-label">Jummah Prayer</span>
-                <span class="jummah-time">{{ $dailyPrayerHeader['jummah']->time1 ?? '1.15 PM' }}</span>
+                <span class="jummah-time">
+                    @if(isset($dailyPrayerHeader['jummah']) && $dailyPrayerHeader['jummah'])
+                        {{ $dailyPrayerHeader['jummah']->salah_formatted ?? '1:15 PM' }}
+                    @else
+                        1:15 PM
+                    @endif
+                </span>
             </div>
             
             <div class="prayer-grid-table">
@@ -19,6 +25,10 @@
                         </div>
                     @endforeach
                 @endif
+            </div>
+            
+            <div class="prayer-actions">
+                <a href="{{ url('/prayer-times') }}" class="btn-view-timetable">View Full Timetable</a>
             </div>
         </div>
     </div>

@@ -45,6 +45,9 @@ Route::get('/donate', function () {
     return view('donate');
 });
 
+// Donation payment routes
+Route::post('/create-payment-intent', [DonationController::class, 'createPaymentIntent']);
+Route::get('/donation-success', [DonationController::class, 'success'])->name('donation.success');
 
 Route::get('/ramadan', function () {
     return view('ramadan');
@@ -98,12 +101,7 @@ Route::middleware(['auth', 'admin'])
 
 Route::post('/create-checkout-session', [DonationController::class, 'createCheckoutSession']);
 
-// routes/web.php
-Route::post('/create-payment-intent', [DonationController::class, 'createPaymentIntent']);
-
 Route::get('/donation-success', [DonationController::class, 'success'])->name('donation.success');
-
-Route::view('/donate', 'donate');
 Route::get('/prayer-times', [PrayerTimesController::class, 'index']);
 Route::get('/prayer-timing-screen', [PrayerTimesController::class, 'timingScreen']);
 
@@ -140,9 +138,9 @@ Route::get('/import', function () {
     return 'Imported!';
 });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return redirect()->route('admin');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 
 Route::middleware(['auth'])->group(function () {
@@ -153,9 +151,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/duas', [AdminController::class, 'duas'])->name('duas');
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
+        Route::get('/donations', [AdminController::class, 'donations'])->name('donations');
         // Note: contacts routes are defined earlier as resource routes (admin.contacts.index, etc.)
         // Ramadan CRUD
- 
+  
     });
 });
 

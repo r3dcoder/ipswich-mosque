@@ -1545,12 +1545,123 @@
 @yield( 'header')
 
 <body>
+    @include('partials.header')
+    
     @yield('content')
-
 
     @if (Route::has('login'))
         <div class="h-14.5 hidden lg:block"></div>
     @endif
+
+    <!-- Scroll to Top Button (Mobile) -->
+    <button id="scrollToTopBtn" class="scroll-to-top-btn" style="display: none;" aria-label="Scroll to top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m18 15-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <style>
+        .scroll-to-top-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #0a5134 0%, #166f4a 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(10, 81, 52, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .scroll-to-top-btn.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .scroll-to-top-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(10, 81, 52, 0.6);
+            background: linear-gradient(135deg, #084a2f 0%, #146040 100%);
+        }
+
+        .scroll-to-top-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Show only on mobile */
+        @media (min-width: 768px) {
+            .scroll-to-top-btn {
+                display: none !important;
+            }
+        }
+
+        /* Animation for the button */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-5px);
+            }
+            60% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .scroll-to-top-btn.bounce {
+            animation: bounce 1s infinite;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollBtn = document.getElementById('scrollToTopBtn');
+            
+            if (!scrollBtn) return;
+
+            // Show/hide button based on scroll position
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollBtn.style.display = 'flex';
+                    // Trigger reflow
+                    scrollBtn.offsetHeight;
+                    scrollBtn.classList.add('visible');
+                    
+                    // Add bounce animation after 2 seconds
+                    setTimeout(() => {
+                        scrollBtn.classList.add('bounce');
+                    }, 2000);
+                } else {
+                    scrollBtn.classList.remove('visible');
+                    scrollBtn.classList.remove('bounce');
+                    
+                    // Hide after animation
+                    setTimeout(() => {
+                        if (!scrollBtn.classList.contains('visible')) {
+                            scrollBtn.style.display = 'none';
+                        }
+                    }, 300);
+                }
+            });
+
+            // Scroll to top when clicked
+            scrollBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 
 @yield('footer')

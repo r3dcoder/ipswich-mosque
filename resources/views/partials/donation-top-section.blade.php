@@ -21,6 +21,21 @@
                         </div>
                     </div>
 
+                    <!-- Donor Information (for subscriptions) -->
+                    <div class="form-group donor-info" style="display: none;">
+                        <label>Donor Information</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="donor_name">Full Name</label>
+                                <input type="text" id="donor_name" name="donor_name" class="form-control" placeholder="Your full name">
+                            </div>
+                            <div>
+                                <label for="donor_email">Email Address</label>
+                                <input type="email" id="donor_email" name="donor_email" class="form-control" placeholder="your@email.com">
+                            </div>
+                        </div>
+                    </div>
+
 
                     <!-- Step 3: Frequency for Regular Donations -->
                     <div class="form-group donation-frequency" style="display: none;">
@@ -115,32 +130,34 @@
     </div>
 </div>
 
+<script src="https://js.stripe.com/v3/"></script>
 <script>
-    // Initialize Stripe
-    // const stripe = Stripe('{{ env('STRIPE_KEY') }}');
-    // const elements = stripe.elements();
-    // const paymentElement = elements.create('payment');
-    // paymentElement.mount('#payment-element');
+    const stripe = Stripe("{{ env('STRIPE_KEY') }}"); // ✅ publishable key only
+    let elements;
 
     // Handle Donation Type Toggle
     const donationTypeRadios = document.querySelectorAll('input[name="donation_type"]');
     const frequencySection = document.querySelector('.donation-frequency');
+    const donorInfoSection = document.querySelector('.donor-info');
 
-    function toggleFrequencyDropdown() {
-        console.log("selectedType");
+    function toggleFormSections() {
         const selectedType = document.querySelector('input[name="donation_type"]:checked').value;
-        console.log(selectedType);
-
+        
+        // Show/hide frequency options
         frequencySection.style.display = selectedType === 'regular' ? 'block' : 'none';
+        
+        // Show/hide donor info for regular donations
+        donorInfoSection.style.display = selectedType === 'regular' ? 'block' : 'none';
     }
 
-    // Initialize dropdown visibility
-    toggleFrequencyDropdown();
+    // Initialize form visibility
+    toggleFormSections();
 
     // Add event listeners to radio buttons
     donationTypeRadios.forEach(radio => {
-        radio.addEventListener('change', toggleFrequencyDropdown);
+        radio.addEventListener('change', toggleFormSections);
     });
+
     // Handle Amount Buttons
     const amountButtons = document.querySelectorAll('.amount-btn');
     const amountInput = document.getElementById('amount');
@@ -152,57 +169,92 @@
         });
     });
 
-</script>
-
-
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-    const stripe = Stripe("{{ env('STRIPE_KEY') }}"); // ✅ publishable key only
-    let elements;
-
-
+    // Handle Form Submission
     document.getElementById('payment-form').addEventListener('submit', async function(e) {
         e.preventDefault();
-       
-
+        
         const amount = document.getElementById('amount').value;
         const donationType = document.querySelector('input[name="donation_type"]:checked').value;
         const frequency = document.querySelector('input[name="frequency"]:checked')?.value;
         const giftAid = document.getElementById('gift_aid').checked;
+        const donorName = document.getElementById('donor_name')?.value;
+        const donorEmail = document.getElementById('donor_email')?.value;
 
-        // 1. Ask backend for PaymentIntent
-        const res = await fetch("/create-payment-intent", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({ amount, donation_type: donationType, frequency, gift_aid: giftAid })
-        });
-
-        const { clientSecret, error } = await res.json();
-        if (error) {
-            alert(error);
-            return;
-        }
-
-        // 2. Mount Stripe Payment Element
-        if (!elements) {
-            elements = stripe.elements({ clientSecret });
-            const paymentElement = elements.create("payment");
-            paymentElement.mount("#payment-element");
-        }
-
-        // 3. Confirm Payment
-        const { error: submitError } = await stripe.confirmPayment({
-            elements,
-            confirmParams: {
-                return_url: "{{ url('/donation-success') }}", // redirect after payment
+        // Validate donor info for regular donations
+        if (donationType === 'regular') {
+            if (!donorName || !donorEmail) {
+                alert('Please enter your name and email for regular donations.');
+                return;
             }
-        });
+        }
 
-        if (submitError) {
-            document.querySelector("#payment-message").textContent = submitError.message;
+        // Show loading
+        const submitButton = document.getElementById('submit');
+        const loadingAnimation = document.querySelector('.lds-ellipsis');
+        submitButton.disabled = true;
+        loadingAnimation.style.display = 'flex';
+
+        try {
+            // 1. Ask backend for PaymentIntent or Subscription
+            const res = await fetch("/create-payment-intent", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ 
+                    amount, 
+                    donation_type: donationType, 
+                    frequency, 
+                    gift_aid: giftAid,
+                    donor_name: donorName,
+                    donor_email: donorEmail
+                })
+            });
+
+            const { clientSecret, error } = await res.json();
+            if (error) {
+                alert(error);
+                submitButton.disabled = false;
+                loadingAnimation.style.display = 'none';
+                return;
+            }
+
+            // 2. Mount Stripe Payment Element (reuse if already mounted)
+            if (!elements) {
+                elements = stripe.elements({ clientSecret });
+                const paymentElement = elements.create("payment");
+                paymentElement.mount("#payment-element");
+            } else {
+                // Update the existing elements with new clientSecret
+                elements.update({ clientSecret });
+            }
+
+            // 3. Confirm Payment
+            const { error: submitError, paymentIntent } = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    return_url: "{{ url('/donation-success') }}", // redirect after payment
+                },
+                redirect: 'if_required' // Only redirect if needed (e.g., 3D Secure)
+            });
+
+            if (submitError) {
+                document.querySelector("#payment-message").textContent = submitError.message;
+                document.querySelector("#payment-message").classList.remove('hidden');
+                submitButton.disabled = false;
+                loadingAnimation.style.display = 'none';
+            } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+                // Payment succeeded, redirect to success page
+                window.location.href = "{{ url('/donation-success') }}?payment_intent=" + paymentIntent.id;
+            }
+
+        } catch (err) {
+            console.error('Payment error:', err);
+            document.querySelector("#payment-message").textContent = err.message;
+            document.querySelector("#payment-message").classList.remove('hidden');
+            submitButton.disabled = false;
+            loadingAnimation.style.display = 'none';
         }
     });
 </script>

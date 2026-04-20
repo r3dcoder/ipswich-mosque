@@ -279,6 +279,12 @@
                             {{ request()->routeIs('admin.people.*') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
                             <span>👥</span><span>People</span>
                         </a>
+
+                        <a href="{{ route('admin.donations') }}"
+                            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition
+                            {{ request()->routeIs('admin.donations') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <span>💰</span><span>Donations</span>
+                        </a>
                     </div>
 
                 </div>
