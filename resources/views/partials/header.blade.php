@@ -8,7 +8,7 @@
                     @if(isset($dailyPrayerHeader['jummah']) && $dailyPrayerHeader['jummah'])
                         {{ $dailyPrayerHeader['jummah']->salah_formatted ?? '1:15 PM' }}
                     @else
-                        1:15 PM
+                        1:151 PM
                     @endif
                 </span>
             </div>
@@ -47,15 +47,22 @@
                 <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
                 <li><a href="{{ url('/khutbah') }}">Khutbah</a></li>
                 <li class="dropdown-item">
+                    <a href="javascript:void(0)" class="drop-trigger">Community ▼</a>
+                    <div class="dropdown-content">
+                        <a href="{{ route('notices.index') }}">Notice Board</a>
+                        <a href="{{ route('newsletters.index') }}">Newsletter</a>
+                        <a href="{{ url('/people') }}">Our People</a>
+                    </div>
+                </li>
+                <li class="dropdown-item">
                     <a href="javascript:void(0)" class="drop-trigger">Services ▼</a>
                     <div class="dropdown-content">
                         <a href="{{ url('/services/marriage') }}">Marriage</a>
-                        <a href="{{ url('/services/janazah') }}">Janazah.</a>
+                        <a href="{{ url('/services/janazah') }}">Janazah</a>
                         <a href="{{ url('/services/visit') }}">Visit Mosque</a>
                     </div>
                 </li>
                 <li><a href="{{ url('/duas') }}">Duas</a></li>
-                <li><a href="{{ url('/people') }}">Our people</a></li>
                 <li><a href="{{ url('/contact') }}">Contact Us</a></li>
                 <li><a href="{{ url('/donate') }}" class="btn-donate-green">Donate Now</a></li>
             </ul>
@@ -73,6 +80,8 @@
             <li><a href="{{ url('/') }}">Home</a></li>
             <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
             <li><a href="{{ url('/khutbah') }}">Khutbah</a></li>
+            <li><a href="{{ route('notices.index') }}">Notice Board</a></li>
+            <li><a href="{{ route('newsletters.index') }}">Newsletter</a></li>
             <li><a href="{{ url('/services/marriage') }}">Marriage Service</a></li>
             <li><a href="{{ url('/services/janazah') }}">Janaza Service</a></li>
             <li><a href="{{ url('/duas') }}">Duas</a></li>

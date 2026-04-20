@@ -1,6 +1,12 @@
 @extends('main-layout')
 
+
 @section('title', 'Prayer Times - ' . $selectedMonth . ' ' . date('Y') . ' - Ipswich Mosque')
+@section('header')
+    @include('partials.header')
+@endsection
+
+
 
 @section('styles')
 <style>

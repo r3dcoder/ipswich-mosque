@@ -61,14 +61,29 @@
                     <div class="form-group donation-amount">
                         <label for="amount">Donation Amount (£)</label>
                         <div class="amount-buttons">
-                            <button type="button" class="amount-btn" data-amount="5">£5</button>
-                            <button type="button" class="amount-btn" data-amount="10">£10</button>
-                            <button type="button" class="amount-btn" data-amount="15">£15</button>
+                            <button type="button" class="amount-btn" data-amount="5" style="cursor: pointer; padding: 8px 16px; border: 2px solid #007bff; background: white; color: #007bff; border-radius: 4px; font-weight: bold;">£5</button>
+                            <button type="button" class="amount-btn" data-amount="10" style="cursor: pointer; padding: 8px 16px; border: 2px solid #007bff; background: white; color: #007bff; border-radius: 4px; font-weight: bold;">£10</button>
+                            <button type="button" class="amount-btn" data-amount="15" style="cursor: pointer; padding: 8px 16px; border: 2px solid #007bff; background: white; color: #007bff; border-radius: 4px; font-weight: bold;">£15</button>
                         </div>
                         <input type="number" id="amount" name="amount" class="form-control"
                             placeholder="Or enter custom amount" min="1" required>
                             <input type="hidden" id="stripe_key" value="{{ config('services.stripe.key') }}">
      
+                    </div>
+
+                    <!-- Payment Methods Info -->
+                    <div class="payment-methods-info">
+                        <p class="payment-methods-text">
+                            <strong>Fast & Secure Payment Options:</strong>
+                        </p>
+                        <div class="payment-methods-logos">
+                            <span class="payment-method-badge">💳 Card</span>
+                            <span class="payment-method-badge">📱 Google Pay</span>
+                            <span class="payment-method-badge">🍎 Apple Pay</span>
+                        </div>
+                        <p class="payment-methods-note">
+                            Google Pay and Apple Pay will appear automatically if your device supports them.
+                        </p>
                     </div>
                     <div class="form-group gift-aid">
                         <label>
@@ -132,45 +147,56 @@
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-    const stripe = Stripe("{{ env('STRIPE_KEY') }}"); // ✅ publishable key only
-    let elements;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Stripe with publishable key
+        const stripe = Stripe("{{ config('services.stripe.key') }}");
+        let elements;
+        let paymentElement;
 
-    // Handle Donation Type Toggle
-    const donationTypeRadios = document.querySelectorAll('input[name="donation_type"]');
-    const frequencySection = document.querySelector('.donation-frequency');
-    const donorInfoSection = document.querySelector('.donor-info');
+        // Handle Donation Type Toggle
+        const donationTypeRadios = document.querySelectorAll('input[name="donation_type"]');
+        const frequencySection = document.querySelector('.donation-frequency');
+        const donorInfoSection = document.querySelector('.donor-info');
 
-    function toggleFormSections() {
-        const selectedType = document.querySelector('input[name="donation_type"]:checked').value;
-        
-        // Show/hide frequency options
-        frequencySection.style.display = selectedType === 'regular' ? 'block' : 'none';
-        
-        // Show/hide donor info for regular donations
-        donorInfoSection.style.display = selectedType === 'regular' ? 'block' : 'none';
-    }
+        function toggleFormSections() {
+            const selectedType = document.querySelector('input[name="donation_type"]:checked').value;
+            
+            // Show/hide frequency options
+            frequencySection.style.display = selectedType === 'regular' ? 'block' : 'none';
+            
+            // Show/hide donor info for regular donations
+            donorInfoSection.style.display = selectedType === 'regular' ? 'block' : 'none';
+        }
 
-    // Initialize form visibility
-    toggleFormSections();
+        // Initialize form visibility
+        toggleFormSections();
 
-    // Add event listeners to radio buttons
-    donationTypeRadios.forEach(radio => {
-        radio.addEventListener('change', toggleFormSections);
-    });
-
-    // Handle Amount Buttons
-    const amountButtons = document.querySelectorAll('.amount-btn');
-    const amountInput = document.getElementById('amount');
-    amountButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            amountInput.value = button.dataset.amount;
-            amountButtons.forEach(btn => btn.classList.remove('selected'));
-            button.classList.add('selected');
+        // Add event listeners to radio buttons
+        donationTypeRadios.forEach(radio => {
+            radio.addEventListener('change', toggleFormSections);
         });
-    });
 
-    // Handle Form Submission
-    document.getElementById('payment-form').addEventListener('submit', async function(e) {
+        // Handle Amount Buttons
+        const amountButtons = document.querySelectorAll('.amount-btn');
+        const amountInput = document.getElementById('amount');
+        
+        amountButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const amount = this.dataset.amount;
+                console.log('Button clicked:', amount); // Debug log
+                if (amountInput) {
+                    amountInput.value = amount;
+                    console.log('Amount set to:', amount); // Debug log
+                }
+                // Remove selected class from all buttons
+                amountButtons.forEach(btn => btn.classList.remove('selected'));
+                // Add selected class to clicked button
+                this.classList.add('selected');
+            });
+        });
+
+        // Handle Form Submission
+        document.getElementById('payment-form').addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const amount = document.getElementById('amount').value;
@@ -257,4 +283,5 @@
             loadingAnimation.style.display = 'none';
         }
     });
+    }); // End DOMContentLoaded
 </script>

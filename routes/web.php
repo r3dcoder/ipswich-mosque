@@ -9,6 +9,9 @@ use App\Http\Controllers\Admin\FuneralBookingController as AdminFuneralBookingCo
 use App\Http\Controllers\Admin\JummahScheduleController;
 use App\Http\Controllers\Admin\KhutbahController as AdminKhutbahController;
 use App\Http\Controllers\Admin\MarriageBookingController as AdminMarriageBookingController;
+use App\Http\Controllers\Admin\MosqueSettingController;
+use App\Http\Controllers\Admin\NewsletterController;
+use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\PageBlockController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PrayerTimeController;
@@ -108,6 +111,19 @@ Route::get('/prayer-timing-screen', [PrayerTimesController::class, 'timingScreen
 Route::get('/duas', [DuaController::class, 'index'])->name('duas.index');
 Route::get('/duas/{id}', [DuaController::class, 'show'])->name('duas.show');
 Route::get('/duas/category/{id}', [DuaController::class, 'category'])->name('duas.category');
+
+// Public Notice Board Routes
+Route::get('/notices', [App\Http\Controllers\NewsletterSubscriptionController::class, 'notices'])->name('notices.index');
+Route::get('/notices/{notice}', [App\Http\Controllers\NewsletterSubscriptionController::class, 'showNotice'])->name('notices.show');
+
+// Public Newsletter Routes
+Route::get('/newsletters', [App\Http\Controllers\NewsletterSubscriptionController::class, 'newsletters'])->name('newsletters.index');
+Route::get('/newsletters/{newsletter}', [App\Http\Controllers\NewsletterSubscriptionController::class, 'showNewsletter'])->name('newsletters.show');
+
+// Public Newsletter Subscription Routes
+Route::post('/newsletter/subscribe', [App\Http\Controllers\NewsletterSubscriptionController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::get('/newsletter/unsubscribe/{token}', [App\Http\Controllers\NewsletterSubscriptionController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
+Route::get('/newsletter/resubscribe/{token}', [App\Http\Controllers\NewsletterSubscriptionController::class, 'resubscribe'])->name('newsletter.resubscribe');
 
 
 Route::get('/{slug}', [PublicPageController::class, 'show'])
@@ -320,6 +336,27 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('khutbahs/{khutbah}', [AdminKhutbahController::class, 'destroy'])->name('khutbahs.destroy');
     Route::post('khutbahs/{khutbah}/toggle-featured', [AdminKhutbahController::class, 'toggleFeatured'])->name('khutbahs.toggle-featured');
     Route::post('khutbahs/{khutbah}/toggle-active', [AdminKhutbahController::class, 'toggleActive'])->name('khutbahs.toggle-active');
+});
+
+// Admin Mosque Settings Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('mosque-settings', [MosqueSettingController::class, 'edit'])->name('mosque-settings.edit');
+    Route::put('mosque-settings', [MosqueSettingController::class, 'update'])->name('mosque-settings.update');
+});
+
+// Admin Notice Board Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('notices', NoticeController::class)->except(['show']);
+    Route::post('notices/{notice}/toggle-pin', [NoticeController::class, 'togglePin'])->name('notices.toggle-pin');
+});
+
+// Admin Newsletter Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');
+    Route::get('newsletter/create', [NewsletterController::class, 'create'])->name('newsletter.create');
+    Route::post('newsletter/send', [NewsletterController::class, 'send'])->name('newsletter.send');
+    Route::get('newsletter/export', [NewsletterController::class, 'export'])->name('newsletter.export');
+    Route::delete('newsletter/{subscriber}', [NewsletterController::class, 'destroy'])->name('newsletter.destroy');
 });
 
 require __DIR__.'/auth.php';

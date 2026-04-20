@@ -287,6 +287,17 @@
                         </a>
                     </div>
 
+                    {{-- Settings Section --}}
+                    <div class="mb-4">
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Settings</p>
+                        
+                        <a href="{{ route('admin.mosque-settings.edit') }}"
+                            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition
+                            {{ request()->routeIs('admin.mosque-settings.*') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <span>⚙️</span><span>Mosque Settings</span>
+                        </a>
+                    </div>
+
                 </div>
             </nav>
 
@@ -328,6 +339,9 @@
             </main>
         </div>
     </div>
+
+    {{-- Scripts --}}
+    @yield('scripts')
 </body>
 
 </html>

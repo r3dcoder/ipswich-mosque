@@ -1545,8 +1545,7 @@
 @yield( 'header')
 
 <body>
-    @include('partials.header')
-    
+     
     @yield('content')
 
     @if (Route::has('login'))
