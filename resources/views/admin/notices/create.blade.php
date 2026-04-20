@@ -77,22 +77,29 @@
                 </div>
 
                 <div class="flex items-center">
-                    <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}
-                        class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
-                    <label for="is_active" class="ml-2 block text-sm text-gray-700">Active (visible to public)</label>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}
+                            class="sr-only peer">
+                        <div class="w-14 h-8 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:bg-emerald-500"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-700">Active (visible to public)</span>
+                    </label>
                 </div>
 
                 <div class="flex items-center">
-                    <input type="checkbox" id="is_pinned" name="is_pinned" value="1" {{ old('is_pinned') ? 'checked' : '' }}
-                        class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
-                    <label for="is_pinned" class="ml-2 block text-sm text-gray-700">Pin to top</label>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="is_pinned" name="is_pinned" value="1" {{ old('is_pinned') ? 'checked' : '' }}
+                            class="sr-only peer">
+                        <div class="w-14 h-8 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:bg-emerald-500"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-700">Pin to top</span>
+                    </label>
                 </div>
 
                 <div class="flex items-center md:col-span-2">
-                    <input type="checkbox" id="send_email_notification" name="send_email_notification" value="1" {{ old('send_email_notification') ? 'checked' : '' }}
-                        class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
-                    <label for="send_email_notification" class="ml-2 block text-sm text-gray-700">
-                        Send email notification to newsletter subscribers
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="send_email_notification" name="send_email_notification" value="1" {{ old('send_email_notification') ? 'checked' : '' }}
+                            class="sr-only peer">
+                        <div class="w-14 h-8 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:bg-emerald-500"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-700">Send email notification to newsletter subscribers</span>
                     </label>
                 </div>
             </div>

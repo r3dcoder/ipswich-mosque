@@ -3,12 +3,23 @@
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Donations Management</h1>
-        <p class="text-gray-600">Manage one-off and regular donations</p>
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Donations Management</h1>
+                <p class="text-gray-600">Manage one-off and regular donations</p>
+            </div>
+            <a href="{{ route('admin.donations.statistics') }}" 
+               class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                View Statistics
+            </a>
+        </div>
     </div>
 
     <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-sm font-medium text-gray-600">Total Donations</h3>
             <p class="text-2xl font-bold text-gray-900">£{{ number_format($totalAmount, 2) }}</p>
@@ -25,11 +36,24 @@
             <h3 class="text-sm font-medium text-gray-600">Active Subscriptions</h3>
             <p class="text-2xl font-bold text-purple-600">{{ $activeSubscriptions }}</p>
         </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-sm font-medium text-gray-600">Gift Aid Total</h3>
+            <p class="text-2xl font-bold text-emerald-600">£{{ number_format($giftAidTotal ?? 0, 2) }}</p>
+        </div>
     </div>
 
     <!-- Filters -->
     <div class="bg-white rounded-lg shadow p-6 mb-6">
         <form method="GET" action="{{ route('admin.donations') }}" class="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <select name="category" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">All Categories</option>
+                    @foreach(\App\Models\Donation::CATEGORIES as $value => $label)
+                        <option value="{{ $value }}" {{ request('category') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
                 <select name="type" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
@@ -86,6 +110,7 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donor</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Frequency</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -105,6 +130,11 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             £{{ number_format($donation->amount, 2) }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800">
+                                {{ $donation->category_label ?? ucfirst($donation->category ?? 'general') }}
+                            </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full

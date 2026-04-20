@@ -9,11 +9,27 @@ class Donation extends Model
 {
     use HasFactory;
 
+    /**
+     * Donation categories
+     */
+    const CATEGORIES = [
+        'general' => 'General',
+        'zakat' => 'Zakat',
+        'sadaqah' => 'Sadaqah',
+        'fitra' => 'Fitra (Fitrana)',
+        'qurbani' => 'Qurbani',
+        'lillah' => 'Lillah',
+        'mosque' => 'Mosque Maintenance',
+        'education' => 'Education',
+        'emergency' => 'Emergency Relief',
+    ];
+
     protected $fillable = [
         'donor_name',
         'donor_email',
         'amount',
         'type',
+        'category',
         'frequency',
         'status',
         'gift_aid',
@@ -43,5 +59,40 @@ class Donation extends Model
     public function scopeCompleted($query)
     {
         return $query->where('status', 'completed');
+    }
+
+    public function scopeCategory($query, $category)
+    {
+        return $query->where('category', $category);
+    }
+
+    public function scopeZakat($query)
+    {
+        return $query->where('category', 'zakat');
+    }
+
+    public function scopeFitra($query)
+    {
+        return $query->where('category', 'fitra');
+    }
+
+    public function scopeQurbani($query)
+    {
+        return $query->where('category', 'qurbani');
+    }
+
+    public function scopeLillah($query)
+    {
+        return $query->where('category', 'lillah');
+    }
+
+    public function scopeSadaqah($query)
+    {
+        return $query->where('category', 'sadaqah');
+    }
+
+    public function getCategoryLabelAttribute()
+    {
+        return self::CATEGORIES[$this->category] ?? ucfirst($this->category);
     }
 }

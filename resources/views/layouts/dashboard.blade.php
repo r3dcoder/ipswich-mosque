@@ -285,6 +285,12 @@
                             {{ request()->routeIs('admin.donations') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
                             <span>💰</span><span>Donations</span>
                         </a>
+
+                        <a href="{{ route('admin.gift-aid.index') }}"
+                            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition
+                            {{ request()->routeIs('admin.gift-aid.*') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <span>🏦</span><span>Gift Aid</span>
+                        </a>
                     </div>
 
                     {{-- Settings Section --}}

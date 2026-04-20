@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Donation;
+use App\Models\GiftAidDeclaration;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
 use Stripe\PaymentIntent;
@@ -27,6 +28,10 @@ class DonationController extends Controller
             $giftAid = $request->gift_aid ? true : false;
             $donorName = $request->donor_name;
             $donorEmail = $request->donor_email;
+            $donorAddress = $request->donor_address;
+            $donorPostcode = $request->donor_postcode;
+            $donorPhone = $request->donor_phone;
+            $category = $request->category ?? 'general';
 
             // Validate amount
             if ($amount < 1) {
@@ -34,9 +39,9 @@ class DonationController extends Controller
             }
 
             if ($donationType === 'regular') {
-                return $this->createSubscription($amount, $frequency, $giftAid, $donorName, $donorEmail);
+                return $this->createSubscription($amount, $frequency, $giftAid, $category, $donorName, $donorEmail, $donorAddress, $donorPostcode, $donorPhone);
             } else {
-                return $this->createOneOffPayment($amount, $giftAid, $donorName, $donorEmail);
+                return $this->createOneOffPayment($amount, $giftAid, $category, $donorName, $donorEmail, $donorAddress, $donorPostcode, $donorPhone);
             }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -46,7 +51,7 @@ class DonationController extends Controller
     /**
      * Create a one-off payment intent
      */
-    private function createOneOffPayment($amount, $giftAid, $donorName, $donorEmail)
+    private function createOneOffPayment($amount, $giftAid, $category, $donorName, $donorEmail, $donorAddress = null, $donorPostcode = null, $donorPhone = null)
     {
         $paymentIntent = PaymentIntent::create([
             'amount' => $amount * 100, // convert £ to pence
@@ -66,11 +71,17 @@ class DonationController extends Controller
             'donor_email' => $donorEmail,
             'amount' => $amount,
             'type' => 'one-off',
+            'category' => $category,
             'frequency' => null,
             'status' => 'pending',
             'gift_aid' => $giftAid,
             'stripe_payment_intent_id' => $paymentIntent->id,
         ]);
+
+        // Create or update Gift Aid declaration if applicable
+        if ($giftAid && $donorEmail) {
+            $this->createOrUpdateGiftAidDeclaration($donorName, $donorEmail, $donorAddress, $donorPostcode, $donorPhone);
+        }
 
         return response()->json([
             'clientSecret' => $paymentIntent->client_secret,
@@ -82,7 +93,7 @@ class DonationController extends Controller
     /**
      * Create a subscription for recurring donations
      */
-    private function createSubscription($amount, $frequency, $giftAid, $donorName, $donorEmail)
+    private function createSubscription($amount, $frequency, $giftAid, $category, $donorName, $donorEmail, $donorAddress = null, $donorPostcode = null, $donorPhone = null)
     {
         // Map frequency to Stripe interval
         $intervalMap = [
@@ -208,6 +219,7 @@ class DonationController extends Controller
             'donor_email' => $donorEmail,
             'amount' => $amount,
             'type' => 'regular',
+            'category' => $category,
             'frequency' => $frequency,
             'status' => 'pending',
             'gift_aid' => $giftAid,
@@ -216,6 +228,11 @@ class DonationController extends Controller
             'stripe_price_id' => $price->id,
             'stripe_payment_intent_id' => $paymentIntent ? $paymentIntent->id : null,
         ]);
+
+        // Create or update Gift Aid declaration if applicable
+        if ($giftAid && $donorEmail) {
+            $this->createOrUpdateGiftAidDeclaration($donorName, $donorEmail, $donorAddress, $donorPostcode, $donorPhone);
+        }
 
         if (!$paymentIntent) {
             return response()->json(['error' => 'Failed to create payment intent for subscription'], 500);
@@ -227,6 +244,42 @@ class DonationController extends Controller
             'donation_id' => $donation->id,
             'type' => 'regular',
         ]);
+    }
+
+    /**
+     * Create or update a Gift Aid declaration for a donor
+     */
+    private function createOrUpdateGiftAidDeclaration($donorName, $donorEmail, $donorAddress = null, $donorPostcode = null, $donorPhone = null)
+    {
+        // Check if an active declaration already exists
+        $existingDeclaration = GiftAidDeclaration::where('donor_email', $donorEmail)
+            ->where('status', 'active')
+            ->first();
+
+        if (!$existingDeclaration) {
+            // Create new Gift Aid declaration with full details
+            GiftAidDeclaration::create([
+                'donor_name' => $donorName,
+                'donor_email' => $donorEmail,
+                'donor_address' => $donorAddress,
+                'donor_postcode' => $donorPostcode,
+                'donor_phone' => $donorPhone,
+                'declaration_text' => 'I confirm I am a UK taxpayer and want to Gift Aid my donations. I understand I must pay enough income tax and/or capital gains tax each tax year to cover the amount of Gift Aid that all charities claim on my donations in that tax year, and I am responsible for paying any difference.',
+                'status' => 'active',
+                'declared_at' => now(),
+                'total_donated' => 0,
+                'total_gift_aid_claimed' => 0,
+            ]);
+        } else {
+            // Update existing declaration with new address details if provided
+            if ($donorAddress && $donorPostcode) {
+                $existingDeclaration->update([
+                    'donor_address' => $donorAddress,
+                    'donor_postcode' => $donorPostcode,
+                    'donor_phone' => $donorPhone,
+                ]);
+            }
+        }
     }
 
     /**
@@ -307,5 +360,78 @@ class DonationController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Handle Stripe webhooks
+     */
+    public function handleWebhook(Request $request)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
+
+        $payload = $request->getContent();
+        $sig_header = $request->header('Stripe-Signature');
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload, $sig_header, $endpoint_secret
+            );
+        } catch (\UnexpectedValueException $e) {
+            // Invalid payload
+            return response('Invalid payload', 400);
+        } catch (\Stripe\Error\SignatureVerification $e) {
+            // Invalid signature
+            return response('Invalid signature', 400);
+        }
+
+        // Handle the event
+        switch ($event->type) {
+            case 'payment_intent.succeeded':
+                $paymentIntent = $event->data->object;
+                $donation = Donation::where('stripe_payment_intent_id', $paymentIntent->id)->first();
+                if ($donation) {
+                    $donation->status = 'completed';
+                    $donation->save();
+                    \Log::info('Donation status updated to completed', ['donation_id' => $donation->id]);
+                }
+                break;
+
+            case 'invoice.payment_succeeded':
+                $invoice = $event->data->object;
+                $subscriptionId = $invoice->subscription;
+                $donation = Donation::where('stripe_subscription_id', $subscriptionId)->first();
+                if ($donation) {
+                    $donation->status = 'completed';
+                    $donation->save();
+                    \Log::info('Subscription donation status updated to completed', ['donation_id' => $donation->id]);
+                }
+                break;
+
+            case 'payment_intent.payment_failed':
+                $paymentIntent = $event->data->object;
+                $donation = Donation::where('stripe_payment_intent_id', $paymentIntent->id)->first();
+                if ($donation) {
+                    $donation->status = 'failed';
+                    $donation->save();
+                    \Log::info('Donation status updated to failed', ['donation_id' => $donation->id]);
+                }
+                break;
+
+            case 'customer.subscription.deleted':
+                $subscription = $event->data->object;
+                $donation = Donation::where('stripe_subscription_id', $subscription->id)->first();
+                if ($donation) {
+                    $donation->status = 'cancelled';
+                    $donation->save();
+                    \Log::info('Subscription donation status updated to cancelled', ['donation_id' => $donation->id]);
+                }
+                break;
+
+            default:
+                \Log::info('Unhandled Stripe event type', ['type' => $event->type]);
+        }
+
+        return response('Webhook handled', 200);
     }
 }

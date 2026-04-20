@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CoursesController;
 use App\Http\Controllers\Admin\EditorController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FuneralBookingController as AdminFuneralBookingController;
+use App\Http\Controllers\Admin\GiftAidController;
 use App\Http\Controllers\Admin\JummahScheduleController;
 use App\Http\Controllers\Admin\KhutbahController as AdminKhutbahController;
 use App\Http\Controllers\Admin\MarriageBookingController as AdminMarriageBookingController;
@@ -51,6 +52,7 @@ Route::get('/donate', function () {
 // Donation payment routes
 Route::post('/create-payment-intent', [DonationController::class, 'createPaymentIntent']);
 Route::get('/donation-success', [DonationController::class, 'success'])->name('donation.success');
+Route::post('/stripe-webhook', [DonationController::class, 'handleWebhook']);
 
 Route::get('/ramadan', function () {
     return view('ramadan');
@@ -168,6 +170,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
         Route::get('/donations', [AdminController::class, 'donations'])->name('donations');
+        Route::get('/donations/statistics', [AdminController::class, 'donationStatistics'])->name('donations.statistics');
         // Note: contacts routes are defined earlier as resource routes (admin.contacts.index, etc.)
         // Ramadan CRUD
   
@@ -357,6 +360,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('newsletter/send', [NewsletterController::class, 'send'])->name('newsletter.send');
     Route::get('newsletter/export', [NewsletterController::class, 'export'])->name('newsletter.export');
     Route::delete('newsletter/{subscriber}', [NewsletterController::class, 'destroy'])->name('newsletter.destroy');
+});
+
+// Admin Gift Aid Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('gift-aid', [GiftAidController::class, 'index'])->name('gift-aid.index');
+    Route::get('gift-aid/create', [GiftAidController::class, 'create'])->name('gift-aid.create');
+    Route::post('gift-aid', [GiftAidController::class, 'store'])->name('gift-aid.store');
+    Route::get('gift-aid/report', [GiftAidController::class, 'report'])->name('gift-aid.report');
+    Route::get('gift-aid/export', [GiftAidController::class, 'export'])->name('gift-aid.export');
+    Route::get('gift-aid/{declaration}', [GiftAidController::class, 'show'])->name('gift-aid.show');
+    Route::get('gift-aid/{declaration}/edit', [GiftAidController::class, 'edit'])->name('gift-aid.edit');
+    Route::put('gift-aid/{declaration}', [GiftAidController::class, 'update'])->name('gift-aid.update');
+    Route::post('gift-aid/{declaration}/cancel', [GiftAidController::class, 'cancel'])->name('gift-aid.cancel');
 });
 
 require __DIR__.'/auth.php';

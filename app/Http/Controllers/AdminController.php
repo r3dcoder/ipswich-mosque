@@ -48,6 +48,11 @@ class AdminController extends Controller
     {
         $query = Donation::query();
         
+        // Filter by category
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+        
         // Filter by type
         if ($request->filled('type')) {
             $query->where('type', $request->type);
@@ -89,13 +94,90 @@ class AdminController extends Controller
         $oneOffCount = Donation::oneOff()->count();
         $regularCount = Donation::regular()->count();
         $activeSubscriptions = Donation::regular()->completed()->count();
+        $giftAidTotal = Donation::where('gift_aid', true)->completed()->sum('amount');
         
         return view('admin-panel.donations', compact(
             'donations',
             'totalAmount',
             'oneOffCount',
             'regularCount',
-            'activeSubscriptions'
+            'activeSubscriptions',
+            'giftAidTotal'
+        ));
+    }
+
+    public function donationStatistics(Request $request)
+    {
+        // Date range filter
+        $startDate = $request->input('start_date', now()->subYear()->toDateString());
+        $endDate = $request->input('end_date', now()->toDateString());
+
+        // Get donations in date range
+        $donations = Donation::whereBetween('created_at', [$startDate, $endDate])
+            ->where('status', 'completed')
+            ->get();
+
+        // Calculate statistics
+        $totalAmount = $donations->sum('amount');
+        $totalDonations = $donations->count();
+        $averageDonation = $totalDonations > 0 ? $totalAmount / $totalDonations : 0;
+
+        // Category breakdown
+        $categoryData = $donations->groupBy('category')->map(function($group) {
+            return [
+                'label' => Donation::CATEGORIES[$group->first()->category] ?? ucfirst($group->first()->category),
+                'amount' => $group->sum('amount'),
+                'count' => $group->count()
+            ];
+        });
+
+        // Type breakdown
+        $typeData = $donations->groupBy('type')->map(function($group) {
+            return [
+                'label' => ucfirst($group->first()->type),
+                'amount' => $group->sum('amount'),
+                'count' => $group->count()
+            ];
+        });
+
+        // Monthly trend data
+        $monthlyData = [];
+        $currentDate = now()->subMonths(11);
+        for ($i = 0; $i < 12; $i++) {
+            $monthStart = $currentDate->copy()->startOfMonth();
+            $monthEnd = $currentDate->copy()->endOfMonth();
+            
+            $monthDonations = $donations->whereBetween('created_at', [$monthStart, $monthEnd]);
+            $monthlyData[] = [
+                'month' => $monthStart->format('M Y'),
+                'amount' => $monthDonations->sum('amount'),
+                'count' => $monthDonations->count()
+            ];
+            
+            $currentDate->addMonth();
+        }
+
+        // Gift Aid statistics
+        $giftAidDonations = $donations->where('gift_aid', true);
+        $giftAidAmount = $giftAidDonations->sum('amount');
+        $giftAidPotential = $giftAidAmount * 0.25;
+
+        // Status breakdown - use a simpler approach to avoid GROUP BY issues
+        $allDonations = Donation::whereBetween('created_at', [$startDate, $endDate])->get();
+        $statusData = $allDonations->groupBy('status')->map->count();
+
+        return view('admin-panel.donation-statistics', compact(
+            'totalAmount',
+            'totalDonations',
+            'averageDonation',
+            'categoryData',
+            'typeData',
+            'monthlyData',
+            'giftAidAmount',
+            'giftAidPotential',
+            'statusData',
+            'startDate',
+            'endDate'
         ));
     }
 }
