@@ -166,6 +166,128 @@ class AdminController extends Controller
         $allDonations = Donation::whereBetween('created_at', [$startDate, $endDate])->get();
         $statusData = $allDonations->groupBy('status')->map->count();
 
+        // ==========================================
+        // Period-based statistics with comparisons
+        // ==========================================
+        
+        // Daily statistics (today vs yesterday)
+        $todayStart = now()->startOfDay();
+        $todayEnd = now()->endOfDay();
+        $yesterdayStart = now()->subDay()->startOfDay();
+        $yesterdayEnd = now()->subDay()->endOfDay();
+        
+        $todayDonations = Donation::whereBetween('created_at', [$todayStart, $todayEnd])
+            ->where('status', 'completed')
+            ->get();
+        $yesterdayDonations = Donation::whereBetween('created_at', [$yesterdayStart, $yesterdayEnd])
+            ->where('status', 'completed')
+            ->get();
+        
+        $todayAmount = $todayDonations->sum('amount');
+        $todayCount = $todayDonations->count();
+        $yesterdayAmount = $yesterdayDonations->sum('amount');
+        $yesterdayCount = $yesterdayDonations->count();
+        
+        $dailyAmountChange = $yesterdayAmount > 0 ? (($todayAmount - $yesterdayAmount) / $yesterdayAmount * 100) : ($todayAmount > 0 ? 100 : 0);
+        $dailyCountChange = $yesterdayCount > 0 ? (($todayCount - $yesterdayCount) / $yesterdayCount * 100) : ($todayCount > 0 ? 100 : 0);
+
+        // Weekly statistics (this week vs last week)
+        $weekStart = now()->startOfWeek();
+        $weekEnd = now()->endOfWeek();
+        $lastWeekStart = now()->subWeek()->startOfWeek();
+        $lastWeekEnd = now()->subWeek()->endOfWeek();
+        
+        $thisWeekDonations = Donation::whereBetween('created_at', [$weekStart, $weekEnd])
+            ->where('status', 'completed')
+            ->get();
+        $lastWeekDonations = Donation::whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
+            ->where('status', 'completed')
+            ->get();
+        
+        $thisWeekAmount = $thisWeekDonations->sum('amount');
+        $thisWeekCount = $thisWeekDonations->count();
+        $lastWeekAmount = $lastWeekDonations->sum('amount');
+        $lastWeekCount = $lastWeekDonations->count();
+        
+        $weeklyAmountChange = $lastWeekAmount > 0 ? (($thisWeekAmount - $lastWeekAmount) / $lastWeekAmount * 100) : ($thisWeekAmount > 0 ? 100 : 0);
+        $weeklyCountChange = $lastWeekCount > 0 ? (($thisWeekCount - $lastWeekCount) / $lastWeekCount * 100) : ($thisWeekCount > 0 ? 100 : 0);
+
+        // Monthly statistics (this month vs last month)
+        $monthStart = now()->startOfMonth();
+        $monthEnd = now()->endOfMonth();
+        $lastMonthStart = now()->subMonth()->startOfMonth();
+        $lastMonthEnd = now()->subMonth()->endOfMonth();
+        
+        $thisMonthDonations = Donation::whereBetween('created_at', [$monthStart, $monthEnd])
+            ->where('status', 'completed')
+            ->get();
+        $lastMonthDonations = Donation::whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])
+            ->where('status', 'completed')
+            ->get();
+        
+        $thisMonthAmount = $thisMonthDonations->sum('amount');
+        $thisMonthCount = $thisMonthDonations->count();
+        $lastMonthAmount = $lastMonthDonations->sum('amount');
+        $lastMonthCount = $lastMonthDonations->count();
+        
+        $monthlyAmountChange = $lastMonthAmount > 0 ? (($thisMonthAmount - $lastMonthAmount) / $lastMonthAmount * 100) : ($thisMonthAmount > 0 ? 100 : 0);
+        $monthlyCountChange = $lastMonthCount > 0 ? (($thisMonthCount - $lastMonthCount) / $lastMonthCount * 100) : ($thisMonthCount > 0 ? 100 : 0);
+
+        // Yearly statistics (this year vs last year)
+        $yearStart = now()->startOfYear();
+        $yearEnd = now()->endOfYear();
+        $lastYearStart = now()->subYear()->startOfYear();
+        $lastYearEnd = now()->subYear()->endOfYear();
+        
+        $thisYearDonations = Donation::whereBetween('created_at', [$yearStart, $yearEnd])
+            ->where('status', 'completed')
+            ->get();
+        $lastYearDonations = Donation::whereBetween('created_at', [$lastYearStart, $lastYearEnd])
+            ->where('status', 'completed')
+            ->get();
+        
+        $thisYearAmount = $thisYearDonations->sum('amount');
+        $thisYearCount = $thisYearDonations->count();
+        $lastYearAmount = $lastYearDonations->sum('amount');
+        $lastYearCount = $lastYearDonations->count();
+        
+        $yearlyAmountChange = $lastYearAmount > 0 ? (($thisYearAmount - $lastYearAmount) / $lastYearAmount * 100) : ($thisYearAmount > 0 ? 100 : 0);
+        $yearlyCountChange = $lastYearCount > 0 ? (($thisYearCount - $lastYearCount) / $lastYearCount * 100) : ($thisYearCount > 0 ? 100 : 0);
+
+        // Daily trend data (last 30 days)
+        $dailyTrendData = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $dayStart = now()->subDays($i)->startOfDay();
+            $dayEnd = now()->subDays($i)->endOfDay();
+            
+            $dayDonations = Donation::whereBetween('created_at', [$dayStart, $dayEnd])
+                ->where('status', 'completed')
+                ->get();
+            
+            $dailyTrendData[] = [
+                'date' => $dayStart->format('M d'),
+                'amount' => $dayDonations->sum('amount'),
+                'count' => $dayDonations->count()
+            ];
+        }
+
+        // Weekly trend data (last 12 weeks)
+        $weeklyTrendData = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $weekStart = now()->subWeeks($i)->startOfWeek();
+            $weekEnd = now()->subWeeks($i)->endOfWeek();
+            
+            $weekDonations = Donation::whereBetween('created_at', [$weekStart, $weekEnd])
+                ->where('status', 'completed')
+                ->get();
+            
+            $weeklyTrendData[] = [
+                'week' => 'Week ' . $weekStart->weekOfYear . ' ' . $weekStart->format('M'),
+                'amount' => $weekDonations->sum('amount'),
+                'count' => $weekDonations->count()
+            ];
+        }
+
         return view('admin-panel.donation-statistics', compact(
             'totalAmount',
             'totalDonations',
@@ -177,7 +299,38 @@ class AdminController extends Controller
             'giftAidPotential',
             'statusData',
             'startDate',
-            'endDate'
+            'endDate',
+            // Daily stats
+            'todayAmount',
+            'todayCount',
+            'yesterdayAmount',
+            'yesterdayCount',
+            'dailyAmountChange',
+            'dailyCountChange',
+            // Weekly stats
+            'thisWeekAmount',
+            'thisWeekCount',
+            'lastWeekAmount',
+            'lastWeekCount',
+            'weeklyAmountChange',
+            'weeklyCountChange',
+            // Monthly stats
+            'thisMonthAmount',
+            'thisMonthCount',
+            'lastMonthAmount',
+            'lastMonthCount',
+            'monthlyAmountChange',
+            'monthlyCountChange',
+            // Yearly stats
+            'thisYearAmount',
+            'thisYearCount',
+            'lastYearAmount',
+            'lastYearCount',
+            'yearlyAmountChange',
+            'yearlyCountChange',
+            // Trend data
+            'dailyTrendData',
+            'weeklyTrendData'
         ));
     }
 }

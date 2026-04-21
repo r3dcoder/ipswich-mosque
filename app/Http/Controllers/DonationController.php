@@ -428,6 +428,67 @@ class DonationController extends Controller
                 }
                 break;
 
+            case 'customer.subscription.updated':
+                $subscription = $event->data->object;
+                $donation = Donation::where('stripe_subscription_id', $subscription->id)->first();
+                if ($donation) {
+                    // Update status based on subscription status
+                    $statusMap = [
+                        'active' => 'completed',
+                        'incomplete' => 'pending',
+                        'incomplete_expired' => 'failed',
+                        'past_due' => 'pending',
+                        'unpaid' => 'pending',
+                        'canceled' => 'cancelled',
+                    ];
+                    $newStatus = $statusMap[$subscription->status] ?? $donation->status;
+                    if ($donation->status !== $newStatus) {
+                        $donation->status = $newStatus;
+                        $donation->save();
+                        \Log::info('Subscription donation status updated via subscription.updated', [
+                            'donation_id' => $donation->id,
+                            'new_status' => $newStatus,
+                            'subscription_status' => $subscription->status,
+                        ]);
+                    }
+                }
+                break;
+
+            case 'invoice.payment_failed':
+                $invoice = $event->data->object;
+                $subscriptionId = $invoice->subscription;
+                $donation = Donation::where('stripe_subscription_id', $subscriptionId)->first();
+                if ($donation) {
+                    $donation->status = 'failed';
+                    $donation->save();
+                    \Log::info('Subscription donation status updated to failed (invoice.payment_failed)', [
+                        'donation_id' => $donation->id,
+                    ]);
+                }
+                break;
+
+            case 'charge.refunded':
+                $charge = $event->data->object;
+                $paymentIntentId = $charge->payment_intent;
+                $donation = Donation::where('stripe_payment_intent_id', $paymentIntentId)->first();
+                if ($donation) {
+                    $donation->status = 'refunded';
+                    $donation->save();
+                    \Log::info('Donation status updated to refunded', ['donation_id' => $donation->id]);
+                }
+                break;
+
+            case 'charge.dispute.created':
+                $dispute = $event->data->object;
+                $paymentIntentId = $dispute->payment_intent;
+                $donation = Donation::where('stripe_payment_intent_id', $paymentIntentId)->first();
+                if ($donation) {
+                    $donation->status = 'disputed';
+                    $donation->save();
+                    \Log::info('Donation status updated to disputed', ['donation_id' => $donation->id]);
+                }
+                break;
+
             default:
                 \Log::info('Unhandled Stripe event type', ['type' => $event->type]);
         }

@@ -32,8 +32,73 @@
         </form>
     </div>
 
+    <!-- Period Comparison Cards -->
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Period Overview</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Daily Stats -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-medium text-gray-600">Today</h3>
+                <span class="px-2 py-1 text-xs font-medium rounded-full {{ $dailyAmountChange >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                    {{ $dailyAmountChange >= 0 ? '+' : '' }}{{ number_format($dailyAmountChange, 1) }}%
+                </span>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">£{{ number_format($todayAmount, 2) }}</p>
+            <p class="text-sm text-gray-500 mt-1">{{ $todayCount }} donations</p>
+            <div class="mt-3 pt-3 border-t border-gray-100">
+                <p class="text-xs text-gray-400">Yesterday: £{{ number_format($yesterdayAmount, 2) }} ({{ $yesterdayCount }} donations)</p>
+            </div>
+        </div>
+
+        <!-- Weekly Stats -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-medium text-gray-600">This Week</h3>
+                <span class="px-2 py-1 text-xs font-medium rounded-full {{ $weeklyAmountChange >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                    {{ $weeklyAmountChange >= 0 ? '+' : '' }}{{ number_format($weeklyAmountChange, 1) }}%
+                </span>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">£{{ number_format($thisWeekAmount, 2) }}</p>
+            <p class="text-sm text-gray-500 mt-1">{{ $thisWeekCount }} donations</p>
+            <div class="mt-3 pt-3 border-t border-gray-100">
+                <p class="text-xs text-gray-400">Last Week: £{{ number_format($lastWeekAmount, 2) }} ({{ $lastWeekCount }} donations)</p>
+            </div>
+        </div>
+
+        <!-- Monthly Stats -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-medium text-gray-600">This Month</h3>
+                <span class="px-2 py-1 text-xs font-medium rounded-full {{ $monthlyAmountChange >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                    {{ $monthlyAmountChange >= 0 ? '+' : '' }}{{ number_format($monthlyAmountChange, 1) }}%
+                </span>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">£{{ number_format($thisMonthAmount, 2) }}</p>
+            <p class="text-sm text-gray-500 mt-1">{{ $thisMonthCount }} donations</p>
+            <div class="mt-3 pt-3 border-t border-gray-100">
+                <p class="text-xs text-gray-400">Last Month: £{{ number_format($lastMonthAmount, 2) }} ({{ $lastMonthCount }} donations)</p>
+            </div>
+        </div>
+
+        <!-- Yearly Stats -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-medium text-gray-600">This Year</h3>
+                <span class="px-2 py-1 text-xs font-medium rounded-full {{ $yearlyAmountChange >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                    {{ $yearlyAmountChange >= 0 ? '+' : '' }}{{ number_format($yearlyAmountChange, 1) }}%
+                </span>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">£{{ number_format($thisYearAmount, 2) }}</p>
+            <p class="text-sm text-gray-500 mt-1">{{ $thisYearCount }} donations</p>
+            <div class="mt-3 pt-3 border-t border-gray-100">
+                <p class="text-xs text-gray-400">Last Year: £{{ number_format($lastYearAmount, 2) }} ({{ $lastYearCount }} donations)</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Overall Summary</h2>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-emerald-100 text-emerald-600">
@@ -88,6 +153,22 @@
         </div>
     </div>
 
+    <!-- Daily Trend Chart -->
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Daily Trend (Last 30 Days)</h2>
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="relative" style="height: 300px;">
+            <canvas id="dailyTrendChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Weekly Trend Chart -->
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Weekly Trend (Last 12 Weeks)</h2>
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="relative" style="height: 300px;">
+            <canvas id="weeklyTrendChart"></canvas>
+        </div>
+    </div>
+
     <!-- Charts Row -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <!-- Monthly Trend Chart -->
@@ -134,6 +215,8 @@
     const categoryData = @json($categoryData);
     const typeData = @json($typeData);
     const statusData = @json($statusData);
+    const dailyTrendData = @json($dailyTrendData);
+    const weeklyTrendData = @json($weeklyTrendData);
 
     // Chart.js default colors
     const colors = {
@@ -150,6 +233,150 @@
         yellow: '#EAB308',
         green: '#22C55E'
     };
+
+    // Daily Trend Chart (Line)
+    new Chart(document.getElementById('dailyTrendChart'), {
+        type: 'line',
+        data: {
+            labels: dailyTrendData.map(d => d.date),
+            datasets: [{
+                label: 'Donation Amount (£)',
+                data: dailyTrendData.map(d => d.amount),
+                borderColor: colors.emerald,
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: colors.emerald,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4
+            }, {
+                label: 'Donation Count',
+                data: dailyTrendData.map(d => d.count),
+                borderColor: colors.blue,
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: colors.blue,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount (£)'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Count'
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Weekly Trend Chart (Line)
+    new Chart(document.getElementById('weeklyTrendChart'), {
+        type: 'line',
+        data: {
+            labels: weeklyTrendData.map(d => d.week),
+            datasets: [{
+                label: 'Donation Amount (£)',
+                data: weeklyTrendData.map(d => d.amount),
+                borderColor: colors.purple,
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: colors.purple,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4
+            }, {
+                label: 'Donation Count',
+                data: weeklyTrendData.map(d => d.count),
+                borderColor: colors.amber,
+                backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: colors.amber,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount (£)'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Count'
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
 
     // Monthly Trend Chart (Line)
     new Chart(document.getElementById('monthlyChart'), {
