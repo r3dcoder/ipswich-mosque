@@ -88,6 +88,27 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         max-width: 100%;
+        position: relative;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary-green) #f1f5f9;
+    }
+
+    .table-wrapper::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb {
+        background: var(--primary-green);
+        border-radius: 4px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb:hover {
+        background: var(--secondary-green);
     }
 
     .table-wrapper table {
@@ -152,15 +173,73 @@
     .table-scroll-hint {
         display: none;
         text-align: center;
-        padding: 8px;
+        padding: 10px;
         font-size: 12px;
         color: #64748b;
-        background: #f8fafc;
+        background: linear-gradient(90deg, transparent, #f8fafc, transparent);
         border-top: 1px solid var(--border-color);
+        position: relative;
+    }
+
+    .table-scroll-hint::before {
+        content: "◀";
+        margin-right: 8px;
+        color: var(--primary-green);
+        animation: scrollLeft 1.5s ease-in-out infinite;
     }
 
     .table-scroll-hint::after {
-        content: " ← Swipe to see more →";
+        content: "Swipe to see all prayer times ▶";
+    }
+
+    @keyframes scrollLeft {
+        0%, 100% { opacity: 0.3; transform: translateX(-3px); }
+        50% { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Scroll indicator arrows on table edges */
+    .scroll-indicator-left,
+    .scroll-indicator-right {
+        display: none;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 30px;
+        z-index: 5;
+        pointer-events: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .scroll-indicator-left {
+        left: 0;
+        background: linear-gradient(to right, white, transparent);
+    }
+
+    .scroll-indicator-right {
+        right: 0;
+        background: linear-gradient(to left, white, transparent);
+    }
+
+    .scroll-indicator-left::after,
+    .scroll-indicator-right::after {
+        font-size: 20px;
+        color: var(--primary-green);
+        opacity: 0.7;
+    }
+
+    .scroll-indicator-left::after {
+        content: "◀";
+    }
+
+    .scroll-indicator-right::after {
+        content: "▶";
+        animation: scrollRight 1.5s ease-in-out infinite;
+    }
+
+    @keyframes scrollRight {
+        0%, 100% { opacity: 0.3; transform: translateX(-3px); }
+        50% { opacity: 1; transform: translateX(3px); }
     }
 
     .prayer-time {
