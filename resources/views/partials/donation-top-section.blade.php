@@ -1,4 +1,130 @@
 <style>
+    /* Donation Form Styles */
+    .donation-form {
+        font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .donation-form .form-group {
+        margin-bottom: 24px;
+    }
+
+    .donation-form label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+
+    .donation-form .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        background: white;
+        transition: all 0.2s ease;
+    }
+
+    .donation-form .form-control:focus {
+        outline: none;
+        border-color: #0a5134;
+        box-shadow: 0 0 0 3px rgba(10, 81, 52, 0.1);
+    }
+
+    .donation-form .form-control::placeholder {
+        color: #9ca3af;
+    }
+
+    /* Enhanced Donor Information Section */
+    .donor-info {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border: 2px solid #0ea5e9;
+        border-radius: 12px;
+        padding: 24px;
+        margin: 20px 0;
+    }
+
+    .donor-info label:first-child {
+        font-size: 16px;
+        font-weight: 700;
+        color: #0369a1;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .donor-info .form-control {
+        font-size: 16px;
+        padding: 14px 16px;
+    }
+
+    /* Enhanced Donation Amount Section */
+    .donation-amount {
+        background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        border: 2px solid #9333ea;
+        border-radius: 12px;
+        padding: 24px;
+        margin: 20px 0;
+    }
+
+    .donation-amount > label {
+        font-size: 18px;
+        font-weight: 700;
+        color: #6b21a8;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .amount-buttons {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .amount-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 16px 20px;
+        font-size: 20px;
+        font-weight: 700;
+        border: 2px solid #9333ea;
+        background: white;
+        color: #6b21a8;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .amount-btn:hover {
+        background: #f3e8ff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
+    }
+
+    .amount-btn.selected {
+        background: #6b21a8;
+        color: white;
+        border-color: #6b21a8;
+    }
+
+    .donation-amount .form-control {
+        font-size: 24px;
+        font-weight: 600;
+        padding: 18px 20px;
+        text-align: center;
+        border-color: #9333ea;
+    }
+
+    .donation-amount .form-control:focus {
+        border-color: #6b21a8;
+        box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.15);
+    }
+
     /* Gift Aid Checkbox Styles - Enhanced Visibility */
     .gift-aid-container {
         background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);

@@ -1596,10 +1596,13 @@
             transform: scale(0.95);
         }
 
-        /* Show only on mobile */
+        /* Show on all devices */
         @media (min-width: 768px) {
             .scroll-to-top-btn {
-                display: none !important;
+                bottom: 30px;
+                right: 30px;
+                width: 45px;
+                height: 45px;
             }
         }
 

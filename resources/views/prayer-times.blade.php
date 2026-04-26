@@ -84,6 +84,16 @@
         border: 1px solid var(--border-color);
     }
 
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+    }
+
+    .table-wrapper table {
+        min-width: 900px;
+    }
+
     .table-header {
         background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
         color: white;
@@ -93,6 +103,15 @@
         background: #f8fafc;
         color: var(--text-dark);
         font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .table-labels {
+        position: sticky;
+        top: 42px;
+        z-index: 9;
     }
 
     .table-row {
@@ -127,6 +146,21 @@
         font-size: 10px;
         font-weight: 700;
         letter-spacing: 1px;
+    }
+
+    /* Mobile Table Scroll Indicator */
+    .table-scroll-hint {
+        display: none;
+        text-align: center;
+        padding: 8px;
+        font-size: 12px;
+        color: #64748b;
+        background: #f8fafc;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .table-scroll-hint::after {
+        content: " ← Swipe to see more →";
     }
 
     .prayer-time {
@@ -168,6 +202,50 @@
         
         .prayer-table {
             border-radius: 12px;
+        }
+
+        .table-wrapper {
+            margin: 0 -16px;
+            padding: 0 16px;
+        }
+
+        .table-scroll-hint {
+            display: block;
+        }
+
+        .table-subheader th,
+        .table-labels th {
+            font-size: 11px;
+            padding: 8px 6px;
+            white-space: nowrap;
+        }
+
+        .table-row td {
+            font-size: 13px;
+            padding: 10px 6px;
+            white-space: nowrap;
+        }
+
+        .jamaat-time {
+            font-size: 11px;
+            padding: 1px 5px;
+        }
+
+        .prayer-time {
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .table-subheader th,
+        .table-labels th {
+            font-size: 10px;
+            padding: 6px 4px;
+        }
+
+        .table-row td {
+            font-size: 12px;
+            padding: 8px 4px;
         }
     }
 
@@ -217,7 +295,7 @@
     <section class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="prayer-table overflow-hidden">
-                <div class="overflow-x-auto">
+                <div class="table-wrapper">
                     <table class="w-full">
                         <!-- Header Row -->
                         <thead>
@@ -300,6 +378,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="table-scroll-hint"></div>
                 </div>
             </div>
             
