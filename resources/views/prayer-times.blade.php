@@ -8,7 +8,7 @@
 
 
 
-@section('styles')
+@push('styles')
 <style>
     :root {
         --primary-green: #0a5134;
@@ -101,14 +101,32 @@
     }
 
     .table-row:hover {
-        background-color: #f8fafc;
+        background-color: #f0fdf4;
         transform: translateX(2px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .today-row {
-        background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
-        border-left: 4px solid var(--primary-green);
+        background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 50%, #dcfce7 100%);
+        border-left: 5px solid var(--primary-green);
         font-weight: 700;
+        box-shadow: 0 4px 12px rgba(10, 81, 52, 0.15);
+        position: relative;
+    }
+
+    .today-row::before {
+        content: "TODAY";
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        background: var(--primary-green);
+        color: white;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
     }
 
     .prayer-time {
@@ -164,7 +182,7 @@
         animation: pulseActive 2s infinite;
     }
 </style>
-@endsection
+@endpush
 
 @section('content')
     <!-- Page Header -->
@@ -242,7 +260,7 @@
                         <!-- Body -->
                         <tbody>
                             @foreach($prayerTimes as $time)
-                                <tr class="table-row {{ $time->date == $today ? 'today-row' : '' }}">
+                                <tr class="table-row {{ ($highlightToday && $time->date == $today) ? 'today-row' : '' }}">
                                     <td class="border-r border-gray-200 px-4 py-4 font-medium">{{ $time->date }}</td>
                                     <td class="border-r border-gray-200 px-4 py-4 text-gray-600">{{ $time->day }}</td>
                                     <td class="border-r border-gray-200 px-4 py-4">

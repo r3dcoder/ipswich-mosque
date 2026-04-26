@@ -17,10 +17,17 @@
                 @if(isset($dailyPrayerHeader['prayers']))
                     @foreach($dailyPrayerHeader['prayers'] as $name => $times)
                         <div class="prayer-column {{ (isset($dailyPrayerHeader['highlighted']) && $dailyPrayerHeader['highlighted'] == $name) ? 'is-active' : '' }}">
-                            <div class="p-name">{{ $name }}</div>
+                            <div class="p-name">
+                                @if($name === 'Sunrise')
+                                    <span class="sunrise-icon">🌅</span>
+                                @endif
+                                {{ $name }}
+                            </div>
                             <div class="time-group">
                                 <span class="t-begin">{{ $times['Begins'] }}</span>
-                                <span class="t-jamaat">Jamā‘ah {{ $times['Jamaat'] }}</span> 
+                                @if($times['Jamaat'])
+                                    <span class="t-jamaat">Jamā'a {{ $times['Jamaat'] }}</span>
+                                @endif
                             </div>
                         </div>
                     @endforeach

@@ -129,7 +129,7 @@ Route::get('/newsletter/resubscribe/{token}', [App\Http\Controllers\NewsletterSu
 
 
 Route::get('/{slug}', [PublicPageController::class, 'show'])
-    ->where('slug', '^(?!admin|login|register|storage|api|css|js|services).*$')
+    ->where('slug', '^(?!admin|login|register|storage|api|css|js|services|import).*$')
     ->name('page.show');
 
  
@@ -140,18 +140,18 @@ Route::get('/import', function () {
     // 1️⃣ Delete all existing prayer times
     PrayerTime::truncate(); // ⚠️ WARNING: Deletes all rows permanently
     
-    Excel::import(new PrayerTimesImport('Jan'), storage_path('app/public/prayers-timetable/Jan.xls'));
-    Excel::import(new PrayerTimesImport('Fab'), storage_path('app/public/prayers-timetable/Feb.xls'));
-    Excel::import(new PrayerTimesImport('Mar'), storage_path('app/public/prayers-timetable/Mar.xls'));
-    Excel::import(new PrayerTimesImport('Apr'), storage_path('app/public/prayers-timetable/Apr.xls'));
-    Excel::import(new PrayerTimesImport('May'), storage_path('app/public/prayers-timetable/May.xls'));
-    Excel::import(new PrayerTimesImport('Jun'), storage_path('app/public/prayers-timetable/Jun.xls'));
-    Excel::import(new PrayerTimesImport('Jul'), storage_path('app/public/prayers-timetable/Jul.xls'));
-    Excel::import(new PrayerTimesImport('Aug'), storage_path('app/public/prayers-timetable/Aug.xls'));
-    Excel::import(new PrayerTimesImport('Sep'), storage_path('app/public/prayers-timetable/Sep.xls'));
-    Excel::import(new PrayerTimesImport('Oct'), storage_path('app/public/prayers-timetable/Oct.xls'));
-    Excel::import(new PrayerTimesImport('Nov'), storage_path('app/public/prayers-timetable/Nov.xls'));
-    Excel::import(new PrayerTimesImport('Dec'), storage_path('app/public/prayers-timetable/Dec.xls'));
+    Excel::import(new PrayerTimesImport('Jan'), public_path('prayers-timetable/Jan.xls'));
+    Excel::import(new PrayerTimesImport('Feb'), public_path('prayers-timetable/Feb.xls'));
+    Excel::import(new PrayerTimesImport('Mar'), public_path('prayers-timetable/Mar.xls'));
+    Excel::import(new PrayerTimesImport('Apr'), public_path('prayers-timetable/Apr.xls'));
+    Excel::import(new PrayerTimesImport('May'), public_path('prayers-timetable/May.xls'));
+    Excel::import(new PrayerTimesImport('Jun'), public_path('prayers-timetable/Jun.xls'));
+    Excel::import(new PrayerTimesImport('Jul'), public_path('prayers-timetable/Jul.xls'));
+    Excel::import(new PrayerTimesImport('Aug'), public_path('prayers-timetable/Aug.xls'));
+    Excel::import(new PrayerTimesImport('Sep'), public_path('prayers-timetable/Sep.xls'));
+    Excel::import(new PrayerTimesImport('Oct'), public_path('prayers-timetable/Oct.xls'));
+    Excel::import(new PrayerTimesImport('Nov'), public_path('prayers-timetable/Nov.xls'));
+    Excel::import(new PrayerTimesImport('Dec'), public_path('prayers-timetable/Dec.xls'));
 
     return 'Imported!';
 });

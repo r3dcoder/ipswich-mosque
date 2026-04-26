@@ -150,7 +150,7 @@
 
         .prayer-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 15px;
         }
 
@@ -389,6 +389,7 @@
             // Define prayer names and their corresponding fields
             const prayers = [
                 { name: 'Fajr', begins: prayerTimes.fajr_begins, jamaat: prayerTimes.fajr_jamaat },
+                { name: 'Sunrise', begins: prayerTimes.sunrise, jamaat: null },
                 { name: 'Zuhr', begins: prayerTimes.zuhr_begins, jamaat: prayerTimes.zuhr_jamaat },
                 { name: 'Asr', begins: prayerTimes.asr_begins, jamaat: prayerTimes.asr_jamaat },
                 { name: 'Maghrib', begins: prayerTimes.maghrib_begins, jamaat: prayerTimes.maghrib_jamaat },

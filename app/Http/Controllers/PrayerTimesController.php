@@ -22,9 +22,12 @@ class PrayerTimesController extends Controller
                     ->orderBy('date')
                     ->get();
 
-    $today = Carbon::now()->day;
+    $now = Carbon::now();
+    $today = $now->day;
+    // Only highlight today's date if the selected month matches the current month
+    $highlightToday = $selectedMonth === $now->format('M');
 
-    return view('prayer-times', compact('months', 'prayerTimes', 'selectedMonth', 'today', 'currentMonth'));
+    return view('prayer-times', compact('months', 'prayerTimes', 'selectedMonth', 'today', 'currentMonth', 'highlightToday'));
 }
 
     public function timingScreen()

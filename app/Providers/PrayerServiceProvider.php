@@ -29,6 +29,7 @@ class PrayerServiceProvider extends ServiceProvider
 
             if ($prayer) {
                 $prayers = [
+                    'Sunrise' => ['Begins' => $prayer->sunrise,        'Jamaat' => null],
                     'Fajr'    => ['Begins' => $prayer->fajr_begins,    'Jamaat' => $prayer->fajr_jamaat],
                     'Zuhr'    => ['Begins' => $prayer->zuhr_begins,    'Jamaat' => $prayer->zuhr_jamaat],
                     'Asr'     => ['Begins' => $prayer->asr_begins,     'Jamaat' => $prayer->asr_jamaat],
