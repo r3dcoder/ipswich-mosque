@@ -148,25 +148,8 @@
 
     .today-row {
         background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 50%, #dcfce7 100%);
-        border-left: 5px solid var(--primary-green);
-        font-weight: 700;
-        box-shadow: 0 4px 12px rgba(10, 81, 52, 0.15);
-        position: relative;
-    }
-
-    .today-row::before {
-        content: "TODAY";
-        position: absolute;
-        top: 50%;
-        right: 15px;
-        transform: translateY(-50%);
-        background: var(--primary-green);
-        color: white;
-        padding: 2px 10px;
-        border-radius: 12px;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 1px;
+        border-left: 4px solid var(--primary-green);
+        font-weight: 600;
     }
 
     /* Mobile Table Scroll Indicator */
