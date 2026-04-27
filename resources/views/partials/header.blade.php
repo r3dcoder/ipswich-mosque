@@ -66,8 +66,7 @@
                         <a href="{{ url('/services/marriage') }}">Marriage (Nikah)</a>
                         <a href="{{ url('/services/janazah') }}">Funeral (Janazah)</a>
                         <a href="{{ url('/services/visit') }}">Visit Mosque</a>
-                        <a href="{{ url('/counseling') }}">Counseling</a>
-                    </div>
+                     </div>
                 </li>
                 <li><a href="{{ url('/khutbah') }}">Khutbah</a></li>
                 <li class="dropdown-item">
@@ -106,7 +105,6 @@
                     <li><a href="{{ url('/services/marriage') }}">Marriage (Nikah)</a></li>
                     <li><a href="{{ url('/services/janazah') }}">Funeral (Janazah)</a></li>
                     <li><a href="{{ url('/services/visit') }}">Visit Mosque</a></li>
-                    <li><a href="{{ url('/counseling') }}">Counseling</a></li>
                 </ul>
             </li>
             
