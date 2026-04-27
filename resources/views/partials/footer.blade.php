@@ -5,10 +5,23 @@
 <footer class="bg-gray-800 text-white py-8">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- About Section -->
+            <!-- About Section with Logo -->
             <div class="mb-6 md:mb-0">
                 <h3 class="text-lg font-semibold mb-4">About Us</h3>
+                @if($settings->logo_url)
+                    <div class="mb-4">
+                        <img src="{{ $settings->logo_url }}" alt="{{ $settings->name ?? 'Ipswich Mosque' }} Logo" class="h-16 w-auto max-w-[150px] object-contain rounded-lg bg-white p-2">
+                    </div>
+                @endif
                 <p class="text-sm text-gray-300">{{ $settings->name ?? 'Ipswich Mosque' }} is a community dedicated to serving and supporting our members through faith, education, and charity.</p>
+                <div class="mt-4 text-xs text-gray-400">
+                    @if($settings->charity_number)
+                        <p class="mb-1"><span class="font-medium text-gray-300">Charity No:</span> {{ $settings->charity_number }}</p>
+                    @endif
+                    @if($settings->company_number)
+                        <p class="mb-1"><span class="font-medium text-gray-300">Company No:</span> {{ $settings->company_number }}</p>
+                    @endif
+                </div>
             </div>
             
             <!-- Quick Links -->

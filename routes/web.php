@@ -53,6 +53,7 @@ Route::get('/donate', function () {
 Route::post('/create-payment-intent', [DonationController::class, 'createPaymentIntent']);
 Route::get('/donation-success', [DonationController::class, 'success'])->name('donation.success');
 Route::post('/stripe-webhook', [DonationController::class, 'handleWebhook']);
+Route::post('/confirm-payment', [DonationController::class, 'confirmPayment']);
 
 Route::get('/ramadan', function () {
     return view('ramadan');

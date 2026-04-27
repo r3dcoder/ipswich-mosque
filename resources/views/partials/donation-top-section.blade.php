@@ -577,13 +577,15 @@
                 })
             });
 
-            const { clientSecret, error } = await res.json();
+            const { clientSecret, error, donation_id } = await res.json();
             if (error) {
                 alert(error);
                 submitButton.disabled = false;
                 loadingAnimation.style.display = 'none';
                 return;
             }
+            // Store donation_id for later use
+            window.currentDonationId = donation_id;
 
             // 2. Mount Stripe Payment Element (reuse if already mounted)
             if (!elements) {
@@ -610,7 +612,23 @@
                 submitButton.disabled = false;
                 loadingAnimation.style.display = 'none';
             } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-                // Payment succeeded, redirect to success page
+                // Payment succeeded - update donation status first
+                try {
+                    const confirmRes = await fetch("/confirm-payment", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            payment_intent_id: paymentIntent.id,
+                            donation_id: window.currentDonationId
+                        })
+                    });
+                    // Redirect to success page regardless of confirm result
+                } catch (confirmErr) {
+                    console.error('Error confirming payment:', confirmErr);
+                }
                 window.location.href = "{{ url('/donation-success') }}?payment_intent=" + paymentIntent.id;
             }
 

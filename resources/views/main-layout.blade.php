@@ -6,14 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    @php
+        $mosqueSettings = \App\Models\MosqueSetting::getSettings();
+    @endphp
+
+    {{-- Dynamic Favicon --}}
+    @if($mosqueSettings->favicon_url)
+        <link rel="icon" type="image/png" href="{{ $mosqueSettings->favicon_url }}">
+        <link rel="shortcut icon" type="image/png" href="{{ $mosqueSettings->favicon_url }}">
+    @else
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    @endif
     
-    <title>@yield('title', 'Ipswich Mosque')</title>
+    <title>@yield('title', $mosqueSettings->name ?? 'Ipswich Mosque')</title>
     @stack('styles')
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    @vite(['resources/css/header.css'])
 
     <!-- SEO / General -->
     <meta name="description" content="Ipswich Mosque – Learn Quran, attend events, and support the community.">

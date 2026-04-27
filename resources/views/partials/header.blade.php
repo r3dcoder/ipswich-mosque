@@ -40,18 +40,35 @@
         </div>
     </div>
 
+    @php
+        $headerSettings = \App\Models\MosqueSetting::getSettings();
+    @endphp
+
     <nav class="header-nav">
         <div class="main-nav-container">
             <a href="{{ url('/') }}" class="logo-wrap">
-                <img src="{{ asset('images/logo.png') }}" alt="logo" />
-                <h1>Ipswich Mosque</h1>
+                @if($headerSettings->logo_url)
+                    <img src="{{ $headerSettings->logo_url }}" alt="{{ $headerSettings->name ?? 'Ipswich Mosque' }} Logo" />
+                @else
+                    <img src="{{ asset('images/logo.png') }}" alt="logo" />
+                @endif
+                <h1>{{ $headerSettings->name ?? 'Ipswich Mosque' }}</h1>
             </a>
 
             <div class="nav-spacer"></div>
 
             <ul class="nav-links-wrap">
                 <li><a href="{{ url('/') }}">Home</a></li>
-                <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
+                <li class="dropdown-item">
+                    <a href="javascript:void(0)" class="drop-trigger">Services ▼</a>
+                    <div class="dropdown-content">
+                        <a href="{{ url('/ramadan') }}">Ramadan</a>
+                        <a href="{{ url('/services/marriage') }}">Marriage (Nikah)</a>
+                        <a href="{{ url('/services/janazah') }}">Funeral (Janazah)</a>
+                        <a href="{{ url('/services/visit') }}">Visit Mosque</a>
+                        <a href="{{ url('/counseling') }}">Counseling</a>
+                    </div>
+                </li>
                 <li><a href="{{ url('/khutbah') }}">Khutbah</a></li>
                 <li class="dropdown-item">
                     <a href="javascript:void(0)" class="drop-trigger">Community ▼</a>
@@ -59,14 +76,6 @@
                         <a href="{{ route('notices.index') }}">Notice Board</a>
                         <a href="{{ route('newsletters.index') }}">Newsletter</a>
                         <a href="{{ url('/people') }}">Our People</a>
-                    </div>
-                </li>
-                <li class="dropdown-item">
-                    <a href="javascript:void(0)" class="drop-trigger">Services ▼</a>
-                    <div class="dropdown-content">
-                        <a href="{{ url('/services/marriage') }}">Marriage</a>
-                        <a href="{{ url('/services/janazah') }}">Janazah</a>
-                        <a href="{{ url('/services/visit') }}">Visit Mosque</a>
                     </div>
                 </li>
                 <li><a href="{{ url('/duas') }}">Duas</a></li>
@@ -84,17 +93,41 @@
 
     <div class="mobile-drawer" id="mobile-menu">
         <ul class="mobile-nav-list">
-            <li><a href="{{ url('/') }}">Home</a></li>
-            <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
-            <li><a href="{{ url('/khutbah') }}">Khutbah</a></li>
-            <li><a href="{{ route('notices.index') }}">Notice Board</a></li>
-            <li><a href="{{ route('newsletters.index') }}">Newsletter</a></li>
-            <li><a href="{{ url('/services/marriage') }}">Marriage Service</a></li>
-            <li><a href="{{ url('/services/janazah') }}">Janaza Service</a></li>
-            <li><a href="{{ url('/duas') }}">Duas</a></li>
-            <li><a href="{{ url('/people') }}">Our people</a></li>
-            <li><a href="{{ url('/contact') }}">Contact Us</a></li>
-            <li><a href="{{ url('/donate') }}" class="mobile-donate">Donate Now</a></li>
+            <li><a href="{{ url('/') }}">🏠 Home</a></li>
+            
+            <!-- Services Dropdown -->
+            <li class="mobile-dropdown">
+                <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
+                    <span>🕌 Services</span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <ul class="mobile-dropdown-content">
+                    <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
+                    <li><a href="{{ url('/services/marriage') }}">Marriage (Nikah)</a></li>
+                    <li><a href="{{ url('/services/janazah') }}">Funeral (Janazah)</a></li>
+                    <li><a href="{{ url('/services/visit') }}">Visit Mosque</a></li>
+                    <li><a href="{{ url('/counseling') }}">Counseling</a></li>
+                </ul>
+            </li>
+            
+            <li><a href="{{ url('/khutbah') }}">📖 Khutbah</a></li>
+            
+            <!-- Community Dropdown -->
+            <li class="mobile-dropdown">
+                <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
+                    <span>👥 Community</span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <ul class="mobile-dropdown-content">
+                    <li><a href="{{ route('notices.index') }}">Notice Board</a></li>
+                    <li><a href="{{ route('newsletters.index') }}">Newsletter</a></li>
+                    <li><a href="{{ url('/people') }}">Our People</a></li>
+                </ul>
+            </li>
+            
+            <li><a href="{{ url('/duas') }}">🤲 Duas</a></li>
+            <li><a href="{{ url('/contact') }}">📧 Contact Us</a></li>
+            <li><a href="{{ url('/donate') }}" class="mobile-donate">💚 Donate Now</a></li>
         </ul>
     </div>
 
@@ -112,6 +145,8 @@
                 this.classList.toggle('is-open');
                 menu.classList.toggle('is-visible');
                 overlay.classList.toggle('is-visible');
+                // Prevent body scroll when menu is open
+                document.body.style.overflow = menu.classList.contains('is-visible') ? 'hidden' : '';
             });
         }
 
@@ -120,7 +155,24 @@
                 toggle.classList.remove('is-open');
                 menu.classList.remove('is-visible');
                 this.classList.remove('is-visible');
+                document.body.style.overflow = '';
             });
         }
     });
+
+    // Mobile dropdown toggle function
+    function toggleMobileDropdown(element) {
+        const parent = element.parentElement;
+        const isOpen = parent.classList.contains('is-open');
+        
+        // Close all other dropdowns
+        document.querySelectorAll('.mobile-dropdown.is-open').forEach(function(dropdown) {
+            if (dropdown !== parent) {
+                dropdown.classList.remove('is-open');
+            }
+        });
+        
+        // Toggle current dropdown
+        parent.classList.toggle('is-open', !isOpen);
+    }
 </script>

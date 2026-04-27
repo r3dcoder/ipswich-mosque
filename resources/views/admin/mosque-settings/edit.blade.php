@@ -21,7 +21,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.mosque-settings.update') }}" class="space-y-8">
+    <form method="POST" action="{{ route('admin.mosque-settings.update') }}" class="space-y-8" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -50,6 +50,20 @@
                     <input type="email" id="email" name="email" value="{{ old('email', $settings->email) }}" 
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                         placeholder="info@mosque.org">
+                </div>
+
+                <div>
+                    <label for="charity_number" class="block text-sm font-medium text-gray-700 mb-2">Registered Charity No</label>
+                    <input type="text" id="charity_number" name="charity_number" value="{{ old('charity_number', $settings->charity_number) }}" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        placeholder="e.g. 1234567">
+                </div>
+
+                <div>
+                    <label for="company_number" class="block text-sm font-medium text-gray-700 mb-2">Company No</label>
+                    <input type="text" id="company_number" name="company_number" value="{{ old('company_number', $settings->company_number) }}" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        placeholder="e.g. 01234567">
                 </div>
 
                 <div>
@@ -151,6 +165,43 @@
                     <input type="text" id="bank_sort_code" name="bank_sort_code" value="{{ old('bank_sort_code', $settings->bank_sort_code) }}" 
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                         placeholder="30-94-55">
+                </div>
+            </div>
+        </div>
+
+        <!-- Branding Settings (Logo & Favicon) -->
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                <span>🎨</span> Branding (Logo & Favicon)
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Logo Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Mosque Logo</label>
+                    @if($settings->logo_path)
+                        <div class="mb-3">
+                            <img src="{{ $settings->logo_url }}" alt="Current Logo" class="h-20 w-auto rounded-lg border border-gray-200 p-2">
+                            <p class="text-xs text-gray-500 mt-1">Current logo</p>
+                        </div>
+                    @endif
+                    <input type="file" id="logo" name="logo" accept="image/*"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                    <p class="mt-2 text-sm text-gray-500">Upload a logo image (PNG, JPG, SVG). Max 2MB.</p>
+                </div>
+
+                <!-- Favicon Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Favicon</label>
+                    @if($settings->favicon_path)
+                        <div class="mb-3">
+                            <img src="{{ $settings->favicon_url }}" alt="Current Favicon" class="h-12 w-12 rounded-lg border border-gray-200 p-1">
+                            <p class="text-xs text-gray-500 mt-1">Current favicon</p>
+                        </div>
+                    @endif
+                    <input type="file" id="favicon" name="favicon" accept="image/*"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                    <p class="mt-2 text-sm text-gray-500">Upload a favicon image (ideally 32x32 or 64x64 PNG/ICO). Max 1MB.</p>
                 </div>
             </div>
         </div>
