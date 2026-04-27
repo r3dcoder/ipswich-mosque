@@ -60,7 +60,7 @@
             <ul class="nav-links-wrap">
                 <li><a href="{{ url('/') }}">Home</a></li>
                 <li class="dropdown-item">
-                    <a href="javascript:void(0)" class="drop-trigger">Services ▼</a>
+                    <a href="javascript:void(0)" class="drop-trigger">Our Services ▼</a>
                     <div class="dropdown-content">
                         <a href="{{ url('/ramadan') }}">Ramadan</a>
                         <a href="{{ url('/services/marriage') }}">Marriage (Nikah)</a>
@@ -97,7 +97,7 @@
             <!-- Services Dropdown -->
             <li class="mobile-dropdown">
                 <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
-                    <span>🕌 Services</span>
+                    <span>🕌 Our Services</span>
                     <span class="dropdown-arrow">▼</span>
                 </div>
                 <ul class="mobile-dropdown-content">
