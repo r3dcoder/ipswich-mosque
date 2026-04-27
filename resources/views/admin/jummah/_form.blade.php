@@ -22,7 +22,7 @@
     <div>
         <label class="block text-sm font-medium mb-1">Khutbah Time (HH:MM)</label>
         <input type="time" name="khutbah_time"
-               value="{{ old('khutbah_time', $schedule?->khutbah_time) }}"
+               value="{{ old('khutbah_time', $schedule?->khutbah_time_for_form) }}"
                class="w-full rounded-lg border-gray-300 focus:border-gray-900 focus:ring-gray-900">
         @error('khutbah_time') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
     </div>
@@ -30,7 +30,7 @@
     <div>
         <label class="block text-sm font-medium mb-1">Salah Time (HH:MM)</label>
         <input type="time" name="salah_time"
-               value="{{ old('salah_time', $schedule?->salah_time) }}"
+               value="{{ old('salah_time', $schedule?->salah_time_for_form) }}"
                class="w-full rounded-lg border-gray-300 focus:border-gray-900 focus:ring-gray-900">
         @error('salah_time') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
     </div>
@@ -44,11 +44,19 @@
         @error('note') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
     </div>
 
-    <div class="md:col-span-2 flex items-center gap-2">
-        <input type="checkbox" id="is_active" name="is_active" value="1"
-               {{ old('is_active', $schedule?->is_active) ? 'checked' : '' }}
-               class="rounded border-gray-300 text-gray-900 focus:ring-gray-900">
-        <label for="is_active" class="text-sm">Active</label>
+    <div class="md:col-span-2">
+        <label class="block text-sm font-medium mb-2">Status</label>
+        <label class="inline-flex items-center cursor-pointer group">
+            <input type="checkbox" id="is_active" name="is_active" value="1"
+                   {{ old('is_active', $schedule?->is_active) ? 'checked' : '' }}
+                   class="w-5 h-5 rounded border-gray-400 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 ease-in-out cursor-pointer">
+            <span class="ml-3 text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
+                <span class="inline-flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full {{ old('is_active', $schedule?->is_active) ? 'bg-green-500' : 'bg-gray-400' }}"></span>
+                    {{ old('is_active', $schedule?->is_active) ? 'Active' : 'Inactive' }}
+                </span>
+            </span>
+        </label>
         @error('is_active') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
     </div>
 </div>

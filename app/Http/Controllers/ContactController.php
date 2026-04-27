@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\MosqueSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
@@ -16,7 +17,8 @@ class ContactController extends Controller
      */
     public function index()
     {
-        return view('contact');
+        $mapSettings = MosqueSetting::getSettings();
+        return view('contact', compact('mapSettings'));
     }
 
     /**

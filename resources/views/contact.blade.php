@@ -156,15 +156,15 @@
                     <div class="space-y-3">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Monday - Friday</span>
-                            <span class="font-medium">9:00 AM - 5:00 PM</span>
+                            <span class="font-medium">{{ $mapSettings->office_monday_friday ?? '9:00 AM - 5:00 PM' }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Saturday</span>
-                            <span class="font-medium">10:00 AM - 2:00 PM</span>
+                            <span class="font-medium">{{ $mapSettings->office_saturday ?? '10:00 AM - 2:00 PM' }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Sunday</span>
-                            <span class="font-medium">Closed</span>
+                            <span class="font-medium">{{ $mapSettings->office_sunday ?? 'Closed' }}</span>
                         </div>
                     </div>
                     <div class="mt-6 p-4 bg-green-50 rounded-lg">

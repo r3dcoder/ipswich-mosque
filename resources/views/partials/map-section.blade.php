@@ -1,3 +1,7 @@
+@php
+    $mapSettings = \App\Models\MosqueSetting::getSettings();
+@endphp
+
 <section class="w-full py-20 bg-white">
   <div class="max-w-6xl mx-auto px-6">
     
@@ -30,26 +34,31 @@
           </h2>
           
           <div class="grid gap-8">
+            @if($mapSettings->phone)
             <div class="group flex items-center gap-6">
               <div class="w-14 h-14 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center text-[#0a5134] group-hover:bg-[#0a5134] group-hover:text-white transition-all duration-300">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
               </div>
               <div>
                 <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-0.5">Direct Line</p>
-                <a href="tel:+441473217493" class="text-xl font-bold text-gray-800 hover:text-[#0a5134] transition-colors">+44 1473 217493</a>
+                <a href="tel:{{ $mapSettings->phone }}" class="text-xl font-bold text-gray-800 hover:text-[#0a5134] transition-colors">{{ $mapSettings->phone }}</a>
               </div>
             </div>
+            @endif
 
+            @if($mapSettings->email)
             <div class="group flex items-center gap-6">
               <div class="w-14 h-14 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center text-[#0a5134] group-hover:bg-[#0a5134] group-hover:text-white transition-all duration-300">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
               </div>
               <div>
                 <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-0.5">Support Email</p>
-                <a href="mailto:info@ipswichmosque.org" class="text-xl font-bold text-gray-800 hover:text-[#0a5134] transition-colors">info@ipswichmosque.org</a>
+                <a href="mailto:{{ $mapSettings->email }}" class="text-xl font-bold text-gray-800 hover:text-[#0a5134] transition-colors">{{ $mapSettings->email }}</a>
               </div>
             </div>
+            @endif
 
+            @if($mapSettings->address)
             <div class="group flex items-start gap-6">
               <div class="w-14 h-14 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center text-[#0a5134] group-hover:bg-[#0a5134] group-hover:text-white transition-all duration-300 flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -57,10 +66,11 @@
               <div>
                 <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-0.5">Location</p>
                 <p class="text-lg font-bold text-gray-800 leading-tight">
-                  Bond Street, Ipswich,<br>IP4 1JD, UK
+                  {!! nl2br(e($mapSettings->address)) !!}
                 </p>
               </div>
             </div>
+            @endif
           </div>
 
           <div class="mt-12 pt-8 border-t border-gray-100">

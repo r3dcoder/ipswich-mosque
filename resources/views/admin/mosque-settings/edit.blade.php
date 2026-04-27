@@ -66,11 +66,41 @@
                         placeholder="e.g. 01234567">
                 </div>
 
-                <div>
+                <div class="md:col-span-2">
                     <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address</label>
                     <textarea id="address" name="address" rows="2" 
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                         placeholder="Mosque address...">{{ old('address', $settings->address) }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Office Hours Section -->
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                <span>🕐</span> Office Hours
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label for="office_monday_friday" class="block text-sm font-medium text-gray-700 mb-2">Monday - Friday</label>
+                    <input type="text" id="office_monday_friday" name="office_monday_friday" value="{{ old('office_monday_friday', $settings->office_monday_friday) }}" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        placeholder="9:00 AM - 5:00 PM">
+                </div>
+
+                <div>
+                    <label for="office_saturday" class="block text-sm font-medium text-gray-700 mb-2">Saturday</label>
+                    <input type="text" id="office_saturday" name="office_saturday" value="{{ old('office_saturday', $settings->office_saturday) }}" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        placeholder="10:00 AM - 2:00 PM">
+                </div>
+
+                <div>
+                    <label for="office_sunday" class="block text-sm font-medium text-gray-700 mb-2">Sunday</label>
+                    <input type="text" id="office_sunday" name="office_sunday" value="{{ old('office_sunday', $settings->office_sunday) }}" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        placeholder="Closed">
                 </div>
             </div>
         </div>

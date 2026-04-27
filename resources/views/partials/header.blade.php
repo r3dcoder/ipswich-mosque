@@ -8,7 +8,7 @@
                     @if(isset($dailyPrayerHeader['jummah']) && $dailyPrayerHeader['jummah'])
                         {{ $dailyPrayerHeader['jummah']->salah_formatted ?? '1:15 PM' }}
                     @else
-                        1:151 PM
+                        1:15 PM
                     @endif
                 </span>
             </div>
