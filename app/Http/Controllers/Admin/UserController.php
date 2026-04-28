@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
 class UserController extends Controller
@@ -44,7 +43,7 @@ class UserController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password, // Auto-hashed by 'hashed' cast in User model
             'is_admin' => true,
         ]);
 
@@ -95,7 +94,7 @@ class UserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user->password = Hash::make($request->password);
+        $user->password = $request->password; // Auto-hashed by 'hashed' cast in User model
         $user->save();
 
         return redirect()->route('admin.users.index')
