@@ -10,10 +10,16 @@
         <p class="text-sm text-gray-600">Manage imported prayer timetable rows.</p>
     </div>
 
-    <a href="{{ route('admin.prayer-times.create') }}"
-       class="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm hover:bg-gray-800">
-        + Add Row
-    </a>
+    <div class="flex gap-2">
+        <a href="{{ route('admin.prayer-times.import') }}"
+           class="px-4 py-2 rounded-lg border border-gray-300 text-sm hover:bg-gray-50">
+            Import Excel
+        </a>
+        <a href="{{ route('admin.prayer-times.create') }}"
+           class="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm hover:bg-gray-800">
+            + Add Row
+        </a>
+    </div>
 </div>
 
 @if (session('success'))

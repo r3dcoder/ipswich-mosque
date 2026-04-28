@@ -3,11 +3,97 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\PrayerTimesImport;
 use App\Models\PrayerTime;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PrayerTimeController extends Controller
 {
+    /**
+     * Show the import form for uploading Excel files
+     */
+    public function import()
+    {
+        return view('admin.prayer_times.import');
+    }
+
+    /**
+     * Process the uploaded Excel files
+     */
+    public function importStore(Request $request)
+    {
+        $request->validate([
+            'files' => 'required|array',
+            'files.*' => 'file|mimes:xlsx,xls,csv',
+        ]);
+
+        // Check if exactly 12 files are uploaded
+        if (count($request->file('files')) !== 12) {
+            return back()->withErrors(['files' => 'Please upload exactly 12 Excel files, one for each month.']);
+        }
+
+        // Month mapping - must match the original /import route file naming (Jan, Feb, Mar, etc.)
+        $monthMapping = [
+            'jan' => 'Jan',
+            'feb' => 'Feb',
+            'mar' => 'Mar',
+            'apr' => 'Apr',
+            'may' => 'May',
+            'jun' => 'Jun',
+            'jul' => 'Jul',
+            'aug' => 'Aug',
+            'sep' => 'Sep',
+            'oct' => 'Oct',
+            'nov' => 'Nov',
+            'dec' => 'Dec',
+        ];
+
+        $importedMonths = [];
+        $errors = [];
+
+        // Delete existing prayer times before import
+        PrayerTime::truncate();
+
+        foreach ($request->file('files') as $file) {
+            $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $fileNameLower = strtolower($fileName);
+
+            // Find matching month
+            $month = null;
+            foreach ($monthMapping as $key => $monthName) {
+                if (str_contains($fileNameLower, $key)) {
+                    $month = $monthName;
+                    break;
+                }
+            }
+
+            if (!$month) {
+                $errors[] = "Cannot determine month from filename: {$file->getClientOriginalName()}. Please use month names like 'Jan', 'Feb', 'Mar', etc.";
+                continue;
+            }
+
+            if (in_array($month, $importedMonths)) {
+                $errors[] = "Duplicate month detected: {$month}. Each file should represent a different month.";
+                continue;
+            }
+
+            try {
+                Excel::import(new PrayerTimesImport($month), $file);
+                $importedMonths[] = $month;
+            } catch (\Exception $e) {
+                $errors[] = "Error importing {$file->getClientOriginalName()}: " . $e->getMessage();
+            }
+        }
+
+        if (!empty($errors)) {
+            return back()->withErrors(['files' => implode(' | ', $errors)]);
+        }
+
+        return redirect()->route('admin.prayer-times.index')
+            ->with('success', 'Successfully imported prayer times for: ' . implode(', ', $importedMonths));
+    }
+
     public function index(Request $request)
     {
         $month = $request->query('month'); // e.g. APRIL

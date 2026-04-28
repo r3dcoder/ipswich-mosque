@@ -333,7 +333,7 @@
                     Prayer Times
                 </h1>
                 <p class="text-lg text-gray-600 mb-6">
-                    {{ $selectedMonth }} {{ date('Y') }} | {{ $prayerTimes->first()->hijri_month ?? '' }} - {{ $prayerTimes->first()->hijri_year ?? '' }} A.H.
+                    {{ $selectedMonthFull }} {{ date('Y') }} | Hijri: {{ $prayerTimes->first()->hijri_month ?? '' }} {{ $prayerTimes->first()->hijri_year ?? '' }} A.H.
                 </p>
                 
                 <!-- Month Selector -->
@@ -342,8 +342,25 @@
                         <label for="month" class="text-sm font-medium text-gray-700">Select Month:</label>
                         <select name="month" id="month" onchange="this.form.submit()" class="month-selector">
                             @foreach($months as $month)
+                                @php
+                                    $monthMapping = [
+                                        'Jan' => 'January',
+                                        'Feb' => 'February',
+                                        'Mar' => 'March',
+                                        'Apr' => 'April',
+                                        'May' => 'May',
+                                        'Jun' => 'June',
+                                        'Jul' => 'July',
+                                        'Aug' => 'August',
+                                        'Sep' => 'September',
+                                        'Oct' => 'October',
+                                        'Nov' => 'November',
+                                        'Dec' => 'December',
+                                    ];
+                                    $fullMonth = $monthMapping[$month] ?? $month;
+                                @endphp
                                 <option value="{{ $month }}" {{ $selectedMonth == $month ? 'selected' : '' }}>
-                                    {{ $month }}
+                                    {{ $fullMonth }}
                                 </option>
                             @endforeach
                         </select>
@@ -363,7 +380,7 @@
                         <thead>
                             <tr class="table-header">
                                 <th colspan="13" class="py-6 px-4 text-2xl font-bold">
-                                    {{ strtoupper($selectedMonth) }} Prayer Schedule
+                                    {{ strtoupper($selectedMonthFull) }} Prayer Schedule
                                 </th>
                             </tr>
                             

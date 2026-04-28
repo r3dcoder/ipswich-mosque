@@ -279,6 +279,8 @@ Route::middleware(['auth','admin'])
     ->name('admin.')
     ->group(function () {
         Route::resource('prayer-times', PrayerTimeController::class)->except(['show']);
+        Route::get('prayer-times/import', [PrayerTimeController::class, 'import'])->name('prayer-times.import');
+        Route::post('prayer-times/import', [PrayerTimeController::class, 'importStore'])->name('prayer-times.import.store');
     });
     Route::prefix('admin')->middleware('auth')->group(function () {
 });
