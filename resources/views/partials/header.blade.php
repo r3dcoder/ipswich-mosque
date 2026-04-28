@@ -6,7 +6,7 @@
                 <span class="jummah-label">Jummah Prayer</span>
                 <span class="jummah-time">
                     @if(isset($dailyPrayerHeader['jummah']) && $dailyPrayerHeader['jummah'])
-                        {{ $dailyPrayerHeader['jummah']->salah_formatted ?? '1:15 PM' }}
+                        {{ $dailyPrayerHeader['jummah']->zuhr_jamaat ?? '1:15 PM' }}
                     @else
                         1:15 PM
                     @endif

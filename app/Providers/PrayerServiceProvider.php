@@ -110,14 +110,40 @@ class PrayerServiceProvider extends ServiceProvider
                 // Build display string
                 $dateDisplay = $gregorianDate . " · " . $hijriDate;
 
-                // Jumuah times (hardcoded here, can also fetch from DB/config)
-
-                $jummah = JummahSchedule::query()
-                    ->where('is_active', true)
-                    ->orderByDesc('effective_from')   // latest active range first
-                    ->first();
-
-                $jumuahTimes = "JUM'A 13:15 & 14:15 · PRAYER TIMES";
+                // Jumuah times - fetch from PrayerTime table
+                // If today is Friday, show today's Zuhr Jama'at; otherwise show next Friday's
+                $now = Carbon::now();
+                $todayDayOfWeek = $now->dayOfWeek; // 0 = Sunday, 5 = Friday
+                $todayDate = $now->day;
+                $currentMonth = $now->format('M');
+                
+                $jummah = null;
+                
+                if ($todayDayOfWeek == 5) {
+                    // Today is Friday - show today's Zuhr Jama'at
+                    $jummah = PrayerTime::where('date', $todayDate)
+                        ->where('month', $currentMonth)
+                        ->first();
+                } else {
+                    // Find next Friday
+                    $daysUntilFriday = (5 - $todayDayOfWeek + 7) % 7;
+                    if ($daysUntilFriday == 0) $daysUntilFriday = 7; // If somehow not caught above
+                    
+                    $nextFriday = (clone $now)->addDays($daysUntilFriday);
+                    $nextFridayDate = $nextFriday->day;
+                    $nextFridayMonth = $nextFriday->format('M');
+                    
+                    $jummah = PrayerTime::where('date', $nextFridayDate)
+                        ->where('month', $nextFridayMonth)
+                        ->first();
+                    
+                    // If not found in next month, try current month (edge case for month end)
+                    if (!$jummah && $nextFridayMonth !== $currentMonth) {
+                        $jummah = PrayerTime::where('date', $nextFridayDate)
+                            ->where('month', $currentMonth)
+                            ->first();
+                    }
+                }
 
                 $dailyPrayerHeader = [
                     'date'       => $gregorianDate,
