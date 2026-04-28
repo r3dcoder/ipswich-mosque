@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\PageBlockController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PrayerTimeController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RamadanController;
 use App\Http\Controllers\Admin\RamadanEventController;
 use App\Http\Controllers\AdminController;
@@ -281,6 +282,16 @@ Route::middleware(['auth','admin'])
         Route::resource('prayer-times', PrayerTimeController::class)->except(['show']);
         Route::get('prayer-times/import', [PrayerTimeController::class, 'import'])->name('prayer-times.import');
         Route::post('prayer-times/import', [PrayerTimeController::class, 'importStore'])->name('prayer-times.import.store');
+
+        // Admin User Management
+        Route::get('users', [UserController::class, 'index'])->name('users.index');
+        Route::get('users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('users', [UserController::class, 'store'])->name('users.store');
+        Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::get('users/{user}/password', [UserController::class, 'editPassword'])->name('users.password');
+        Route::put('users/{user}/password', [UserController::class, 'updatePassword'])->name('users.password.update');
+        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
     Route::prefix('admin')->middleware('auth')->group(function () {
 });

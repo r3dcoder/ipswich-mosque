@@ -38,9 +38,9 @@ body { font-family: 'Roboto', sans-serif; overflow-x: hidden; }
 
 /* --- Prayer Ribbon --- */
 .prayer-ribbon { border-bottom: 1px solid var(--border-light); padding: 12px 0; }
-.jummah-box { background: var(--brand-green); color: white; padding: 8px 15px; border-radius: 10px; min-width: 130px; }
-.jummah-label { font-size: 9px; text-transform: uppercase; font-weight: 700; display: block; }
-.jummah-time { font-size: 1rem; font-weight: 800; }
+.jummah-box { background: var(--brand-green); color: white; padding: 8px 15px; border-radius: 10px; min-width: 130px; text-align: center; }
+.jummah-label { font-size: 9px; text-transform: uppercase; font-weight: 700; display: block; text-align: center; }
+.jummah-time { font-size: 1rem; font-weight: 800; text-align: center; display: block; }
 
 .prayer-grid-table { display: flex; gap: 12px; }
 .prayer-column { text-align: center; border-right: 1px solid var(--border-light); padding: 5px 15px; min-width: 95px; border-radius: 8px; transition: 0.3s; }
