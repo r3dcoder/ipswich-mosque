@@ -99,7 +99,15 @@ The system caches YouTube API responses to:
 
 ## API Quota Management
 
-YouTube Data API has daily quota limits. The system is optimized to:
+YouTube Data API has daily quota limits (default: 10,000 units/day). Each API call consumes quota units:
+
+| Operation | Quota Cost |
+|-----------|------------|
+| Search (list videos) | 100 units |
+| Channel info lookup | 1 unit |
+| Video details | 161 units |
+
+The system is optimized to:
 - Use caching to minimize API calls
 - Limit the number of videos fetched per sync
 - Only fetch necessary data fields
@@ -108,6 +116,32 @@ YouTube Data API has daily quota limits. The system is optimized to:
 - Channel info lookup: ~1 unit (cached 24 hours)
 - Video search (3x daily): ~100 units per call = 300 units
 - Total: ~301 units/day (well within the 10,000 unit daily limit)
+
+### Understanding Quota Exceeded Errors
+
+If you see the error **"The request cannot be completed because you have exceeded your quota"**, this means:
+
+1. **Daily limit reached**: The API key has used all 10,000 quota units for the day
+2. **Quota resets daily**: The quota automatically resets at midnight Pacific Time (PT)
+3. **Common causes**:
+   - Too many sync operations in a short period
+   - Multiple applications using the same API key
+   - Cache not working properly (causing repeated API calls)
+
+**To resolve quota issues:**
+
+1. **Wait for quota reset**: Quota resets daily at midnight PT (approximately 8 hours from now if you're in Europe)
+
+2. **Check cache is working**: The system caches API responses for 1 hour. If cache isn't working, quota will be consumed faster.
+   ```bash
+   php artisan cache:clear
+   ```
+
+3. **Reduce sync frequency**: Edit `routes/console.php` to sync less frequently
+
+4. **Request quota increase**: Go to [Google Cloud Console Quotas](https://console.cloud.google.com/apis/api/youtube.googleapis.com/quotas) to request more quota
+
+5. **Monitor usage**: Check your API usage at [Google Cloud Console](https://console.cloud.google.com/apis/api/youtube.googleapis.com)
 
 ## Troubleshooting
 
@@ -129,12 +163,20 @@ YouTube Data API has daily quota limits. The system is optimized to:
    tail -f storage/logs/laravel.log
    ```
 
+4. Check for quota exceeded error:
+   ```bash
+   # Look for quota errors in logs
+   grep -i "quota" storage/logs/laravel.log
+   ```
+
 ### API Quota Exceeded
 
 If you see quota errors:
-1. Reduce sync frequency in `routes/console.php`
-2. Increase cache duration in `YouTubeService.php`
-3. Request quota increase from Google Cloud Console
+1. **Wait for reset**: Quota resets daily at midnight Pacific Time
+2. **Reduce sync frequency** in `routes/console.php`
+3. **Increase cache duration** in `YouTubeService.php` (default is 3600 seconds = 1 hour)
+4. **Request quota increase** from [Google Cloud Console Quotas](https://console.cloud.google.com/apis/api/youtube.googleapis.com/quotas)
+5. **Check for cache issues**: Ensure Redis/file caching is working properly
 
 ### Channel Not Found
 

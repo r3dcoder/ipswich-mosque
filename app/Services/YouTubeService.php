@@ -116,6 +116,23 @@ class YouTubeService
                 if ($response->successful()) {
                     $data = $response->json();
                     $videos = $this->parseVideoResults($data['items'] ?? []);
+                } else {
+                    // Log the specific error for debugging
+                    $statusCode = $response->status();
+                    $errorBody = $response->json() ?? [];
+                    $errorMessage = $errorBody['error']['message'] ?? 'Unknown error';
+                    Log::error('YouTube API Error - Getting Videos', [
+                        'status_code' => $statusCode,
+                        'error' => $errorMessage,
+                        'channel_id' => $channelId,
+                    ]);
+                    
+                    // Check for quota exceeded
+                    if ($statusCode === 403 && str_contains($errorMessage, 'quota')) {
+                        Log::critical('YouTube API Quota Exceeded - Cannot fetch videos');
+                    }
+                    
+                    return [];
                 }
 
                 // Also fetch past live streams specifically
@@ -147,6 +164,15 @@ class YouTubeService
                             return strtotime($b['published_at'] ?? 0) - strtotime($a['published_at'] ?? 0);
                         });
                         $videos = array_slice($videos, 0, $maxResults);
+                    } else {
+                        // Log but don't fail - we already have some videos
+                        $statusCode = $liveResponse->status();
+                        $errorBody = $liveResponse->json() ?? [];
+                        $errorMessage = $errorBody['error']['message'] ?? 'Unknown error';
+                        Log::warning('YouTube API Error - Getting Live Videos', [
+                            'status_code' => $statusCode,
+                            'error' => $errorMessage,
+                        ]);
                     }
                 }
 
@@ -408,5 +434,44 @@ class YouTubeService
     public function isConfigured(): bool
     {
         return !empty($this->apiKey);
+    }
+
+    /**
+     * Check if the last API error was a quota exceeded error
+     * This can be used to provide a more specific error message to users
+     */
+    public function checkQuotaError(): bool
+    {
+        if (empty($this->apiKey)) {
+            return false;
+        }
+
+        $channelId = $this->getChannelId();
+        if (!$channelId) {
+            return false;
+        }
+
+        try {
+            $response = Http::get("{$this->baseUrl}/search", [
+                'part' => 'snippet',
+                'channelId' => $channelId,
+                'order' => 'date',
+                'type' => 'video',
+                'maxResults' => 1,
+                'key' => $this->apiKey,
+            ]);
+
+            if (!$response->successful()) {
+                $statusCode = $response->status();
+                $errorBody = $response->json() ?? [];
+                $errorMessage = $errorBody['error']['message'] ?? '';
+                
+                return $statusCode === 403 && str_contains($errorMessage, 'quota');
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return false;
     }
 }

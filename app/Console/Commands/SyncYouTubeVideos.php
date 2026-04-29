@@ -41,6 +41,14 @@ class SyncYouTubeVideos extends Command
         $videos = $this->youtubeService->getChannelVideos($limit, true);
 
         if (empty($videos)) {
+            // Check if this is a quota exceeded error
+            if ($this->youtubeService->checkQuotaError()) {
+                $this->error('YouTube API quota exceeded. The daily API limit has been reached.');
+                $this->info('Please try again later or consider increasing your API quota in Google Cloud Console.');
+                $this->info('Quota resets daily. Visit: https://console.cloud.google.com/apis/api/youtube.googleapis.com/quotas');
+                return Command::FAILURE;
+            }
+            
             $this->warn('No videos found or unable to fetch from YouTube.');
             return Command::SUCCESS;
         }

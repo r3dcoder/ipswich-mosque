@@ -207,6 +207,13 @@ class KhutbahController extends Controller
             ]);
             
             if (empty($videos)) {
+                // Check if this is a quota exceeded error
+                $isQuotaExceeded = $youtubeService->checkQuotaError();
+                
+                if ($isQuotaExceeded) {
+                    return back()->with('error', 'YouTube API quota exceeded. The daily API limit has been reached. Please try again later or consider increasing your API quota in Google Cloud Console. Quota resets daily.');
+                }
+                
                 return back()->with('error', 'No videos found on YouTube channel. Please check your API key and channel handle.');
             }
             
