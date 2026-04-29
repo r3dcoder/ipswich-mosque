@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Khutbah;
+use App\Services\YouTubeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -176,6 +177,66 @@ class KhutbahController extends Controller
         $khutbah->update(['is_active' => !$khutbah->is_active]);
 
         return back()->with('success', 'Active status updated.');
+    }
+
+    /**
+     * Sync videos from YouTube channel.
+     */
+    public function syncYouTube(YouTubeService $youtubeService)
+    {
+        if (!$youtubeService->isConfigured()) {
+            return back()->with('error', 'YouTube API key is not configured. Please add YOUTUBE_API_KEY to your .env file.');
+        }
+
+        try {
+            // Get videos from YouTube
+            $videos = $youtubeService->getChannelVideos(30, true);
+            
+            // Get existing YouTube IDs to avoid duplicates
+            $existingYoutubeIds = Khutbah::whereNotNull('youtube_id')
+                ->pluck('youtube_id')
+                ->toArray();
+            
+            $importedCount = 0;
+            $skippedCount = 0;
+            
+            foreach ($videos as $video) {
+                // Skip if already exists
+                if (in_array($video['youtube_id'], $existingYoutubeIds)) {
+                    $skippedCount++;
+                    continue;
+                }
+                
+                // Detect category from title
+                $categoryInfo = $youtubeService->detectCategory($video['title']);
+                
+                // Create new khutbah entry
+                Khutbah::create([
+                    'title' => $video['title'],
+                    'description' => $video['description'] ?? null,
+                    'youtube_url' => "https://www.youtube.com/watch?v={$video['youtube_id']}",
+                    'youtube_id' => $video['youtube_id'],
+                    'thumbnail_url' => $video['thumbnail_url'] ?? "https://img.youtube.com/vi/{$video['youtube_id']}/maxresdefault.jpg",
+                    'speaker' => 'Ipswich Mosque',
+                    'category' => $categoryInfo['category'],
+                    'delivered_date' => isset($video['published_at']) ? date('Y-m-d', strtotime($video['published_at'])) : null,
+                    'duration' => null,
+                    'is_featured' => false,
+                    'is_active' => true,
+                    'sort_order' => 0,
+                ]);
+                
+                $importedCount++;
+            }
+            
+            // Clear cache to refresh videos
+            cache()->forget('youtube_videos_' . md5($youtubeService->getChannelId() . '_30_1'));
+            
+            return back()->with('success', "Successfully imported {$importedCount} videos from YouTube. Skipped {$skippedCount} existing videos.");
+            
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to sync videos from YouTube: ' . $e->getMessage());
+        }
     }
 
     /**

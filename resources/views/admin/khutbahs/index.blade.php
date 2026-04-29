@@ -11,7 +11,15 @@
             <p class="text-sm text-gray-600">Manage Friday sermons and Islamic lectures</p>
         </div>
 
-        <div class="flex gap-2">
+        <div class="flex gap-2 flex-wrap">
+            <form action="{{ route('admin.khutbahs.sync-youtube') }}" method="POST" class="inline" onsubmit="return confirm('Sync videos from YouTube channel? This may take a moment.')">
+                @csrf
+                <button type="submit" class="px-4 py-2 rounded-lg bg-red-600 text-white text-sm hover:bg-red-700 flex items-center gap-2">
+                    <i class="fab fa-youtube"></i>
+                    Sync from YouTube
+                </button>
+            </form>
+            
             <a href="{{ route('admin.khutbahs.create') }}" 
                class="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm hover:bg-gray-800">
                 Add New Khutbah

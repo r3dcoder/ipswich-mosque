@@ -20,11 +20,6 @@ return Application::configure(basePath: dirname(__DIR__))
             
         ]);
         
-        // Apply YouTube sync middleware to specific routes
-        $middleware->group('web', [
-            SyncYouTubeVideos::class,
-        ]);
-        
         // Exempt Stripe webhook from CSRF verification
         $middleware->validateCsrfTokens(except: [
             'stripe-webhook',

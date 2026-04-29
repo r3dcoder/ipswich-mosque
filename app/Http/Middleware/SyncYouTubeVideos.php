@@ -54,6 +54,12 @@ class SyncYouTubeVideos
             // Log error but don't interrupt the request
             \Log::error('Background YouTube sync failed: ' . $e->getMessage());
         }
+        
+        // Share errors with views (for Blade components like x-input-error)
+        if (!isset($errors)) {
+            $errors = new \Illuminate\Support\ViewErrorBag();
+        }
+        app()->instance('errors', $errors);
 
         return $next($request);
     }

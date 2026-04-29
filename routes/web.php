@@ -80,7 +80,7 @@ Route::post('/services/marriage/booking', [MarriageBookingController::class, 'st
 Route::get('/services/visit', function () { return view('services.visit'); })->name('visit.show');
 
 // Route::get('/services/janazah', [MarriageBookingController::class, 'show'])->name('marriage.show');
-Route::get('/khutbah', [KhutbahController::class, 'index'])->name('khutbah.index');
+Route::get('/khutbah', [KhutbahController::class, 'index'])->name('khutbah.index')->middleware('sync.youtube');
 
 Route::get('/services/janazah', [FuneralController::class, 'show'])->name('janazah.show');
 Route::post('/services/janazah', [FuneralController::class, 'store'])->name('janazah.store');
@@ -353,6 +353,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('khutbahs/{khutbah}', [AdminKhutbahController::class, 'destroy'])->name('khutbahs.destroy');
     Route::post('khutbahs/{khutbah}/toggle-featured', [AdminKhutbahController::class, 'toggleFeatured'])->name('khutbahs.toggle-featured');
     Route::post('khutbahs/{khutbah}/toggle-active', [AdminKhutbahController::class, 'toggleActive'])->name('khutbahs.toggle-active');
+    Route::post('khutbahs/sync-youtube', [AdminKhutbahController::class, 'syncYouTube'])->name('khutbahs.sync-youtube');
 });
 
 // Admin Mosque Settings Routes
