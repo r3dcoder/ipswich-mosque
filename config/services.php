@@ -40,4 +40,9 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'youtube' => [
+        'api_key' => env('YOUTUBE_API_KEY', ''),
+        'channel_handle' => env('YOUTUBE_CHANNEL_HANDLE', '@ipswichmosque1980'),
+    ],
+
 ];

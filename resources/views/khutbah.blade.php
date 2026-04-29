@@ -25,6 +25,58 @@
                 <p class="text-slate-300 text-lg max-w-2xl mx-auto">Watch and learn from our collection of Friday sermons and special Islamic lectures</p>
             </div>
 
+            @if($liveStream)
+                <!-- Live Stream Banner -->
+                <div class="max-w-4xl mx-auto mb-8">
+                    <div class="bg-red-600/90 backdrop-blur-md rounded-2xl p-6 border-2 border-red-400 shadow-2xl animate-pulse">
+                        <div class="flex items-center justify-center gap-3 mb-4">
+                            <span class="bg-white text-red-600 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                <span class="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
+                                LIVE NOW
+                            </span>
+                            <span class="text-white font-semibold">Friday Jumu'ah Live Stream</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-white text-center mb-4">{{ $liveStream['title'] }}</h2>
+                        <div class="flex justify-center">
+                            <button onclick="openVideoModal('{{ $liveStream['youtube_id'] }}', '{{ addslashes($liveStream['title']) }}', '{{ addslashes($liveStream['description'] ?? '') }}', 'Ipswich Mosque', '{{ now()->format('M d, Y') }}', 'LIVE')" 
+                                    class="px-8 py-3 bg-white text-red-600 font-bold rounded-xl hover:bg-red-50 transition-all flex items-center gap-2">
+                                <i class="fas fa-play"></i>
+                                Watch Live
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if(count($upcomingStreams) > 0)
+                <!-- Upcoming Streams Section -->
+                <div class="max-w-4xl mx-auto mb-8">
+                    <div class="bg-emerald-600/20 backdrop-blur-md rounded-2xl p-6 border border-emerald-500/30">
+                        <h3 class="text-lg font-bold text-emerald-300 mb-4 flex items-center gap-2">
+                            <i class="fas fa-clock"></i>
+                            Upcoming Streams
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            @foreach($upcomingStreams as $stream)
+                                <div class="bg-white/10 rounded-xl p-4 border border-white/20">
+                                    <div class="flex items-start gap-3">
+                                        <img src="{{ $stream['thumbnail_url'] }}" alt="{{ $stream['title'] }}" class="w-20 h-14 object-cover rounded-lg">
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="text-sm font-semibold text-white truncate">{{ $stream['title'] }}</h4>
+                                            <p class="text-xs text-slate-300 mt-1">{{ $stream['formatted_date'] ?? 'Coming Soon' }}</p>
+                                        </div>
+                                    </div>
+                                    <button onclick="openVideoModal('{{ $stream['youtube_id'] }}', '{{ addslashes($stream['title']) }}', '{{ addslashes($stream['description'] ?? '') }}', 'Ipswich Mosque', '{{ $stream['formatted_date'] ?? 'Coming Soon' }}', 'Upcoming')" 
+                                            class="mt-3 w-full px-4 py-2 bg-emerald-500/30 hover:bg-emerald-500/50 text-emerald-200 text-sm font-semibold rounded-lg transition-all border border-emerald-500/30">
+                                        <i class="fas fa-bell mr-1"></i> Set Reminder
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             @if($featuredKhutbah)
                 <!-- Featured Khutbah Card -->
                 <div class="max-w-5xl mx-auto">
@@ -81,7 +133,7 @@
                         </div>
                     </div>
                 </div>
-            @else
+            @elseif(!$liveStream)
                 <div class="max-w-3xl mx-auto text-center">
                     <div class="bg-white/5 backdrop-blur-md rounded-3xl p-12 border border-white/10">
                         <div class="w-20 h-20 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -135,42 +187,80 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($khutbahs as $khutbah)
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group">
-                        <div class="relative aspect-video bg-gray-100 cursor-pointer overflow-hidden" onclick="openVideoModal('{{ $khutbah->youtube_id }}', '{{ addslashes($khutbah->title) }}', '{{ addslashes($khutbah->description ?? '') }}', '{{ $khutbah->speaker ?? 'Unknown' }}', '{{ $khutbah->formatted_date }}', '{{ $khutbah->formatted_duration }}')">
-                            <img src="{{ $khutbah->thumbnail_url }}" 
-                                 alt="{{ $khutbah->title }}"
+                        <div class="relative aspect-video bg-gray-100 cursor-pointer overflow-hidden" onclick="openVideoModal('{{ $khutbah['youtube_id'] }}', '{{ addslashes($khutbah['title']) }}', '{{ addslashes($khutbah['description'] ?? '') }}', '{{ $khutbah['speaker'] ?? 'Ipswich Mosque' }}', '{{ $khutbah['formatted_date'] }}', '{{ $khutbah['formatted_duration'] ?: ($khutbah['is_live'] ? 'LIVE' : '') }}')">
+                            <img src="{{ $khutbah['thumbnail_url'] }}" 
+                                 alt="{{ $khutbah['title'] }}"
                                  class="w-full h-full object-cover transition duration-500 group-hover:scale-105"
-                                 onerror="this.src='https://img.youtube.com/vi/{{ $khutbah->youtube_id }}/maxresdefault.jpg'; this.onerror=function(){this.src='https://placehold.co/640x360/e2e8f0/64748b?text=Video';}">
+                                 onerror="this.src='https://img.youtube.com/vi/{{ $khutbah['youtube_id'] }}/maxresdefault.jpg'; this.onerror=function(){this.src='https://placehold.co/640x360/e2e8f0/64748b?text=Video';}">
+                            
+                            <!-- Live Badge -->
+                            @if($khutbah['is_live'])
+                                <div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                                    <span class="w-2 h-2 bg-white rounded-full animate-ping"></span>
+                                    LIVE
+                                </div>
+                            @elseif($khutbah['was_live'] ?? false)
+                                <!-- Past Live Badge -->
+                                <div class="absolute top-3 left-3 bg-red-500/80 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                    <i class="fas fa-record-vinyl text-[10px]"></i>
+                                    Past Live
+                                </div>
+                            @endif
+                            
+                            <!-- Upcoming Badge -->
+                            @if($khutbah['is_upcoming'])
+                                <div class="absolute top-3 left-3 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                    <i class="fas fa-clock text-[10px]"></i>
+                                    Upcoming
+                                </div>
+                            @endif
+                            
+                            <!-- Source Badge (YouTube) -->
+                            @if($khutbah['source'] === 'youtube' && !$khutbah['is_live'] && !$khutbah['is_upcoming'])
+                                <div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                                    <i class="fab fa-youtube"></i>
+                                </div>
+                            @endif
+                            
                             <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
                                 <div class="w-14 h-14 bg-emerald-500/90 rounded-full flex items-center justify-center text-white shadow-lg transform translate-y-4 group-hover:translate-y-0 transition duration-300">
                                     <i class="fas fa-play text-lg ml-0.5"></i>
                                 </div>
                             </div>
-                            @if($khutbah->is_featured)
-                                <div class="absolute top-3 left-3 bg-yellow-500 text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                            @if($khutbah['is_featured'] && $khutbah['source'] === 'database')
+                                <div class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
                                     <i class="fas fa-star text-[10px]"></i>
                                     Featured
                                 </div>
                             @endif
-                            <div class="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                <i class="fas fa-clock mr-1"></i>{{ $khutbah->formatted_duration }}
-                            </div>
+                            @if($khutbah['formatted_duration'])
+                                <div class="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                    <i class="fas fa-clock mr-1"></i>{{ $khutbah['formatted_duration'] }}
+                                </div>
+                            @endif
                         </div>
                         <div class="p-5">
                             <div class="flex items-center gap-2 mb-2">
-                                <span class="text-emerald-600 text-xs font-semibold uppercase tracking-wide">{{ $khutbah->category_label }}</span>
+                                <span class="text-emerald-600 text-xs font-semibold uppercase tracking-wide">{{ $khutbah['category_label'] }}</span>
+                                @if($khutbah['source'] === 'youtube')
+                                    <span class="text-gray-400 text-[10px] flex items-center gap-1">
+                                        <i class="fab fa-youtube text-red-600"></i>
+                                        YouTube
+                                    </span>
+                                @endif
                             </div>
-                            <h4 class="text-base font-bold text-slate-900 line-clamp-2 mb-3">{{ $khutbah->title }}</h4>
+                            <h4 class="text-base font-bold text-slate-900 line-clamp-2 mb-3">{{ $khutbah['title'] }}</h4>
                             <div class="flex items-center justify-between text-gray-400 text-xs">
                                 <div class="flex items-center gap-2">
                                     <span class="flex items-center gap-1">
                                         <i class="fas fa-user"></i>
-                                        <span class="truncate max-w-[100px]">{{ $khutbah->speaker ?? 'Unknown' }}</span>
+                                        <span class="truncate max-w-[100px]">{{ $khutbah['speaker'] ?? 'Ipswich Mosque' }}</span>
                                     </span>
                                 </div>
                                 <span class="flex items-center gap-1">
                                     <i class="fas fa-calendar"></i>
-                                    {{ $khutbah->formatted_date }}
+                                    {{ $khutbah['formatted_date'] }}
                                 </span>
                             </div>
                         </div>
@@ -266,7 +356,7 @@
         document.getElementById('videoDescription').textContent = description || '';
         document.getElementById('videoSpeaker').innerHTML = `<i class="fas fa-user"></i> ${speaker}`;
         document.getElementById('videoDate').innerHTML = `<i class="fas fa-calendar"></i> ${date}`;
-        document.getElementById('videoDuration').innerHTML = `<i class="fas fa-clock"></i> ${duration}`;
+        document.getElementById('videoDuration').innerHTML = `<i class="fas fa-clock"></i> ${duration || ''}`;
         
         // Show modal
         const modal = document.getElementById('videoModal');
