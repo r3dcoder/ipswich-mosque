@@ -498,7 +498,19 @@
     function setReminder(videoId, title, date) {
         // Check if browser supports notifications
         if (!('Notification' in window)) {
-            alert('Your browser does not support desktop notifications. But we\'ll remind you when you visit the site!');
+            alert('Your browser does not support notifications. But we\'ll remind you when you visit the site!');
+            return;
+        }
+
+        // Check if this is iOS and needs home screen installation
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        
+        if (isIOS && !isStandalone) {
+            // Show iOS-specific instructions
+            if (confirm('📱 For iPhone/iPad notifications to work, you need to add this website to your home screen first.\n\nWould you like to see instructions?')) {
+                alert('📲 How to add to Home Screen:\n\n1. Tap the Share button (square with arrow)\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right corner\n\nAfter adding, visit the site from your home screen and set the reminder again!');
+            }
             return;
         }
 
