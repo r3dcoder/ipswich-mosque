@@ -184,13 +184,31 @@ class KhutbahController extends Controller
      */
     public function syncYouTube(YouTubeService $youtubeService)
     {
+        // Check if API key is configured
         if (!$youtubeService->isConfigured()) {
             return back()->with('error', 'YouTube API key is not configured. Please add YOUTUBE_API_KEY to your .env file.');
         }
 
         try {
-            // Get videos from YouTube
+            // Get channel ID to verify connection
+            $channelId = $youtubeService->getChannelId();
+            if (!$channelId) {
+                return back()->with('error', 'Could not find YouTube channel. Please check your channel handle configuration.');
+            }
+            
+            // Get videos from YouTube (this will clear cache and fetch fresh)
             $videos = $youtubeService->getChannelVideos(30, true);
+            
+            // Log for debugging
+            \Log::info('YouTube Sync', [
+                'channel_id' => $channelId,
+                'videos_found' => count($videos),
+                'first_video' => $videos[0] ?? null,
+            ]);
+            
+            if (empty($videos)) {
+                return back()->with('error', 'No videos found on YouTube channel. Please check your API key and channel handle.');
+            }
             
             // Get existing YouTube IDs to avoid duplicates
             $existingYoutubeIds = Khutbah::whereNotNull('youtube_id')
@@ -230,11 +248,15 @@ class KhutbahController extends Controller
             }
             
             // Clear cache to refresh videos
-            cache()->forget('youtube_videos_' . md5($youtubeService->getChannelId() . '_30_1'));
+            cache()->forget('youtube_videos_' . md5($channelId . '_30_1'));
             
-            return back()->with('success', "Successfully imported {$importedCount} videos from YouTube. Skipped {$skippedCount} existing videos.");
+            return back()->with('success', "Successfully imported {$importedCount} videos from YouTube. Skipped {$skippedCount} existing videos. Total videos found: " . count($videos));
             
         } catch (\Exception $e) {
+            \Log::error('YouTube Sync Failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             return back()->with('error', 'Failed to sync videos from YouTube: ' . $e->getMessage());
         }
     }
