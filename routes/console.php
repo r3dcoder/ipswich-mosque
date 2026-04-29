@@ -18,3 +18,9 @@ Schedule::command('youtube:sync-khutbahs --limit=10')
 Schedule::command('youtube:sync-khutbahs --limit=5')
     ->dailyAt('18:00')
     ->withoutOverlapping();
+
+
+Schedule::call(function () {
+    \Log::info('Scheduler is working!');
+})->everyMinute();
+    
