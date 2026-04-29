@@ -96,6 +96,47 @@ body { font-family: 'Roboto', sans-serif; overflow-x: hidden; }
 
 .btn-donate-green { background: var(--brand-green) !important; color: white !important; font-weight: 700 !important; }
 
+/* Khutbah Live Indicator */
+.khutbah-nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #dc2626;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: pulse-live 2s infinite;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-live {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+@keyframes pulse-dot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+}
+
 /* --- DROPDOWN (Fixed Logic) --- */
 .dropdown-item { position: relative; }
 .dropdown-content { 

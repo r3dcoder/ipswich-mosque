@@ -68,7 +68,17 @@
                         <a href="{{ url('/services/visit') }}">Visit Mosque</a>
                      </div>
                 </li>
-                <li><a href="{{ url('/khutbah') }}">Khutbah</a></li>
+                <li>
+                    <a href="{{ url('/khutbah') }}" class="khutbah-nav-link">
+                        <span class="nav-link-text">Khutbah</span>
+                        @if(isset($liveStream) && $liveStream)
+                            <span class="live-indicator">
+                                <span class="live-dot"></span>
+                                LIVE
+                            </span>
+                        @endif
+                    </a>
+                </li>
                 <li class="dropdown-item">
                     <a href="javascript:void(0)" class="drop-trigger">Community ▼</a>
                     <div class="dropdown-content">

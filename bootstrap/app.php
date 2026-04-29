@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\SyncYouTubeVideos;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,7 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
         //
         $middleware->alias([
             'admin' => AdminMiddleware::class,
+            'sync.youtube' => SyncYouTubeVideos::class,
             
+        ]);
+        
+        // Apply YouTube sync middleware to specific routes
+        $middleware->group('web', [
+            SyncYouTubeVideos::class,
         ]);
         
         // Exempt Stripe webhook from CSRF verification
