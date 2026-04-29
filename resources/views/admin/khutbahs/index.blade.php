@@ -33,6 +33,12 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="mb-4 p-3 rounded-lg bg-red-50 text-red-800 border border-red-200">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="bg-white p-4 rounded-lg border">

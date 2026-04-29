@@ -210,6 +210,11 @@ class KhutbahController extends Controller
                 // Check if this is a quota exceeded error
                 $isQuotaExceeded = $youtubeService->checkQuotaError();
                 
+                \Log::warning('YouTube Sync - No videos found', [
+                    'channel_id' => $channelId,
+                    'is_quota_exceeded' => $isQuotaExceeded,
+                ]);
+                
                 if ($isQuotaExceeded) {
                     return back()->with('error', 'YouTube API quota exceeded. The daily API limit has been reached. Please try again later or consider increasing your API quota in Google Cloud Console. Quota resets daily.');
                 }
