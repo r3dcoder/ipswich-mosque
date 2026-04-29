@@ -49,29 +49,82 @@
             @endif
 
             @if(count($upcomingStreams) > 0)
-                <!-- Upcoming Streams Section -->
+                <!-- Upcoming Streams Slider -->
                 <div class="max-w-4xl mx-auto mb-8">
-                    <div class="bg-emerald-600/20 backdrop-blur-md rounded-2xl p-6 border border-emerald-500/30">
-                        <h3 class="text-lg font-bold text-emerald-300 mb-4 flex items-center gap-2">
-                            <i class="fas fa-clock"></i>
-                            Upcoming Streams
-                        </h3>
-                        <div class="grid md:grid-cols-2 gap-4">
-                            @foreach($upcomingStreams as $stream)
-                                <div class="bg-white/10 rounded-xl p-4 border border-white/20">
-                                    <div class="flex items-start gap-3">
-                                        <img src="{{ $stream['thumbnail_url'] }}" alt="{{ $stream['title'] }}" class="w-20 h-14 object-cover rounded-lg">
-                                        <div class="flex-1 min-w-0">
-                                            <h4 class="text-sm font-semibold text-white truncate">{{ $stream['title'] }}</h4>
-                                            <p class="text-xs text-slate-300 mt-1">{{ $stream['formatted_date'] ?? 'Coming Soon' }}</p>
+                    <div class="bg-gradient-to-r from-emerald-800/90 to-emerald-900/90 backdrop-blur-md rounded-2xl p-6 border border-emerald-500/30 shadow-2xl">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fas fa-clock text-emerald-400"></i>
+                                <span class="text-emerald-300">Coming Up</span>
+                                <span class="bg-emerald-500/30 text-emerald-200 text-xs px-3 py-1 rounded-full">{{ count($upcomingStreams) }} Stream{{ count($upcomingStreams) > 1 ? 's' : '' }}</span>
+                            </h3>
+                            <div class="flex gap-2">
+                                <button onclick="prevSlide()" class="w-10 h-10 rounded-full bg-emerald-700/50 hover:bg-emerald-600/70 text-white flex items-center justify-center transition-all border border-emerald-500/30">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button onclick="nextSlide()" class="w-10 h-10 rounded-full bg-emerald-700/50 hover:bg-emerald-600/70 text-white flex items-center justify-center transition-all border border-emerald-500/30">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Slider Container -->
+                        <div class="relative overflow-hidden">
+                            <div id="upcomingSlider" class="flex transition-transform duration-500 ease-in-out">
+                                @foreach($upcomingStreams as $index => $stream)
+                                    <div class="w-full flex-shrink-0 px-2">
+                                        <div class="bg-white/10 rounded-2xl p-5 border border-white/20 hover:border-emerald-400/50 transition-all group">
+                                            <div class="flex items-start gap-4">
+                                                <div class="relative flex-shrink-0">
+                                                    <img src="{{ $stream['thumbnail_url'] }}" alt="{{ $stream['title'] }}" class="w-32 h-20 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300">
+                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-xl"></div>
+                                                    <div class="absolute bottom-2 left-2 right-2">
+                                                        <span class="bg-blue-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 w-fit">
+                                                            <i class="fas fa-broadcast-tower"></i>
+                                                            Upcoming
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <h4 class="text-base font-semibold text-white line-clamp-2 leading-tight">{{ $stream['title'] }}</h4>
+                                                    <div class="flex items-center gap-3 mt-2 text-xs text-slate-300">
+                                                        <span class="flex items-center gap-1">
+                                                            <i class="fas fa-calendar text-emerald-400"></i>
+                                                            {{ $stream['formatted_date'] ?? 'Coming Soon' }}
+                                                        </span>
+                                                        <span class="flex items-center gap-1">
+                                                            <i class="fas fa-video text-emerald-400"></i>
+                                                            Ipswich Mosque
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex gap-3 mt-4">
+                                                <button onclick="openVideoModal('{{ $stream['youtube_id'] }}', '{{ addslashes($stream['title']) }}', '{{ addslashes($stream['description'] ?? '') }}', 'Ipswich Mosque', '{{ $stream['formatted_date'] ?? 'Coming Soon' }}', 'Upcoming')" 
+                                                        class="flex-1 px-4 py-2.5 bg-emerald-500/30 hover:bg-emerald-500/50 text-emerald-200 text-sm font-semibold rounded-xl transition-all border border-emerald-500/30 flex items-center justify-center gap-2">
+                                                    <i class="fas fa-info-circle"></i>
+                                                    View Details
+                                                </button>
+                                                <button onclick="setReminder('{{ $stream['youtube_id'] }}', '{{ addslashes($stream['title']) }}', '{{ $stream['formatted_date'] ?? '' }}')" 
+                                                        class="px-4 py-2.5 bg-blue-500/30 hover:bg-blue-500/50 text-blue-200 text-sm font-semibold rounded-xl transition-all border border-blue-500/30 flex items-center gap-2">
+                                                    <i class="fas fa-bell"></i>
+                                                    Remind
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <button onclick="openVideoModal('{{ $stream['youtube_id'] }}', '{{ addslashes($stream['title']) }}', '{{ addslashes($stream['description'] ?? '') }}', 'Ipswich Mosque', '{{ $stream['formatted_date'] ?? 'Coming Soon' }}', 'Upcoming')" 
-                                            class="mt-3 w-full px-4 py-2 bg-emerald-500/30 hover:bg-emerald-500/50 text-emerald-200 text-sm font-semibold rounded-lg transition-all border border-emerald-500/30">
-                                        <i class="fas fa-bell mr-1"></i> Set Reminder
+                                @endforeach
+                            </div>
+                            
+                            <!-- Slider Dots -->
+                            <div class="flex justify-center gap-2 mt-4" id="sliderDots">
+                                @foreach($upcomingStreams as $index => $stream)
+                                    <button onclick="goToSlide({{ $index }})" 
+                                            class="w-2.5 h-2.5 rounded-full transition-all duration-300 {{ $index === 0 ? 'bg-emerald-400 w-6' : 'bg-white/30 hover:bg-white/50' }}"
+                                            data-slide="{{ $index }}">
                                     </button>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -349,6 +402,9 @@
 </style>
 
 <script>
+    // ==========================================
+    // Video Modal Functions
+    // ==========================================
     function openVideoModal(videoId, title, description, speaker, date, duration) {
         // Set video content
         document.getElementById('videoIframe').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
@@ -384,6 +440,129 @@
         if (event.key === 'Escape') {
             closeVideoModal();
         }
+    });
+
+    // ==========================================
+    // Upcoming Streams Slider
+    // ==========================================
+    let currentSlide = 0;
+    const totalSlides = {{ count($upcomingStreams) }};
+
+    function updateSlider() {
+        const slider = document.getElementById('upcomingSlider');
+        if (slider) {
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+        
+        // Update dots
+        document.querySelectorAll('#sliderDots button').forEach((dot, index) => {
+            if (index === currentSlide) {
+                dot.classList.remove('bg-white/30', 'hover:bg-white/50');
+                dot.classList.add('bg-emerald-400', 'w-6');
+            } else {
+                dot.classList.remove('bg-emerald-400', 'w-6');
+                dot.classList.add('bg-white/30', 'hover:bg-white/50');
+            }
+        });
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            updateSlider();
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateSlider();
+        }
+    }
+
+    function goToSlide(index) {
+        currentSlide = index;
+        updateSlider();
+    }
+
+    // Auto-advance slider every 5 seconds
+    if (totalSlides > 1) {
+        setInterval(() => {
+            nextSlide();
+        }, 5000);
+    }
+
+    // ==========================================
+    // Reminder Function
+    // ==========================================
+    function setReminder(videoId, title, date) {
+        // Check if browser supports notifications
+        if (!('Notification' in window)) {
+            alert('Your browser does not support desktop notifications. But we\'ll remind you when you visit the site!');
+            return;
+        }
+
+        // Request permission for notifications
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                // Store reminder in localStorage
+                const reminders = JSON.parse(localStorage.getItem('khutbah_reminders') || '[]');
+                
+                if (!reminders.find(r => r.videoId === videoId)) {
+                    reminders.push({
+                        videoId: videoId,
+                        title: title,
+                        date: date,
+                        notified: false
+                    });
+                    localStorage.setItem('khutbah_reminders', JSON.stringify(reminders));
+                    
+                    // Show success notification
+                    new Notification('Reminder Set! 🔔', {
+                        body: `You'll be reminded about: ${title}`,
+                        icon: '/images/logo.png'
+                    });
+                } else {
+                    alert('You already have a reminder set for this stream!');
+                }
+            } else {
+                // Fallback: Store in localStorage and show confirmation
+                const reminders = JSON.parse(localStorage.getItem('khutbah_reminders') || '[]');
+                
+                if (!reminders.find(r => r.videoId === videoId)) {
+                    reminders.push({
+                        videoId: videoId,
+                        title: title,
+                        date: date,
+                        notified: false
+                    });
+                    localStorage.setItem('khutbah_reminders', JSON.stringify(reminders));
+                    
+                    alert('Reminder set! We\'ll notify you when you visit the site.');
+                }
+            }
+        });
+    }
+
+    // Check for reminders on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const reminders = JSON.parse(localStorage.getItem('khutbah_reminders') || '[]');
+        const now = new Date();
+        
+        reminders.forEach(reminder => {
+            if (!reminder.notified) {
+                // Check if it's Friday and close to the reminder time
+                if (now.getDay() === 5) { // Friday
+                    // You could add more sophisticated timing logic here
+                    if (Notification.permission === 'granted') {
+                        new Notification('Upcoming Khutbah! 🔔', {
+                            body: `Don't forget: ${reminder.title}`,
+                            icon: '/images/logo.png'
+                        });
+                    }
+                }
+            }
+        });
     });
 </script>
 @endsection

@@ -90,7 +90,12 @@ class KhutbahController extends Controller
             ->take(8)
             ->get();
         
-        $categories = Khutbah::categories();
+        // Get only categories that have videos (from both database and YouTube)
+        $allCategories = Khutbah::categories();
+        $usedCategories = array_unique(array_column($combinedVideos, 'category'));
+        $categories = array_filter($allCategories, function($key) use ($usedCategories) {
+            return in_array($key, $usedCategories);
+        }, ARRAY_FILTER_USE_KEY);
         
         return view('khutbah', compact(
             'featuredKhutbah', 
@@ -135,8 +140,11 @@ class KhutbahController extends Controller
             ];
         }
         
-        // Add YouTube videos
+        // Add YouTube videos with auto-detected categories
         foreach ($youtubeVideos as $video) {
+            // Detect category from title
+            $categoryInfo = app(\App\Services\YouTubeService::class)->detectCategory($video['title']);
+            
             $combined[] = [
                 'id' => null,
                 'youtube_id' => $video['youtube_id'],
@@ -144,8 +152,8 @@ class KhutbahController extends Controller
                 'description' => $video['description'] ?? '',
                 'thumbnail_url' => $video['thumbnail_url'] ?? "https://img.youtube.com/vi/{$video['youtube_id']}/maxresdefault.jpg",
                 'speaker' => null,
-                'category' => 'general',
-                'category_label' => 'General',
+                'category' => $categoryInfo['category'],
+                'category_label' => $categoryInfo['category_label'],
                 'delivered_date' => null,
                 'formatted_date' => isset($video['published_at']) ? (new \DateTime($video['published_at']))->format('M d, Y') : '',
                 'duration' => null,

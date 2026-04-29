@@ -309,6 +309,37 @@ class YouTubeService
     }
 
     /**
+     * Detect category from video title based on keywords
+     */
+    public function detectCategory(string $title): array
+    {
+        $title = strtolower($title);
+        
+        // Category keyword mappings
+        $categoryKeywords = [
+            'quran' => ['quran', 'qira\'at', 'recitation', 'tilawah', 'hafiz', 'memorization'],
+            'hadith' => ['hadith', 'sunnah', 'prophet muhammad', 'sahih', 'bukhari', 'muslim'],
+            'marriage' => ['marriage', 'nikah', 'wedding', 'spouse', 'husband', 'wife'],
+            'family' => ['family', 'parenting', 'children', 'parents', 'upbringing', 'tarbiyah'],
+            'youth' => ['youth', 'young', 'teenager', 'student', 'school', 'education'],
+            'spirituality' => ['spirituality', 'heart', 'soul', 'taqwa', 'ikhlas', 'dhikr', 'prayer', 'salah'],
+            'character' => ['character', 'manners', 'adab', 'ethics', 'morality', 'patience', 'gratitude'],
+            'history' => ['history', 'seerah', 'companions', 'sahaba', 'islamic history', 'prophets'],
+        ];
+        
+        foreach ($categoryKeywords as $category => $keywords) {
+            foreach ($keywords as $keyword) {
+                if (strpos($title, $keyword) !== false) {
+                    return ['category' => $category, 'category_label' => \App\Models\Khutbah::categories()[$category] ?? 'General'];
+                }
+            }
+        }
+        
+        // Default to general
+        return ['category' => 'general', 'category_label' => 'General'];
+    }
+
+    /**
      * Get video details including duration
      */
     public function getVideoDetails(string $videoId): ?array
