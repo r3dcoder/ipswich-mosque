@@ -306,11 +306,27 @@
                         </div>
                     </div>
 
+                    <!-- GDPR Consent -->
+                    <div class="form-group gdpr-consent">
+                        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #16a34a; border-radius: 12px; padding: 20px; margin: 16px 0;">
+                            <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="gdpr_consent" name="gdpr_consent" required style="width: 24px; height: 24px; margin-top: 2px; cursor: pointer; accent-color: #16a34a;">
+                                <span style="font-size: 14px; color: #166534; line-height: 1.5;">
+                                    <strong>GDPR Consent:</strong> I consent to this website storing and processing my personal data (name, email, address, donation information) for the purpose of processing my donation and for Gift Aid claims to HMRC. I understand that my data will be handled in accordance with the <a href="#" style="color: #007bff; text-decoration: underline;">Privacy Policy</a>.
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
 
                     <!-- Step 3: Frequency for Regular Donations -->
                     <div class="form-group donation-frequency" style="display: none;">
                         <label>Donation Frequency</label>
                         <div class="frequency-options">
+                            <label>
+                                <input type="radio" name="frequency" value="daily">
+                                Daily
+                            </label>
                             <label>
                                 <input type="radio" name="frequency" value="monthly" checked>
                                 Monthly
@@ -547,6 +563,13 @@
                 alert('Please enter your full address and postcode for Gift Aid. This is required by HMRC.');
                 return;
             }
+        }
+
+        // Validate GDPR consent
+        const gdprConsent = document.getElementById('gdpr_consent').checked;
+        if (!gdprConsent) {
+            alert('Please accept the GDPR consent to proceed with your donation.');
+            return;
         }
 
         // Show loading

@@ -133,6 +133,22 @@
                         @enderror
                     </div>
 
+                    <!-- GDPR Consent -->
+                    <div>
+                        <div class="bg-green-50 border-2 border-green-400 rounded-xl p-5">
+                            <label class="flex items-start space-x-3 cursor-pointer">
+                                <input type="checkbox" name="gdpr_consent" value="1" {{ old('gdpr_consent') ? 'checked' : '' }} class="form-checkbox h-6 w-6 text-green-600 rounded border-green-500 focus:ring-green-500 mt-0.5" required>
+                                <span class="text-sm text-gray-700 leading-relaxed">
+                                    <strong class="text-green-800">GDPR Consent:</strong> I consent to this website storing my personal information (name, email, phone) for the purpose of responding to my enquiry. 
+                                    I understand that my data will be handled in accordance with the <a href="{{ route('privacy') }}" class="text-green-600 hover:underline font-medium" target="_blank">Privacy Policy</a>.
+                                </span>
+                            </label>
+                        </div>
+                        @error('gdpr_consent')
+                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Submit Button -->
                     <div>
                         <button type="submit" 
