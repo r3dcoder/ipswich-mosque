@@ -221,10 +221,72 @@
     <!-- Latest Khutbahs Grid -->
     <section id="latest-khutbahs" class="py-16">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-end mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
                 <div>
                     <h2 class="text-2xl md:text-3xl font-bold text-slate-900">Latest Khutbahs</h2>
                     <p class="text-gray-500 mt-1">Recent Friday sermons and special lectures</p>
+                </div>
+                
+                <!-- Sort Controls -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <span class="text-sm text-gray-500">Sort by:</span>
+                    
+                    <div class="relative inline-block text-left" id="sortDropdown">
+                        <!-- Sort Button -->
+                        <button type="button" onclick="toggleSortDropdown()" 
+                                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">
+                            <i class="fas fa-sliders-h"></i>
+                            <span id="currentSortLabel">
+                                Date - Newest First
+                            </span>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-200" id="sortChevron"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div id="sortDropdownMenu" class="hidden absolute right-0 mt-2 w-56 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                            <div class="py-1" role="menu">
+                                <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">
+                                    Sort Options
+                                </div>
+                                
+                                <!-- Date Options -->
+                                <button onclick="sortVideos('date', 'desc')"
+                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                    <i class="fas fa-calendar-day w-5 text-gray-400"></i>
+                                    <span class="ml-2">Date - Newest First</span>
+                                </button>
+                                <button onclick="sortVideos('date', 'asc')"
+                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                    <i class="fas fa-calendar-day w-5 text-gray-400"></i>
+                                    <span class="ml-2">Date - Oldest First</span>
+                                </button>
+                                
+                                <!-- Title Options -->
+                                <button onclick="sortVideos('title', 'asc')"
+                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                    <i class="fas fa-font w-5 text-gray-400"></i>
+                                    <span class="ml-2">Title - A to Z</span>
+                                </button>
+                                <button onclick="sortVideos('title', 'desc')"
+                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                    <i class="fas fa-font w-5 text-gray-400"></i>
+                                    <span class="ml-2">Title - Z to A</span>
+                                </button>
+                                
+                                <!-- Speaker Options -->
+                                <button onclick="sortVideos('speaker', 'asc')"
+                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                    <i class="fas fa-user w-5 text-gray-400"></i>
+                                    <span class="ml-2">Speaker - A to Z</span>
+                                </button>
+                                <button onclick="sortVideos('speaker', 'desc')"
+                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                                    <i class="fas fa-user w-5 text-gray-400"></i>
+                                    <span class="ml-2">Speaker - Z to A</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -237,9 +299,12 @@
                     </div>
                 </div>
             @else
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="khutbahGrid">
                     @foreach($khutbahs as $khutbah)
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group sortible-card" 
+                         data-date="{{ $khutbah['published_at'] ?? $khutbah['formatted_date'] ?? '' }}"
+                         data-title="{{ addslashes($khutbah['title']) }}"
+                         data-speaker="{{ addslashes($khutbah['speaker'] ?? 'Ipswich Mosque') }}">
                         <div class="relative aspect-video bg-gray-100 cursor-pointer overflow-hidden" onclick="openVideoModal('{{ $khutbah['youtube_id'] }}', '{{ addslashes($khutbah['title']) }}', '{{ addslashes($khutbah['description'] ?? '') }}', '{{ $khutbah['speaker'] ?? 'Ipswich Mosque' }}', '{{ $khutbah['formatted_date'] }}', '{{ $khutbah['formatted_duration'] ?: ($khutbah['is_live'] ? 'LIVE' : '') }}')">
                             <img src="{{ $khutbah['thumbnail_url'] }}" 
                                  alt="{{ $khutbah['title'] }}"
@@ -324,7 +389,7 @@
             
             @if($khutbahs->hasPages())
                 <div class="mt-10 flex justify-center">
-                    {{ $khutbahs->links() }}
+                    {{ $khutbahs->links('vendor.pagination.tailwind') }}
                 </div>
             @endif
         </div>
@@ -556,7 +621,112 @@
         });
     }
 
+    // ==========================================
+    // Sort Dropdown Functions
+    // ==========================================
+    function toggleSortDropdown() {
+        const dropdown = document.getElementById('sortDropdownMenu');
+        const chevron = document.getElementById('sortChevron');
+        const isHidden = dropdown.classList.contains('hidden');
+        
+        if (isHidden) {
+            dropdown.classList.remove('hidden');
+            chevron.style.transform = 'rotate(180deg)';
+        } else {
+            dropdown.classList.add('hidden');
+            chevron.style.transform = 'rotate(0deg)';
+        }
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('sortDropdown');
+        const button = dropdown.querySelector('button');
+        
+        if (!dropdown.contains(event.target) && !dropdown.classList.contains('hidden')) {
+            toggleSortDropdown();
+        }
+    });
+
+    // ==========================================
+    // Client-Side Sort Function (using data attributes)
+    // ==========================================
+    function sortVideos(sortBy, sortOrder) {
+        // Close dropdown
+        toggleSortDropdown();
+        
+        // Update button label
+        const labelMap = {
+            'date-desc': 'Date - Newest First',
+            'date-asc': 'Date - Oldest First',
+            'title-asc': 'Title - A to Z',
+            'title-desc': 'Title - Z to A',
+            'speaker-asc': 'Speaker - A to Z',
+            'speaker-desc': 'Speaker - Z to A'
+        };
+        document.getElementById('currentSortLabel').textContent = labelMap[sortBy + '-' + sortOrder];
+        
+        // Get the grid container
+        const grid = document.getElementById('khutbahGrid');
+        if (!grid) return;
+        
+        // Get all video cards with data attributes
+        const cards = Array.from(grid.querySelectorAll('.sortible-card'));
+        
+        // Sort the cards using data attributes
+        cards.sort((a, b) => {
+            let valueA, valueB;
+            
+            if (sortBy === 'date') {
+                // Use data-date attribute
+                valueA = a.getAttribute('data-date') || '';
+                valueB = b.getAttribute('data-date') || '';
+                
+                // Parse dates
+                const parsedDateA = new Date(valueA);
+                const parsedDateB = new Date(valueB);
+                
+                valueA = isNaN(parsedDateA.getTime()) ? 0 : parsedDateA.getTime();
+                valueB = isNaN(parsedDateB.getTime()) ? 0 : parsedDateB.getTime();
+            } else if (sortBy === 'title') {
+                // Use data-title attribute
+                valueA = (a.getAttribute('data-title') || '').toLowerCase();
+                valueB = (b.getAttribute('data-title') || '').toLowerCase();
+            } else if (sortBy === 'speaker') {
+                // Use data-speaker attribute
+                valueA = (a.getAttribute('data-speaker') || '').toLowerCase();
+                valueB = (b.getAttribute('data-speaker') || '').toLowerCase();
+                
+                // Put empty/ipswich mosque speakers at the end
+                if (!valueA || valueA === 'ipswich mosque') return 1;
+                if (!valueB || valueB === 'ipswich mosque') return -1;
+            }
+            
+            // Compare values
+            let result;
+            if (typeof valueA === 'string') {
+                result = valueA.localeCompare(valueB);
+            } else {
+                result = valueA - valueB;
+            }
+            
+            return sortOrder === 'desc' ? -result : result;
+        });
+        
+        // Re-append sorted cards to grid
+        cards.forEach(card => grid.appendChild(card));
+        
+        // Add a subtle animation to show sorting happened
+        grid.style.opacity = '0.5';
+        setTimeout(() => {
+            grid.style.opacity = '1';
+            grid.style.transition = 'opacity 0.3s ease';
+        }, 50);
+    }
+
+    // ==========================================
     // Check for reminders on page load
+    // ==========================================
     document.addEventListener('DOMContentLoaded', function() {
         const reminders = JSON.parse(localStorage.getItem('khutbah_reminders') || '[]');
         const now = new Date();

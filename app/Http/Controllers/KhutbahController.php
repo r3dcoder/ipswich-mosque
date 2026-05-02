@@ -17,6 +17,8 @@ class KhutbahController extends Controller
     public function index(Request $request, YouTubeService $youtubeService)
     {
         $category = $request->input('category', 'all');
+        $sortBy = $request->input('sort', 'date'); // date, title, speaker
+        $sortOrder = $request->input('order', 'desc'); // asc, desc
         
         // Get featured khutbah from database (first one)
         $featuredKhutbah = Khutbah::active()
@@ -68,6 +70,9 @@ class KhutbahController extends Controller
         // Combine database khutbahs and YouTube videos
         $combinedVideos = $this->combineVideos($databaseKhutbahs, $youtubeVideos);
         
+        // Apply sorting
+        $combinedVideos = $this->sortVideos($combinedVideos, $sortBy, $sortOrder);
+        
         // Paginate the combined results
         $perPage = 12;
         $currentPage = $request->input('page', 1);
@@ -103,6 +108,8 @@ class KhutbahController extends Controller
             'featuredSeries', 
             'categories', 
             'category',
+            'sortBy',
+            'sortOrder',
             'liveStream',
             'upcomingStreams'
         ));
@@ -136,7 +143,10 @@ class KhutbahController extends Controller
                 'is_live' => false,
                 'is_upcoming' => false,
                 'source' => 'database',
-                'published_at' => $khutbah->created_at?->toDateTimeString(),
+                // Use delivered_date for sorting if available, otherwise use created_at
+                'published_at' => $khutbah->delivered_date 
+                    ? \Carbon\Carbon::parse($khutbah->delivered_date)->toDateTimeString()
+                    : $khutbah->created_at?->toDateTimeString(),
             ];
         }
         
@@ -175,5 +185,42 @@ class KhutbahController extends Controller
         });
         
         return $combined;
+    }
+
+    /**
+     * Sort videos by the specified field and order.
+     */
+    private function sortVideos(array $videos, string $sortBy, string $sortOrder): array
+    {
+        usort($videos, function($a, $b) use ($sortBy, $sortOrder) {
+            $fieldA = '';
+            $fieldB = '';
+            
+            switch ($sortBy) {
+                case 'title':
+                    $fieldA = strtolower($a['title'] ?? '');
+                    $fieldB = strtolower($b['title'] ?? '');
+                    $result = strcmp($fieldA, $fieldB);
+                    break;
+                case 'speaker':
+                    $fieldA = strtolower($a['speaker'] ?? '');
+                    $fieldB = strtolower($b['speaker'] ?? '');
+                    // Put items without speaker at the end
+                    if (empty($fieldA)) return 1;
+                    if (empty($fieldB)) return -1;
+                    $result = strcmp($fieldA, $fieldB);
+                    break;
+                case 'date':
+                default:
+                    $dateA = $a['published_at'] ?? $a['formatted_date'] ?? '';
+                    $dateB = $b['published_at'] ?? $b['formatted_date'] ?? '';
+                    $result = strtotime($dateA) - strtotime($dateB);
+                    break;
+            }
+            
+            return $sortOrder === 'desc' ? -$result : $result;
+        });
+        
+        return $videos;
     }
 }
