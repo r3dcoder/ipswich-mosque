@@ -54,7 +54,7 @@ body { font-family: 'Roboto', sans-serif; overflow-x: hidden; }
 .p-name { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 2px; display: flex; align-items: center; justify-content: center; gap: 4px; }
 .sunrise-icon { font-size: 14px; }
 .t-begin { font-size: 1rem; font-weight: 700; color: var(--text-dark); display: block; }
-.t-jamaat { font-size: 11px; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 3px 6px; border-radius: 4px; display: inline-block; margin-top: 2px; }
+.t-jamaat { font-size: 14px; font-weight: 700; color: var(--brand-green); background: #e8f5e9; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-top: 4px; letter-spacing: 0.3px; }
 
 /* --- Prayer Actions Button --- */
 .prayer-actions { display: flex; align-items: center; }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDuaController;
 use App\Http\Controllers\Admin\CarouselSlideController;
 use App\Http\Controllers\Admin\CoursesController;
+use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\EditorController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FuneralBookingController as AdminFuneralBookingController;
@@ -388,6 +389,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('gift-aid/{declaration}/edit', [GiftAidController::class, 'edit'])->name('gift-aid.edit');
     Route::put('gift-aid/{declaration}', [GiftAidController::class, 'update'])->name('gift-aid.update');
     Route::post('gift-aid/{declaration}/cancel', [GiftAidController::class, 'cancel'])->name('gift-aid.cancel');
+});
+
+// Admin Menu Items Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('menu-items', [MenuItemController::class, 'index'])->name('menu-items.index');
+    Route::get('menu-items/create', [MenuItemController::class, 'create'])->name('menu-items.create');
+    Route::post('menu-items', [MenuItemController::class, 'store'])->name('menu-items.store');
+    Route::get('menu-items/{menuItem}/edit', [MenuItemController::class, 'edit'])->name('menu-items.edit');
+    Route::put('menu-items/{menuItem}', [MenuItemController::class, 'update'])->name('menu-items.update');
+    Route::delete('menu-items/{menuItem}', [MenuItemController::class, 'destroy'])->name('menu-items.destroy');
+    Route::post('menu-items/{menuItem}/toggle-active', [MenuItemController::class, 'toggleActive'])->name('menu-items.toggle-active');
 });
 
 require __DIR__.'/auth.php';

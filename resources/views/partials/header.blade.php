@@ -1,4 +1,3 @@
- 
 <header class="header-root">
     <div class="prayer-ribbon">
         <div class="ribbon-container">
@@ -42,6 +41,24 @@
 
     @php
         $headerSettings = \App\Models\MosqueSetting::getSettings();
+        $servicesMenuItems = \App\Models\MenuItem::with('children')
+            ->where('menu_group', 'services')
+            ->where('is_active', true)
+            ->parents()
+            ->orderBy('sort_order')
+            ->get();
+        $communityMenuItems = \App\Models\MenuItem::with('children')
+            ->where('menu_group', 'community')
+            ->where('is_active', true)
+            ->parents()
+            ->orderBy('sort_order')
+            ->get();
+        $mainMenuItems = \App\Models\MenuItem::with('children')
+            ->where('menu_group', 'main')
+            ->where('is_active', true)
+            ->parents()
+            ->orderBy('sort_order')
+            ->get();
     @endphp
 
     <nav class="header-nav">
@@ -58,37 +75,74 @@
             <div class="nav-spacer"></div>
 
             <ul class="nav-links-wrap">
-                <li><a href="{{ url('/') }}">Home</a></li>
-                <li class="dropdown-item">
-                    <a href="javascript:void(0)" class="drop-trigger">Our Services ▼</a>
-                    <div class="dropdown-content">
-                        <a href="{{ url('/ramadan') }}">Ramadan</a>
-                        <a href="{{ url('/services/marriage') }}">Marriage (Nikah)</a>
-                        <a href="{{ url('/services/janazah') }}">Funeral (Janazah)</a>
-                        <a href="{{ url('/services/visit') }}">Visit Mosque</a>
-                     </div>
-                </li>
-                <li>
-                    <a href="{{ url('/khutbah') }}" class="khutbah-nav-link">
-                        <span class="nav-link-text">Khutbah</span>
-                        @if(isset($liveStream) && $liveStream)
-                            <span class="live-indicator">
-                                <span class="live-dot"></span>
-                                LIVE
-                            </span>
+                @php
+                    // Load all menu items from database (all groups)
+                    $allMenuItems = \App\Models\MenuItem::with('children')
+                        ->where('is_active', true)
+                        ->parents()
+                        ->orderBy('sort_order')
+                        ->get();
+                @endphp
+                
+                @if($allMenuItems->count() > 0)
+                    @foreach($allMenuItems as $item)
+                        @if($item->children->count() > 0)
+                            {{-- Dropdown item with children --}}
+                            <li class="dropdown-item">
+                                <a href="javascript:void(0)" class="drop-trigger">{{ $item->title }} ▼</a>
+                                <div class="dropdown-content">
+                                    @foreach($item->children as $child)
+                                        <a href="{{ $child->url }}" @if($child->open_in_new_tab) target="_blank" @endif>{{ $child->title }}</a>
+                                    @endforeach
+                                </div>
+                            </li>
+                        @else
+                            {{-- Single menu item --}}
+                            <li>
+                                <a href="{{ $item->url }}" 
+                                   @if($item->open_in_new_tab) target="_blank" @endif
+                                   {{ $item->url === '/donate' ? 'class="btn-donate-green"' : '' }}>
+                                    {{ $item->title }}
+                                </a>
+                            </li>
                         @endif
-                    </a>
-                </li>
-                <li class="dropdown-item">
-                    <a href="javascript:void(0)" class="drop-trigger">Community ▼</a>
-                    <div class="dropdown-content">
-                        <a href="{{ route('notices.index') }}">Notice Board</a>
-                        <a href="{{ route('newsletters.index') }}">Newsletter</a>
-                        <a href="{{ url('/people') }}">Our People</a>
-                    </div>
-                </li>
-                <li><a href="{{ url('/duas') }}">Duas</a></li>
-                <li><a href="{{ url('/contact') }}">Contact Us</a></li>
+                    @endforeach
+                @else
+                    {{-- Default fallback menu --}}
+                    <li><a href="{{ url('/') }}">Home</a></li>
+                    <li class="dropdown-item">
+                        <a href="javascript:void(0)" class="drop-trigger">Our Services ▼</a>
+                        <div class="dropdown-content">
+                            <a href="{{ url('/ramadan') }}">Ramadan</a>
+                            <a href="{{ url('/services/marriage') }}">Marriage (Nikah)</a>
+                            <a href="{{ url('/services/janazah') }}">Funeral (Janazah)</a>
+                            <a href="{{ url('/services/visit') }}">Visit Mosque</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="{{ url('/khutbah') }}" class="khutbah-nav-link">
+                            <span class="nav-link-text">Khutbah</span>
+                            @if(isset($liveStream) && $liveStream)
+                                <span class="live-indicator">
+                                    <span class="live-dot"></span>
+                                    LIVE
+                                </span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="dropdown-item">
+                        <a href="javascript:void(0)" class="drop-trigger">Community ▼</a>
+                        <div class="dropdown-content">
+                            <a href="{{ route('notices.index') }}">Notice Board</a>
+                            <a href="{{ route('newsletters.index') }}">Newsletter</a>
+                            <a href="{{ url('/people') }}">Our People</a>
+                        </div>
+                    </li>
+                    <li><a href="{{ url('/duas') }}">Duas</a></li>
+                    <li><a href="{{ url('/contact') }}">Contact Us</a></li>
+                @endif
+                
+                {{-- Fixed Donate Button --}}
                 <li><a href="{{ url('/donate') }}" class="btn-donate-green">Donate Now</a></li>
             </ul>
 
@@ -104,38 +158,86 @@
         <ul class="mobile-nav-list">
             <li><a href="{{ url('/') }}">🏠 Home</a></li>
             
-            <!-- Services Dropdown -->
-            <li class="mobile-dropdown">
-                <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
-                    <span>🕌 Our Services</span>
-                    <span class="dropdown-arrow">▼</span>
-                </div>
-                <ul class="mobile-dropdown-content">
-                    <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
-                    <li><a href="{{ url('/services/marriage') }}">Marriage (Nikah)</a></li>
-                    <li><a href="{{ url('/services/janazah') }}">Funeral (Janazah)</a></li>
-                    <li><a href="{{ url('/services/visit') }}">Visit Mosque</a></li>
-                </ul>
-            </li>
+            @if($servicesMenuItems->count() > 0)
+                <li class="mobile-dropdown">
+                    <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
+                        <span>🕌 Our Services</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <ul class="mobile-dropdown-content">
+                        @foreach($servicesMenuItems as $item)
+                            <li><a href="{{ $item->url }}" @if($item->open_in_new_tab) target="_blank" @endif>{{ $item->title }}</a></li>
+                            @if($item->children->count() > 0)
+                                @foreach($item->children as $child)
+                                    <li><a href="{{ $child->url }}" @if($child->open_in_new_tab) target="_blank" @endif>&nbsp;&nbsp;{{ $child->title }}</a></li>
+                                @endforeach
+                            @endif
+                        @endforeach
+                    </ul>
+                </li>
+            @else
+                <li class="mobile-dropdown">
+                    <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
+                        <span>🕌 Our Services</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <ul class="mobile-dropdown-content">
+                        <li><a href="{{ url('/ramadan') }}">Ramadan</a></li>
+                        <li><a href="{{ url('/services/marriage') }}">Marriage (Nikah)</a></li>
+                        <li><a href="{{ url('/services/janazah') }}">Funeral (Janazah)</a></li>
+                        <li><a href="{{ url('/services/visit') }}">Visit Mosque</a></li>
+                    </ul>
+                </li>
+            @endif
             
             <li><a href="{{ url('/khutbah') }}">📖 Khutbah</a></li>
             
-            <!-- Community Dropdown -->
-            <li class="mobile-dropdown">
-                <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
-                    <span>👥 Community</span>
-                    <span class="dropdown-arrow">▼</span>
-                </div>
-                <ul class="mobile-dropdown-content">
-                    <li><a href="{{ route('notices.index') }}">Notice Board</a></li>
-                    <li><a href="{{ route('newsletters.index') }}">Newsletter</a></li>
-                    <li><a href="{{ url('/people') }}">Our People</a></li>
-                </ul>
-            </li>
+            @if($communityMenuItems->count() > 0)
+                <li class="mobile-dropdown">
+                    <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
+                        <span>👥 Community</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <ul class="mobile-dropdown-content">
+                        @foreach($communityMenuItems as $item)
+                            <li><a href="{{ $item->url }}" @if($item->open_in_new_tab) target="_blank" @endif>{{ $item->title }}</a></li>
+                            @if($item->children->count() > 0)
+                                @foreach($item->children as $child)
+                                    <li><a href="{{ $child->url }}" @if($child->open_in_new_tab) target="_blank" @endif>&nbsp;&nbsp;{{ $child->title }}</a></li>
+                                @endforeach
+                            @endif
+                        @endforeach
+                    </ul>
+                </li>
+            @else
+                <li class="mobile-dropdown">
+                    <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
+                        <span>👥 Community</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <ul class="mobile-dropdown-content">
+                        <li><a href="{{ route('notices.index') }}">Notice Board</a></li>
+                        <li><a href="{{ route('newsletters.index') }}">Newsletter</a></li>
+                        <li><a href="{{ url('/people') }}">Our People</a></li>
+                    </ul>
+                </li>
+            @endif
             
-            <li><a href="{{ url('/duas') }}">🤲 Duas</a></li>
-            <li><a href="{{ url('/contact') }}">📧 Contact Us</a></li>
-            <li><a href="{{ url('/donate') }}" class="mobile-donate">💚 Donate Now</a></li>
+            @if($mainMenuItems->count() > 0)
+                @foreach($mainMenuItems as $item)
+                    <li>
+                        <a href="{{ $item->url }}" 
+                           @if($item->open_in_new_tab) target="_blank" @endif
+                           {{ $item->url === '/donate' ? 'class="mobile-donate"' : '' }}>
+                            {{ $item->url === '/duas' ? '🤲 ' : '' }}{{ $item->url === '/contact' ? '📧 ' : '' }}{{ $item->url === '/donate' ? '💚 ' : '' }}{{ $item->title }}
+                        </a>
+                    </li>
+                @endforeach
+            @else
+                <li><a href="{{ url('/duas') }}">🤲 Duas</a></li>
+                <li><a href="{{ url('/contact') }}">📧 Contact Us</a></li>
+                <li><a href="{{ url('/donate') }}" class="mobile-donate">💚 Donate Now</a></li>
+            @endif
         </ul>
     </div>
 

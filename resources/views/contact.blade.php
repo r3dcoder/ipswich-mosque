@@ -140,7 +140,7 @@
                                 <input type="checkbox" name="gdpr_consent" value="1" {{ old('gdpr_consent') ? 'checked' : '' }} class="form-checkbox h-6 w-6 text-green-600 rounded border-green-500 focus:ring-green-500 mt-0.5" required>
                                 <span class="text-sm text-gray-700 leading-relaxed">
                                     <strong class="text-green-800">GDPR Consent:</strong> I consent to this website storing my personal information (name, email, phone) for the purpose of responding to my enquiry. 
-                                    I understand that my data will be handled in accordance with the <a href="{{ route('privacy') }}" class="text-green-600 hover:underline font-medium" target="_blank">Privacy Policy</a>.
+                                    I understand that my data will be handled in accordance with the <a href="{{ url('/privacy') }}" class="text-green-600 hover:underline font-medium" target="_blank">Privacy Policy</a>.
                                 </span>
                             </label>
                         </div>
