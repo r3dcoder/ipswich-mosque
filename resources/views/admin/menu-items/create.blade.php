@@ -4,6 +4,15 @@
 @section('header', 'Add Menu Item')
 
 @section('content')
+<!-- Breadcrumbs -->
+<nav class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
+    <a href="{{ url('/admin') }}" class="hover:text-gray-700">Dashboard</a>
+    <span>/</span>
+    <a href="{{ route('admin.menu-items.index') }}" class="hover:text-gray-700">Menu Management</a>
+    <span>/</span>
+    <span class="text-gray-900 font-medium">Add Menu Item</span>
+</nav>
+
 <div class="max-w-2xl">
     <div class="bg-white rounded-lg border border-gray-200 p-6">
         <form action="{{ route('admin.menu-items.store') }}" method="POST">
