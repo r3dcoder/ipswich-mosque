@@ -9,7 +9,7 @@
         <form action="{{ route('admin.menu-items.store') }}" method="POST">
             @csrf
             
-            <input type="hidden" name="menu_group" value="{{ $group }}">
+            <input type="hidden" name="menu_group" value="main">
 
             <div class="space-y-6">
                 <!-- Title -->

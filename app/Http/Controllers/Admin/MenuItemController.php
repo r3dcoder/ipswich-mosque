@@ -12,22 +12,18 @@ class MenuItemController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $group = $request->get('group', 'main');
-        
         $menuItems = MenuItem::with('children')
-            ->where('menu_group', $group)
             ->parents()
             ->orderBy('sort_order')
             ->get();
 
-        $allParents = MenuItem::where('menu_group', $group)
-            ->parents()
+        $allParents = MenuItem::parents()
             ->orderBy('sort_order')
             ->get();
 
-        return view('admin.menu-items.index', compact('menuItems', 'group', 'allParents'));
+        return view('admin.menu-items.index', compact('menuItems', 'allParents'));
     }
 
     /**

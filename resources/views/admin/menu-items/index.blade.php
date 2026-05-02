@@ -13,37 +13,23 @@
 
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-            <h2 class="text-2xl font-bold text-gray-900">Menu Items</h2>
-            <p class="text-gray-600 text-sm mt-1">Manage navigation menu items for your website header</p>
+            <h2 class="text-2xl font-bold text-gray-900">Menu Management</h2>
+            <p class="text-gray-600 text-sm mt-1">Manage all navigation menu items for your website header. Create dropdowns by selecting a parent item.</p>
         </div>
         
         <div class="flex gap-2">
-            <a href="{{ route('admin.menu-items.create', ['group' => 'main']) }}" 
+            <a href="{{ route('admin.menu-items.create') }}" 
                class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition text-sm font-medium">
                 + Add Menu Item
             </a>
         </div>
     </div>
 
-    <!-- Tab Navigation -->
-    <div class="border-b border-gray-200 mb-6">
-        <nav class="flex gap-4">
-            <a href="{{ route('admin.menu-items.index', ['group' => 'main']) }}" 
-               class="pb-3 px-1 border-b-2 font-medium text-sm transition
-               {{ $group === 'main' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                Main Menu
-            </a>
-            <a href="{{ route('admin.menu-items.index', ['group' => 'services']) }}" 
-               class="pb-3 px-1 border-b-2 font-medium text-sm transition
-               {{ $group === 'services' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                Services Dropdown
-            </a>
-            <a href="{{ route('admin.menu-items.index', ['group' => 'community']) }}" 
-               class="pb-3 px-1 border-b-2 font-medium text-sm transition
-               {{ $group === 'community' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                Community Dropdown
-            </a>
-        </nav>
+    <!-- Info Box -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <p class="text-sm text-blue-800">
+            <strong>How to create a dropdown:</strong> When adding a menu item, select a parent item from the "Parent Item" dropdown. Items without a parent appear as top-level menu items. Items with a parent become dropdown sub-items.
+        </p>
     </div>
 
     <!-- Menu Items Table -->
