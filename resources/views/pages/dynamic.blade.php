@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('main-layout')
 
 @section('title', $page->meta_title ?? $page->title)
 
