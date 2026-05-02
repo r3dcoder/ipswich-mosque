@@ -249,41 +249,41 @@
                                     Sort Options
                                 </div>
                                 
-                                <!-- Date Options -->
-                                <button onclick="sortVideos('date', 'desc')"
-                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
-                                    <i class="fas fa-calendar-day w-5 text-gray-400"></i>
-                                    <span class="ml-2">Date - Newest First</span>
-                                </button>
-                                <button onclick="sortVideos('date', 'asc')"
-                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
-                                    <i class="fas fa-calendar-day w-5 text-gray-400"></i>
-                                    <span class="ml-2">Date - Oldest First</span>
-                                </button>
-                                
-                                <!-- Title Options -->
-                                <button onclick="sortVideos('title', 'asc')"
-                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
-                                    <i class="fas fa-font w-5 text-gray-400"></i>
-                                    <span class="ml-2">Title - A to Z</span>
-                                </button>
-                                <button onclick="sortVideos('title', 'desc')"
-                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
-                                    <i class="fas fa-font w-5 text-gray-400"></i>
-                                    <span class="ml-2">Title - Z to A</span>
-                                </button>
-                                
-                                <!-- Speaker Options -->
-                                <button onclick="sortVideos('speaker', 'asc')"
-                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
-                                    <i class="fas fa-user w-5 text-gray-400"></i>
-                                    <span class="ml-2">Speaker - A to Z</span>
-                                </button>
-                                <button onclick="sortVideos('speaker', 'desc')"
-                                   class="w-full flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
-                                    <i class="fas fa-user w-5 text-gray-400"></i>
-                                    <span class="ml-2">Speaker - Z to A</span>
-                                </button>
+                        <!-- Date Options -->
+                        <a href="{{ route('khutbah.index', array_merge(request()->except('sort', 'order'), ['sort' => 'date', 'order' => 'desc'])) }}"
+                           class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                            <i class="fas fa-calendar-day w-5 text-gray-400"></i>
+                            <span class="ml-2">Date - Newest First</span>
+                        </a>
+                        <a href="{{ route('khutbah.index', array_merge(request()->except('sort', 'order'), ['sort' => 'date', 'order' => 'asc'])) }}"
+                           class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                            <i class="fas fa-calendar-day w-5 text-gray-400"></i>
+                            <span class="ml-2">Date - Oldest First</span>
+                        </a>
+                        
+                        <!-- Title Options -->
+                        <a href="{{ route('khutbah.index', array_merge(request()->except('sort', 'order'), ['sort' => 'title', 'order' => 'asc'])) }}"
+                           class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                            <i class="fas fa-font w-5 text-gray-400"></i>
+                            <span class="ml-2">Title - A to Z</span>
+                        </a>
+                        <a href="{{ route('khutbah.index', array_merge(request()->except('sort', 'order'), ['sort' => 'title', 'order' => 'desc'])) }}"
+                           class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                            <i class="fas fa-font w-5 text-gray-400"></i>
+                            <span class="ml-2">Title - Z to A</span>
+                        </a>
+                        
+                        <!-- Speaker Options -->
+                        <a href="{{ route('khutbah.index', array_merge(request()->except('sort', 'order'), ['sort' => 'speaker', 'order' => 'asc'])) }}"
+                           class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                            <i class="fas fa-user w-5 text-gray-400"></i>
+                            <span class="ml-2">Speaker - A to Z</span>
+                        </a>
+                        <a href="{{ route('khutbah.index', array_merge(request()->except('sort', 'order'), ['sort' => 'speaker', 'order' => 'desc'])) }}"
+                           class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50" role="menuitem">
+                            <i class="fas fa-user w-5 text-gray-400"></i>
+                            <span class="ml-2">Speaker - Z to A</span>
+                        </a>
                             </div>
                         </div>
                     </div>
@@ -673,29 +673,42 @@
         // Get all video cards with data attributes
         const cards = Array.from(grid.querySelectorAll('.sortible-card'));
         
+        // Debug: Log the dates before sorting
+        console.log('Sorting by:', sortBy, 'Order:', sortOrder);
+        cards.forEach((card, index) => {
+            console.log(`Card ${index}:`, {
+                title: card.getAttribute('data-title'),
+                date: card.getAttribute('data-date')
+            });
+        });
+        
         // Sort the cards using data attributes
-        cards.sort((a, b) => {
+        cards.sort((cardA, cardB) => {
             let valueA, valueB;
             
             if (sortBy === 'date') {
                 // Use data-date attribute
-                valueA = a.getAttribute('data-date') || '';
-                valueB = b.getAttribute('data-date') || '';
+                const dateStrA = cardA.getAttribute('data-date') || '';
+                const dateStrB = cardB.getAttribute('data-date') || '';
                 
-                // Parse dates
-                const parsedDateA = new Date(valueA);
-                const parsedDateB = new Date(valueB);
+                // Parse dates - handle both ISO format and "M d, Y" format
+                const parsedDateA = new Date(dateStrA);
+                const parsedDateB = new Date(dateStrB);
                 
-                valueA = isNaN(parsedDateA.getTime()) ? 0 : parsedDateA.getTime();
-                valueB = isNaN(parsedDateB.getTime()) ? 0 : parsedDateB.getTime();
+                valueA = parsedDateA.getTime();
+                valueB = parsedDateB.getTime();
+                
+                // Handle invalid dates
+                if (isNaN(valueA)) valueA = 0;
+                if (isNaN(valueB)) valueB = 0;
             } else if (sortBy === 'title') {
                 // Use data-title attribute
-                valueA = (a.getAttribute('data-title') || '').toLowerCase();
-                valueB = (b.getAttribute('data-title') || '').toLowerCase();
+                valueA = (cardA.getAttribute('data-title') || '').toLowerCase();
+                valueB = (cardB.getAttribute('data-title') || '').toLowerCase();
             } else if (sortBy === 'speaker') {
                 // Use data-speaker attribute
-                valueA = (a.getAttribute('data-speaker') || '').toLowerCase();
-                valueB = (b.getAttribute('data-speaker') || '').toLowerCase();
+                valueA = (cardA.getAttribute('data-speaker') || '').toLowerCase();
+                valueB = (cardB.getAttribute('data-speaker') || '').toLowerCase();
                 
                 // Put empty/ipswich mosque speakers at the end
                 if (!valueA || valueA === 'ipswich mosque') return 1;
@@ -710,7 +723,19 @@
                 result = valueA - valueB;
             }
             
+            // Apply sort order
+            // For 'desc' (newest first): higher values should come first, so negate
+            // For 'asc' (oldest first): lower values should come first, keep as is
             return sortOrder === 'desc' ? -result : result;
+        });
+        
+        // Debug: Log the dates after sorting
+        console.log('After sorting:');
+        cards.forEach((card, index) => {
+            console.log(`Card ${index}:`, {
+                title: card.getAttribute('data-title'),
+                date: card.getAttribute('data-date')
+            });
         });
         
         // Re-append sorted cards to grid

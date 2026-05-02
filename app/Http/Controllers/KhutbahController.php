@@ -145,8 +145,8 @@ class KhutbahController extends Controller
                 'source' => 'database',
                 // Use delivered_date for sorting if available, otherwise use created_at
                 'published_at' => $khutbah->delivered_date 
-                    ? \Carbon\Carbon::parse($khutbah->delivered_date)->toDateTimeString()
-                    : $khutbah->created_at?->toDateTimeString(),
+                    ? \Carbon\Carbon::parse($khutbah->delivered_date)->toIso8601String()
+                    : $khutbah->created_at?->toIso8601String(),
             ];
         }
         
