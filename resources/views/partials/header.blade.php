@@ -41,20 +41,7 @@
 
     @php
         $headerSettings = \App\Models\MosqueSetting::getSettings();
-        $servicesMenuItems = \App\Models\MenuItem::with('children')
-            ->where('menu_group', 'services')
-            ->where('is_active', true)
-            ->parents()
-            ->orderBy('sort_order')
-            ->get();
-        $communityMenuItems = \App\Models\MenuItem::with('children')
-            ->where('menu_group', 'community')
-            ->where('is_active', true)
-            ->parents()
-            ->orderBy('sort_order')
-            ->get();
-        $mainMenuItems = \App\Models\MenuItem::with('children')
-            ->where('menu_group', 'main')
+        $allMenuItems = \App\Models\MenuItem::with('children')
             ->where('is_active', true)
             ->parents()
             ->orderBy('sort_order')
@@ -75,15 +62,6 @@
             <div class="nav-spacer"></div>
 
             <ul class="nav-links-wrap">
-                @php
-                    // Load all menu items from database (all groups)
-                    $allMenuItems = \App\Models\MenuItem::with('children')
-                        ->where('is_active', true)
-                        ->parents()
-                        ->orderBy('sort_order')
-                        ->get();
-                @endphp
-                
                 @if($allMenuItems->count() > 0)
                     @foreach($allMenuItems as $item)
                         @if($item->children->count() > 0)
@@ -156,26 +134,35 @@
 
     <div class="mobile-drawer" id="mobile-menu">
         <ul class="mobile-nav-list">
-            <li><a href="{{ url('/') }}">🏠 Home</a></li>
-            
-            @if($servicesMenuItems->count() > 0)
-                <li class="mobile-dropdown">
-                    <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
-                        <span>🕌 Our Services</span>
-                        <span class="dropdown-arrow">▼</span>
-                    </div>
-                    <ul class="mobile-dropdown-content">
-                        @foreach($servicesMenuItems as $item)
-                            <li><a href="{{ $item->url }}" @if($item->open_in_new_tab) target="_blank" @endif>{{ $item->title }}</a></li>
-                            @if($item->children->count() > 0)
+            @if($allMenuItems->count() > 0)
+                @foreach($allMenuItems as $item)
+                    @if($item->children->count() > 0)
+                        {{-- Dropdown item with children --}}
+                        <li class="mobile-dropdown">
+                            <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
+                                <span>{{ $item->title }}</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </div>
+                            <ul class="mobile-dropdown-content">
                                 @foreach($item->children as $child)
                                     <li><a href="{{ $child->url }}" @if($child->open_in_new_tab) target="_blank" @endif>&nbsp;&nbsp;{{ $child->title }}</a></li>
                                 @endforeach
-                            @endif
-                        @endforeach
-                    </ul>
-                </li>
+                            </ul>
+                        </li>
+                    @else
+                        {{-- Single menu item --}}
+                        <li>
+                            <a href="{{ $item->url }}" 
+                               @if($item->open_in_new_tab) target="_blank" @endif
+                               {{ $item->url === '/donate' ? 'class="mobile-donate"' : '' }}>
+                                {{ $item->url === '/donate' ? '💚 ' : '' }}{{ $item->title }}
+                            </a>
+                        </li>
+                    @endif
+                @endforeach
             @else
+                {{-- Default fallback menu --}}
+                <li><a href="{{ url('/') }}">🏠 Home</a></li>
                 <li class="mobile-dropdown">
                     <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
                         <span>🕌 Our Services</span>
@@ -188,28 +175,7 @@
                         <li><a href="{{ url('/services/visit') }}">Visit Mosque</a></li>
                     </ul>
                 </li>
-            @endif
-            
-            <li><a href="{{ url('/khutbah') }}">📖 Khutbah</a></li>
-            
-            @if($communityMenuItems->count() > 0)
-                <li class="mobile-dropdown">
-                    <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
-                        <span>👥 Community</span>
-                        <span class="dropdown-arrow">▼</span>
-                    </div>
-                    <ul class="mobile-dropdown-content">
-                        @foreach($communityMenuItems as $item)
-                            <li><a href="{{ $item->url }}" @if($item->open_in_new_tab) target="_blank" @endif>{{ $item->title }}</a></li>
-                            @if($item->children->count() > 0)
-                                @foreach($item->children as $child)
-                                    <li><a href="{{ $child->url }}" @if($child->open_in_new_tab) target="_blank" @endif>&nbsp;&nbsp;{{ $child->title }}</a></li>
-                                @endforeach
-                            @endif
-                        @endforeach
-                    </ul>
-                </li>
-            @else
+                <li><a href="{{ url('/khutbah') }}">📖 Khutbah</a></li>
                 <li class="mobile-dropdown">
                     <div class="mobile-dropdown-trigger" onclick="toggleMobileDropdown(this)">
                         <span>👥 Community</span>
@@ -221,20 +187,6 @@
                         <li><a href="{{ url('/people') }}">Our People</a></li>
                     </ul>
                 </li>
-            @endif
-            
-            @if($mainMenuItems->count() > 0)
-                @foreach($mainMenuItems as $item)
-                    <li>
-                        <a href="{{ $item->url }}" 
-                           @if($item->open_in_new_tab) target="_blank" @endif
-                           {{ $item->url === '/donate' ? 'class="mobile-donate"' : '' }}>
-                            {{ $item->url === '/duas' ? '🤲 ' : '' }}{{ $item->url === '/contact' ? '📧 ' : '' }}{{ $item->url === '/donate' ? '💚 ' : '' }}{{ $item->title }}
-                        </a>
-                    </li>
-                @endforeach
-            @else
-                <li><a href="{{ url('/duas') }}">🤲 Duas</a></li>
                 <li><a href="{{ url('/contact') }}">📧 Contact Us</a></li>
                 <li><a href="{{ url('/donate') }}" class="mobile-donate">💚 Donate Now</a></li>
             @endif

@@ -5,7 +5,6 @@
 @section('header')
     @include('partials.header')
 @endsection
-
 @section('content')
 <div class="khutbah-hub bg-slate-50 min-h-screen pb-20">
     
