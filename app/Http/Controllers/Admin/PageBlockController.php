@@ -10,181 +10,151 @@ use Illuminate\Support\Facades\Storage;
 
 class PageBlockController extends Controller
 {
-    // Add new block
+    /**
+     * Store a new block
+     */
     public function store(Request $request, Page $page)
     {
-        $type = $request->validate([
-            'type' => ['required','string','max:50'],
-        ])['type'];
+        $request->validate([
+            'type' => ['required', 'string', 'in:hero,rich_text,repeater,image,download'],
+        ]);
 
+        $type = $request->input('type');
         $nextOrder = (int) ($page->blocks()->max('sort_order') ?? 0) + 1;
 
-        $page->blocks()->create([
+        $block = $page->blocks()->create([
             'type' => $type,
             'sort_order' => $nextOrder,
             'data' => $this->defaultDataFor($type),
         ]);
 
-        return back()->with('success', 'Block added.');
+        return redirect()->back()->with('success', 'Block added.');
     }
 
-    // Update block (including upload)
+    /**
+     * Show the editor for a block
+     */
+    public function edit(Page $page, PageBlock $block)
+    {
+        abort_unless($block->page_id === $page->id, 404);
+
+        $view = 'admin.pages.blocks.editor.' . $block->type;
+        
+        if (!view()->exists($view)) {
+            return response('Editor not found for block type: ' . $block->type, 404);
+        }
+
+        $data = $block->data ?? [];
+        return view($view, compact('page', 'block', 'data'));
+    }
+
+    /**
+     * Update a block
+     */
     public function update(Request $request, Page $page, PageBlock $block)
     {
         abort_unless($block->page_id === $page->id, 404);
 
-        $data = $block->data ?? [];
+        $data = $request->input('data', []);
 
-        // Common fields
-        if ($block->type === 'hero') {
-            $payload = $request->validate([
-                'heading' => ['required','string','max:255'],
-                'subheading' => ['nullable','string','max:1000'],
-                'button_text' => ['nullable','string','max:50'],
-                'button_url' => ['nullable','string','max:255'],
-                'bg_image' => ['nullable','image','max:5120'],
-            ]);
-
-            $data['heading'] = $payload['heading'];
-            $data['subheading'] = $payload['subheading'] ?? '';
-            $data['button_text'] = $payload['button_text'] ?? '';
-            $data['button_url'] = $payload['button_url'] ?? '';
-
-            if ($request->hasFile('bg_image')) {
-                if (!empty($data['bg_image_path'])) Storage::disk('public')->delete($data['bg_image_path']);
-                $data['bg_image_path'] = $request->file('bg_image')->store('pages', 'public');
-            }
-        }
-
-        if ($block->type === 'rich_text') {
-            $payload = $request->validate([
-                'title' => ['nullable','string','max:255'],
-                'html' => ['required','string'],
-            ]);
-
-            $data['title'] = $payload['title'] ?? '';
-            $data['html'] = $payload['html'];
-        }
-
-        if ($block->type === 'download') {
-            $payload = $request->validate([
-                'title' => ['nullable','string','max:255'],
-                'button_text' => ['nullable','string','max:50'],
-                'file' => ['nullable','file','max:10240'], // pdf, doc, etc
-            ]);
-
-            $data['title'] = $payload['title'] ?? '';
-            $data['button_text'] = $payload['button_text'] ?? 'Download';
-
-            if ($request->hasFile('file')) {
-                if (!empty($data['file_path'])) Storage::disk('public')->delete($data['file_path']);
-                $data['file_path'] = $request->file('file')->store('pages', 'public');
-            }
-        }
-
-        if ($block->type === 'image') {
-            $payload = $request->validate([
-                'caption' => ['nullable','string','max:255'],
-                'image' => ['nullable','image','max:5120'],
-            ]);
-
-            $data['caption'] = $payload['caption'] ?? '';
-
-            if ($request->hasFile('image')) {
-                if (!empty($data['image_path'])) Storage::disk('public')->delete($data['image_path']);
-                $data['image_path'] = $request->file('image')->store('pages', 'public');
-            }
-        }
-
-        if ($block->type === 'repeater') {
-            $payload = $request->validate([
-                'title' => ['nullable','string','max:255'],
-                'items' => ['nullable','array'],
-                'items.*' => ['nullable','string','max:255'],
-            ]);
-
-            $data['title'] = $payload['title'] ?? '';
-            $data['items'] = array_values(array_filter($payload['items'] ?? [], fn($v) => trim((string)$v) !== ''));
-        }
-
-        if ($block->type === 'eid_times') {
-            $payload = $request->validate([
-                'title' => ['nullable','string','max:255'],
-                'rows' => ['nullable','array'],
-                'rows.*.label' => ['required_with:rows','string','max:50'],
-                'rows.*.time' => ['required_with:rows','string','max:10'],
-            ]);
-
-            $data['title'] = $payload['title'] ?? 'EID JAMAT';
-            $data['rows'] = array_values($payload['rows'] ?? []);
+        // For repeater type: filter empty items and reindex
+        if ($block->type === 'repeater' && isset($data['items'])) {
+            $data['items'] = array_values(array_filter($data['items'], function($v) {
+                return trim($v) !== '';
+            }));
         }
 
         $block->update(['data' => $data]);
 
-        return back()->with('success', 'Block updated.');
+        return response()->json(['success' => true]);
     }
 
+    /**
+     * Get preview HTML for a block
+     */
+    public function preview(Page $page, PageBlock $block)
+    {
+        abort_unless($block->page_id === $page->id, 404);
+
+        $view = 'blocks.' . $block->type;
+        
+        if (!view()->exists($view)) {
+            return response('Preview not found for block type: ' . $block->type, 404);
+        }
+
+        $data = $block->data ?? [];
+        return view($view, ['data' => $data, 'page' => $page])->render();
+    }
+
+    /**
+     * Delete a block
+     */
     public function destroy(Page $page, PageBlock $block)
     {
         abort_unless($block->page_id === $page->id, 404);
 
-        // delete uploaded files if present
+        // Delete uploaded files if present
         $data = $block->data ?? [];
-        foreach (['bg_image_path','file_path','image_path'] as $key) {
-            if (!empty($data[$key])) Storage::disk('public')->delete($data[$key]);
+        foreach (['bg_image_path', 'file_path', 'image_path'] as $key) {
+            if (!empty($data[$key]) && Storage::disk('public')->exists($data[$key])) {
+                Storage::disk('public')->delete($data[$key]);
+            }
         }
 
         $block->delete();
-        return back()->with('success', 'Block deleted.');
+
+        return redirect()->back()->with('success', 'Block deleted.');
     }
 
+    /**
+     * Reorder blocks
+     */
     public function reorder(Request $request, Page $page)
     {
-        $payload = $request->validate([
-            'order' => ['required','array'],
-            'order.*' => ['integer'],
-        ]);
+        $order = $request->input('order', []);
 
-        foreach ($payload['order'] as $i => $id) {
-            PageBlock::where('page_id', $page->id)->where('id', $id)->update(['sort_order' => $i + 1]);
+        foreach ($order as $index => $blockId) {
+            PageBlock::where('page_id', $page->id)
+                ->where('id', $blockId)
+                ->update(['sort_order' => $index + 1]);
         }
 
-        return response()->json(['ok' => true]);
+        return response()->json(['success' => true]);
     }
 
+    /**
+     * Get default data for a block type
+     */
     private function defaultDataFor(string $type): array
     {
         return match ($type) {
             'hero' => [
-                'heading' => 'Page Title',
+                'heading' => '',
                 'subheading' => '',
                 'button_text' => '',
-                'button_url' => '',
-                'bg_image_path' => null,
+                'button_url' => '#',
+                'bg_image_path' => '',
+                'alignment' => 'left',
+                'column_left' => '',
+                'column_right' => '',
             ],
             'rich_text' => [
                 'title' => '',
-                'html' => '<p>Write content here...</p>',
+                'html' => '',
             ],
-            'download' => [
-                'title' => 'Download',
-                'button_text' => 'Download',
-                'file_path' => null,
+            'repeater' => [
+                'title' => '',
+                'style' => 'bullet',
+                'items' => ['First item', 'Second item'],
             ],
             'image' => [
                 'caption' => '',
-                'image_path' => null,
+                'image_path' => '',
             ],
-            'repeater' => [
-                'title' => 'List',
-                'items' => ['Item 1', 'Item 2'],
-            ],
-            'eid_times' => [
-                'title' => 'EID JAMAT',
-                'rows' => [
-                    ['label' => '1st Jamat', 'time' => '08:00'],
-                    ['label' => '2nd Jamat', 'time' => '09:00'],
-                ],
+            'download' => [
+                'title' => '',
+                'button_text' => 'Download',
+                'file_path' => '',
             ],
             default => [],
         };

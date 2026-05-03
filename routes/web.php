@@ -302,14 +302,25 @@ Route::middleware(['auth','admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::resource('pages', PageController::class)->except(['show']);
-        Route::post('pages/{page}/blocks', [PageBlockController::class, 'store'])->name('pages.blocks.store');
-        Route::put('pages/{page}/blocks/{block}', [PageBlockController::class, 'update'])->name('pages.blocks.update');
-        Route::delete('pages/{page}/blocks/{block}', [PageBlockController::class, 'destroy'])->name('pages.blocks.destroy');
+        // Pages CRUD
+        Route::get('pages', [PageController::class, 'index'])->name('pages.index');
+        Route::get('pages/create', [PageController::class, 'create'])->name('pages.create');
+        Route::post('pages', [PageController::class, 'store'])->name('pages.store');
+        Route::get('pages/{page}', [PageController::class, 'show'])->name('pages.show');
+        Route::get('pages/{page}/edit', [PageController::class, 'edit'])->name('pages.edit');
+        Route::get('pages/{page}/builder', [PageController::class, 'builder'])->name('pages.builder');
+        Route::put('pages/{page}', [PageController::class, 'update'])->name('pages.update');
+        Route::delete('pages/{page}', [PageController::class, 'destroy'])->name('pages.destroy');
 
-        // reorder blocks (drag drop)
-        Route::post('pages/{page}/blocks/reorder', [PageBlockController::class, 'reorder'])->name('pages.blocks.reorder');
-
+        // Page Blocks
+        Route::prefix('pages/{page}/blocks')->group(function () {
+            Route::post('/', [PageBlockController::class, 'store'])->name('pages.blocks.store');
+            Route::post('/reorder', [PageBlockController::class, 'reorder'])->name('pages.blocks.reorder');
+            Route::get('/{block}/edit', [PageBlockController::class, 'edit'])->name('pages.blocks.edit');
+            Route::get('/{block}/preview', [PageBlockController::class, 'preview'])->name('pages.blocks.preview');
+            Route::put('/{block}', [PageBlockController::class, 'update'])->name('pages.blocks.update');
+            Route::delete('/{block}', [PageBlockController::class, 'destroy'])->name('pages.blocks.destroy');
+        });
     });
     Route::post('editor/upload', [EditorController::class, 'upload'])->name('admin.editor.upload');
     

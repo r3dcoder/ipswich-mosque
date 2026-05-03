@@ -1,18 +1,19 @@
 @php
-  $caption = $data['caption'] ?? '';
-  $img = $data['image_path'] ?? null;
+$caption = $data['caption'] ?? '';
+$imagePath = $data['image_path'] ?? '';
 @endphp
 
-<section class="mt-6 bg-white border rounded-2xl p-6">
-    @if($img)
-        <img src="{{ asset('storage/'.$img) }}"
-             class="w-full max-h-[560px] object-contain rounded-xl border bg-white"
-             alt="">
-    @else
-        <div class="text-sm text-gray-600">No image uploaded yet.</div>
-    @endif
-
-    @if($caption)
-        <p class="text-sm text-gray-600 mt-3">{{ $caption }}</p>
-    @endif
+@if($imagePath)
+<section class="py-12 px-6">
+    <div class="max-w-4xl mx-auto">
+        <figure class="text-center">
+            <img src="{{ $imagePath }}" alt="{{ $caption }}" class="max-w-full h-auto rounded-lg shadow-lg">
+            @if($caption)
+                <figcaption class="mt-4 text-gray-600 text-sm italic">
+                    {{ $caption }}
+                </figcaption>
+            @endif
+        </figure>
+    </div>
 </section>
+@endif
