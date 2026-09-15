@@ -329,8 +329,10 @@ Route::middleware(['auth','admin'])
             Route::put('/{block}', [PageBlockController::class, 'update'])->name('pages.blocks.update');
             Route::delete('/{block}', [PageBlockController::class, 'destroy'])->name('pages.blocks.destroy');
         });
+
+        // Rich text / block image uploads (admin only)
+        Route::post('editor/upload', [EditorController::class, 'upload'])->name('editor.upload');
     });
-    Route::post('editor/upload', [EditorController::class, 'upload'])->name('admin.editor.upload');
     
 
 // Admin People Routes

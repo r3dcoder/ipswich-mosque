@@ -12,7 +12,7 @@ $html = $data['html'] ?? '';
         @endif
 
         @if($html)
-            <div class="prose prose-lg max-w-none text-gray-700">
+            <div class="pb-rich-text max-w-none">
                 {!! $html !!}
             </div>
         @endif

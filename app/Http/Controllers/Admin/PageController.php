@@ -103,8 +103,20 @@ class PageController extends Controller
             [
                 'id' => 'rich_text',
                 'name' => 'Rich Text',
-                'description' => 'Text content with editor',
+                'description' => 'Text, headings, lists & inline images',
                 'icon' => '📝'
+            ],
+            [
+                'id' => 'columns',
+                'name' => 'Columns',
+                'description' => '2, 3 or 4 column layout with images',
+                'icon' => '🧱'
+            ],
+            [
+                'id' => 'image_text',
+                'name' => 'Image + Text',
+                'description' => 'Image beside text, either side',
+                'icon' => '🖼️'
             ],
             [
                 'id' => 'download',

@@ -8,23 +8,18 @@
 
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
-        <div id="quillToolbar" class="border rounded-t-lg p-2 bg-gray-50">
-            <button type="button" class="ql-bold" title="Bold"><strong>B</strong></button>
-            <button type="button" class="ql-italic" title="Italic"><em>I</em></button>
-            <button type="button" class="ql-underline" title="Underline"><u>U</u></button>
-            <button type="button" class="ql-strike" title="Strikethrough"><s>S</s></button>
-            <span class="mx-2">|</span>
-            <button type="button" class="ql-list" value="ordered" title="Numbered List">1.</button>
-            <button type="button" class="ql-list" value="bullet" title="Bullet List">•</button>
-            <span class="mx-2">|</span>
-            <button type="button" class="ql-align" value="" title="Align Left">Left</button>
-            <button type="button" class="ql-align" value="center" title="Align Center">Center</button>
-            <button type="button" class="ql-align" value="right" title="Align Right">Right</button>
-            <span class="mx-2">|</span>
-            <button type="button" class="ql-link" title="Insert Link">🔗</button>
+
+        {{-- TipTap mounts its toolbar + editable area inside this element --}}
+        <div id="richTextTipTap"></div>
+
+        {{-- Existing HTML, escaped by Blade and read back on init --}}
+        <textarea id="richTextSource" class="hidden">{{ $data['html'] ?? '' }}</textarea>
+
+        <div class="mt-2 text-xs text-gray-500 space-y-1">
+            <p><strong>Images:</strong> click the 🖼 button to upload. Then click the inserted image to unlock
+                <em>width</em> and <em>text wrapping</em> controls in the toolbar.</p>
+            <p><strong>Layouts:</strong> for side-by-side content use the <em>Columns</em> or <em>Image + Text</em> blocks.</p>
         </div>
-        <div id="quillEditor" class="border-t-0 border rounded-b-lg min-h-[200px] bg-white"></div>
-        <input type="hidden" name="html" id="richTextHtml" value="{{ $data['html'] ?? '' }}">
     </div>
 
     <button type="button" onclick="saveThisBlock()"
@@ -34,63 +29,49 @@
 </form>
 
 <script>
-// Load Quill CSS if not already loaded
-if (!document.querySelector('link[href*="quill.snow"]')) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css';
-    document.head.appendChild(link);
-}
+// Wait for the TipTap bundle (loaded on the builder page) to be ready
+function whenEditorReady(callback) {
+    if (window.PageBuilderEditor) { callback(); return; }
 
-// Load Quill JS if not already loaded
-if (!document.querySelector('script[src*="quill.min"]')) {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js';
-    script.onload = function() {
-        if (typeof window.initQuillEditor === 'function') {
-            window.initQuillEditor();
+    let tries = 0;
+    const timer = setInterval(function () {
+        tries++;
+        if (window.PageBuilderEditor) {
+            clearInterval(timer);
+            callback();
+        } else if (tries > 100) {
+            clearInterval(timer);
+            if (typeof window.showNotification === 'function') {
+                window.showNotification('Editor failed to load - please refresh the page', 'error');
+            }
         }
-    };
-    document.head.appendChild(script);
+    }, 50);
 }
 
-window.initQuillEditor = function() {
-    if (window.quillInstance) return; // Already initialized
+window.initRichTextEditor = function () {
+    const mount = document.getElementById('richTextTipTap');
+    if (!mount || mount.dataset.ready === '1') return;
 
-    window.quillInstance = new Quill('#quillEditor', {
-        theme: 'snow',
-        modules: {
-            toolbar: '#quillToolbar'
-        },
-        placeholder: 'Start typing your content...'
-    });
+    whenEditorReady(function () {
+        const source = document.getElementById('richTextSource');
 
-    // Set initial content
-    const initialHtml = document.getElementById('richTextHtml').value;
-    if (initialHtml) {
-        window.quillInstance.root.innerHTML = initialHtml;
-    }
+        window.PageBuilderEditor.create(mount, {
+            html: source ? source.value : '',
+            placeholder: 'Start typing your content...',
+            minHeight: '220px'
+        });
 
-    // Sync content to hidden input on every change
-    window.quillInstance.on('text-change', function() {
-        document.getElementById('richTextHtml').value = window.quillInstance.root.innerHTML;
+        mount.dataset.ready = '1';
     });
 };
 
-// Initialize if Quill is already loaded
-if (typeof Quill !== 'undefined') {
-    setTimeout(function() {
-        if (typeof window.initQuillEditor === 'function') {
-            window.initQuillEditor();
-        }
-    }, 100);
-}
-
 function saveThisBlock() {
-    const form = document.getElementById('richTextEditorForm');
-    const formData = new FormData(form);
-    const data = {};
-    formData.forEach((value, key) => data[key] = value);
+    const title = document.querySelector('#richTextEditorForm input[name="title"]').value;
+    const html = window.PageBuilderEditor
+        ? window.PageBuilderEditor.getHtml('#richTextTipTap')
+        : (document.getElementById('richTextSource') || {}).value || '';
+
+    const data = { title: title, html: html };
 
     fetch('/admin/pages/{{ $page->id }}/blocks/' + window.selectedBlockId + '?_method=PUT', {
         method: 'POST',
@@ -111,4 +92,6 @@ function saveThisBlock() {
         window.showNotification('Error saving block', 'error');
     });
 }
+
+window.initRichTextEditor();
 </script>

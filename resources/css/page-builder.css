@@ -1,0 +1,413 @@
+/* ==========================================================================
+   Page Builder — TipTap editor + public block layouts
+   ========================================================================== */
+
+/* ---------- TipTap editor (admin) ---------- */
+.pb-editor {
+    font-size: 0.9375rem;
+}
+
+.pb-editor-content {
+    outline: none;
+    color: #1f2937;
+    line-height: 1.7;
+    word-break: break-word;
+}
+
+.pb-editor-content > *:first-child {
+    margin-top: 0;
+}
+
+.pb-editor-content h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0.9rem 0 0.5rem;
+}
+
+.pb-editor-content h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0.85rem 0 0.45rem;
+}
+
+.pb-editor-content h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0.8rem 0 0.4rem;
+}
+
+.pb-editor-content p {
+    margin: 0 0 0.75rem;
+}
+
+.pb-editor-content ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin: 0 0 0.75rem;
+}
+
+.pb-editor-content ol {
+    list-style: decimal;
+    padding-left: 1.5rem;
+    margin: 0 0 0.75rem;
+}
+
+.pb-editor-content li {
+    margin-bottom: 0.25rem;
+}
+
+.pb-editor-content li > p {
+    margin: 0;
+}
+
+.pb-editor-content blockquote {
+    border-left: 4px solid #d1d5db;
+    padding-left: 1rem;
+    margin: 0 0 0.75rem;
+    color: #4b5563;
+    font-style: italic;
+}
+
+.pb-editor-content pre {
+    background: #111827;
+    color: #f9fafb;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 0 0 0.75rem;
+    font-size: 0.8125rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.pb-editor-content code {
+    background: #f3f4f6;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.25rem;
+    font-size: 0.85em;
+}
+
+.pb-editor-content a {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.pb-editor-content hr {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+    margin: 1rem 0;
+}
+
+.pb-editor-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.pb-editor-content img.ProseMirror-selectednode {
+    outline: 3px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* TipTap placeholder */
+.pb-editor-content p.is-editor-empty:first-child::before,
+.pb-editor-content.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: #9ca3af;
+    pointer-events: none;
+    height: 0;
+}
+
+/* ---------- Public: rich text typography ---------- */
+.pb-rich-text {
+    color: #374151;
+    line-height: 1.8;
+    font-size: 1.0625rem;
+}
+
+.pb-rich-text > *:first-child {
+    margin-top: 0;
+}
+
+.pb-rich-text h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #111827;
+    margin: 1.75rem 0 0.9rem;
+}
+
+.pb-rich-text h2 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #111827;
+    margin: 1.6rem 0 0.8rem;
+}
+
+.pb-rich-text h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #111827;
+    margin: 1.4rem 0 0.7rem;
+}
+
+.pb-rich-text p {
+    margin: 0 0 1.1rem;
+}
+
+.pb-rich-text ul {
+    list-style: disc;
+    padding-left: 1.6rem;
+    margin: 0 0 1.1rem;
+}
+
+.pb-rich-text ol {
+    list-style: decimal;
+    padding-left: 1.6rem;
+    margin: 0 0 1.1rem;
+}
+
+.pb-rich-text li {
+    margin-bottom: 0.4rem;
+}
+
+.pb-rich-text li::marker {
+    color: #059669;
+}
+
+.pb-rich-text blockquote {
+    border-left: 4px solid #059669;
+    background: #f0fdf4;
+    padding: 0.9rem 1.1rem;
+    margin: 0 0 1.2rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    color: #374151;
+    font-style: italic;
+}
+
+.pb-rich-text pre {
+    background: #111827;
+    color: #f9fafb;
+    padding: 1rem 1.2rem;
+    border-radius: 0.6rem;
+    overflow-x: auto;
+    margin: 0 0 1.2rem;
+    font-size: 0.875rem;
+}
+
+.pb-rich-text code {
+    background: #f3f4f6;
+    padding: 0.15rem 0.35rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.pb-rich-text a {
+    color: #047857;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.pb-rich-text a:hover {
+    color: #065f46;
+}
+
+.pb-rich-text hr {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+    margin: 1.75rem 0;
+}
+
+.pb-rich-text img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+}
+
+.pb-rich-text strong {
+    font-weight: 700;
+    color: #111827;
+}
+
+/* Clear floated (wrapped) images */
+.pb-rich-text::after,
+.pb-col-body::after,
+.pb-image-text__body::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* ---------- Public: columns block ---------- */
+.pb-columns {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.pb-col {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.pb-col-media {
+    margin-bottom: 0.9rem;
+}
+
+.pb-col-media img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0.75rem;
+    object-fit: cover;
+}
+
+.pb-col-media--bottom {
+    order: 2;
+    margin-bottom: 0;
+    margin-top: 0.9rem;
+}
+
+.pb-col-body {
+    flex: 1 1 auto;
+}
+
+.pb-col-body.pb-image-left {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.pb-col-body.pb-image-left .pb-col-media {
+    flex: 0 0 40%;
+    margin-bottom: 0;
+}
+
+.pb-col-body.pb-image-right {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.pb-col-body.pb-image-right .pb-col-media {
+    flex: 0 0 40%;
+    margin-bottom: 0;
+}
+
+/* Mobile: stack columns */
+@media (max-width: 767px) {
+    .pb-columns.pb-columns--stack {
+        flex-direction: column;
+    }
+
+    .pb-columns.pb-columns--stack .pb-col {
+        width: 100% !important;
+        flex: 1 1 auto !important;
+    }
+
+    .pb-col-body.pb-image-left,
+    .pb-col-body.pb-image-right {
+        flex-direction: column;
+    }
+
+    .pb-col-body.pb-image-left .pb-col-media,
+    .pb-col-body.pb-image-right .pb-col-media {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+}
+
+/* ---------- Public: image + text block ---------- */
+.pb-image-text {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.pb-image-text--right {
+    flex-direction: row-reverse;
+}
+
+.pb-image-text--top {
+    align-items: flex-start;
+}
+
+.pb-image-text--bottom {
+    align-items: flex-end;
+}
+
+.pb-image-text__media {
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.pb-image-text__media img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0.75rem;
+    object-fit: cover;
+}
+
+.pb-image-text__media.pb-rounded-none img {
+    border-radius: 0;
+}
+
+.pb-image-text__body {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+@media (max-width: 767px) {
+    .pb-image-text,
+    .pb-image-text--right {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pb-image-text__media {
+        width: 100% !important;
+        flex: 1 1 auto;
+        margin-bottom: 1.25rem;
+    }
+}
+
+/* ---------- Legacy Quill alignment classes ----------
+   Content authored before the TipTap switch stored alignment as
+   class="ql-align-center" instead of an inline style. */
+.pb-rich-text .ql-align-center,
+.pb-editor-content .ql-align-center,
+.pb-col-body .ql-align-center,
+.pb-image-text__body .ql-align-center {
+    text-align: center;
+}
+
+.pb-rich-text .ql-align-right,
+.pb-editor-content .ql-align-right,
+.pb-col-body .ql-align-right,
+.pb-image-text__body .ql-align-right {
+    text-align: right;
+}
+
+.pb-rich-text .ql-align-left,
+.pb-editor-content .ql-align-left,
+.pb-col-body .ql-align-left,
+.pb-image-text__body .ql-align-left {
+    text-align: left;
+}
+
+.pb-rich-text .ql-align-justify,
+.pb-editor-content .ql-align-justify,
+.pb-col-body .ql-align-justify,
+.pb-image-text__body .ql-align-justify {
+    text-align: justify;
+}
+

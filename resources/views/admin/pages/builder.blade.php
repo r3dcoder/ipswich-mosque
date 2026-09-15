@@ -218,6 +218,9 @@ function selectBlock(blockId) {
     
     document.getElementById('editorSidebar').style.display = 'block';
     
+    // Tear down any editors from the previously opened block
+    if (window.PageBuilderEditor) window.PageBuilderEditor.destroyAll();
+
     fetch('/admin/pages/{{ $page->id }}/blocks/' + blockId + '/edit')
         .then(response => response.text())
         .then(html => {
@@ -225,7 +228,9 @@ function selectBlock(blockId) {
             executeScripts(document.getElementById('blockEditorForm'));
             // Call initialization functions if they exist
             setTimeout(function() {
-                if (typeof window.initQuillEditor === 'function') window.initQuillEditor();
+                if (typeof window.initRichTextEditor === 'function') window.initRichTextEditor();
+                if (typeof window.initColumnsEditor === 'function') window.initColumnsEditor();
+                if (typeof window.initImageTextEditor === 'function') window.initImageTextEditor();
                 if (typeof window.initRepeaterEditor === 'function') window.initRepeaterEditor();
             }, 100);
         });
@@ -246,6 +251,12 @@ function executeScripts(container) {
 
 // Close editor
 function closeEditor() {
+    // Destroy TipTap instances so reopening a block starts clean
+    if (window.PageBuilderEditor) window.PageBuilderEditor.destroyAll();
+
+    const form = document.getElementById('blockEditorForm');
+    if (form) form.innerHTML = '';
+
     document.getElementById('editorSidebar').style.display = 'none';
     window.selectedBlockId = null;
     document.querySelectorAll('.block-selected').forEach(el => el.classList.remove('block-selected'));
@@ -372,4 +383,19 @@ window.refreshBlockPreview = function(blockId) {
         });
 };
 </script>
+@endsection
+
+@section('scripts')
+<script>
+    // Where the page builder uploads rich text / column / image-text images
+    window.PB_UPLOAD_URL = @json(route('admin.editor.upload'));
+</script>
+
+@if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+    @vite(['resources/js/tiptap-editor.js'])
+@else
+    <script>
+        console.warn('TipTap bundle not built yet. Run: npm install && npm run build');
+    </script>
+@endif
 @endsection

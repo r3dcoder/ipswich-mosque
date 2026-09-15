@@ -7,6 +7,7 @@
 @import "./event.css";
 @import "./carousel.css";
 @import "./welcome-section.css";
+@import "./page-builder.css";
 
 @tailwind base;
 @tailwind components;
