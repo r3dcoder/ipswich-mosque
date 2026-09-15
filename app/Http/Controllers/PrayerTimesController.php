@@ -15,7 +15,7 @@ class PrayerTimesController extends Controller
 
         // Sort months in calendar order
         $monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        $months = $months->sortBy(function($month) use ($monthOrder) {
+        $months = $months->sortBy(function ($month) use ($monthOrder) {
             return array_search($month, $monthOrder);
         })->values();
 
@@ -52,7 +52,22 @@ class PrayerTimesController extends Controller
         $selectedMonthFull = $monthMapping[$selectedMonth] ?? $selectedMonth;
         $currentMonthFull = $monthMapping[$currentMonth] ?? $currentMonth;
 
-        return view('prayer-times', compact('months', 'prayerTimes', 'selectedMonth', 'selectedMonthFull', 'today', 'currentMonth', 'currentMonthFull', 'highlightToday'));
+        // A Gregorian month almost always spans two Hijri months.
+        // Collect unique Hijri months/years in chronological order for the header.
+        [$hijriMonthsLabel, $hijriYearsLabel] = $this->buildHijriHeaderLabels($prayerTimes);
+
+        return view('prayer-times', compact(
+            'months',
+            'prayerTimes',
+            'selectedMonth',
+            'selectedMonthFull',
+            'today',
+            'currentMonth',
+            'currentMonthFull',
+            'highlightToday',
+            'hijriMonthsLabel',
+            'hijriYearsLabel'
+        ));
     }
 
     public function timingScreen()
@@ -60,11 +75,56 @@ class PrayerTimesController extends Controller
         // Get today's prayer times
         $today = Carbon::now()->day;
         $currentMonth = Carbon::now()->format('M');
-        
+
         $prayerTimes = PrayerTime::where('month', $currentMonth)
                     ->where('date', $today)
                     ->first();
 
         return view('prayer-timing-screen', compact('prayerTimes'));
+    }
+
+    /**
+     * Build display labels for Hijri month(s) and year(s) covered by the given days.
+     * Example: "RABI AL-AWWAL / RABI AL-AKHIR" and "1448".
+     */
+    private function buildHijriHeaderLabels($prayerTimes): array
+    {
+        $months = [];
+        $years = [];
+
+        foreach ($prayerTimes as $row) {
+            $month = $this->normalizeHijriMonth($row->hijri_month ?? null);
+            if ($month !== null && !in_array($month, $months, true)) {
+                $months[] = $month;
+            }
+
+            $year = $row->hijri_year ?? null;
+            if ($year !== null && $year !== '' && !in_array((string) $year, $years, true)) {
+                $years[] = (string) $year;
+            }
+        }
+
+        $monthsLabel = count($months) ? implode(' / ', $months) : '';
+        $yearsLabel = count($years) ? implode(' / ', $years) : '';
+
+        return [$monthsLabel, $yearsLabel];
+    }
+
+    /**
+     * Normalize Hijri month names so spacing/case duplicates collapse.
+     */
+    private function normalizeHijriMonth(?string $month): ?string
+    {
+        if ($month === null) {
+            return null;
+        }
+
+        $month = trim(preg_replace('/\s+/', ' ', $month) ?? '');
+
+        if ($month === '') {
+            return null;
+        }
+
+        return mb_strtoupper($month);
     }
 }

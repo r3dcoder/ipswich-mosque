@@ -353,7 +353,7 @@
                         </div>
                         <input type="number" id="amount" name="amount" class="form-control"
                             placeholder="Or enter custom amount" min="1" required>
-                            <input type="hidden" id="stripe_key" value="{{ config('services.stripe.key') }}">
+                            <input type="hidden" id="stripe_key" value="{{ \App\Services\StripeConfig::publicKey() }}">
      
                     </div>
 
@@ -466,7 +466,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize Stripe with publishable key
-        const stripe = Stripe("{{ config('services.stripe.key') }}");
+        const stripe = Stripe("{{ \App\Services\StripeConfig::publicKey() }}");
         let elements;
         let paymentElement;
 

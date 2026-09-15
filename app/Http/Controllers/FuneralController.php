@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FuneralBooking;
+use App\Models\JanazahContent;
+use App\Models\EmergencyContact;
 use App\Mail\FuneralBookingNotification;
 use Illuminate\Support\Facades\Mail;
 
@@ -14,7 +16,25 @@ class FuneralController extends Controller
      */
     public function show()
     {
-        return view('services.janazah');
+        $hero = JanazahContent::visibleOrdered()->section('hero')->first();
+        $ritesHeading = JanazahContent::visibleOrdered()->section('rite_heading')->first();
+        $rites = JanazahContent::visibleOrdered()->section('rite')->get();
+        $prayersHeading = JanazahContent::visibleOrdered()->section('prayer_heading')->first();
+        $prayers = JanazahContent::visibleOrdered()->section('prayer')->get();
+        $terms = JanazahContent::visibleOrdered()->section('terms')->first();
+        $termsPoints = JanazahContent::visibleOrdered()->section('terms_point')->get();
+        $emergencyContacts = EmergencyContact::visibleOrdered()->get();
+
+        return view('services.janazah', compact(
+            'hero',
+            'ritesHeading',
+            'rites',
+            'prayersHeading',
+            'prayers',
+            'terms',
+            'termsPoints',
+            'emergencyContacts'
+        ));
     }
 
     /**
@@ -22,7 +42,6 @@ class FuneralController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validate the incoming data
         $validated = $request->validate([
             'name'          => 'required|string|max:255',
             'email'         => 'required|email|max:255',
@@ -31,19 +50,15 @@ class FuneralController extends Controller
             'message'       => 'nullable|string|max:1000',
         ]);
 
-        // 2. Save to database using the Model
         $booking = FuneralBooking::create($validated);
 
-        // 3. Send email notification to admin
         try {
             $adminEmail = config('mail.from.address', 'admin@ipswichmosque.com');
             Mail::to($adminEmail)->send(new FuneralBookingNotification($booking));
         } catch (\Exception $e) {
-            // Log the error but don't fail the request
             \Log::error('Failed to send funeral booking notification: ' . $e->getMessage());
         }
 
-        // 4. Redirect back with a success message
         return back()->with('success', 'Your inquiry has been received. Our team will contact you shortly. Inna Lillahi wa inna ilayhi raji\'un.');
     }
 }

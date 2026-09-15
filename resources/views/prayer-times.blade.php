@@ -333,7 +333,7 @@
                     Prayer Times
                 </h1>
                 <p class="text-lg text-gray-600 mb-6">
-                    {{ $selectedMonthFull }} {{ date('Y') }} | Hijri: {{ $prayerTimes->first()->hijri_month ?? '' }} {{ $prayerTimes->first()->hijri_year ?? '' }} A.H.
+                    {{ $selectedMonthFull }} {{ date('Y') }} | Hijri: {{ $hijriMonthsLabel ?: ($prayerTimes->first()->hijri_month ?? '') }}{{ $hijriYearsLabel ? ' ' . $hijriYearsLabel : '' }}{{ ($hijriMonthsLabel || $hijriYearsLabel) ? ' A.H.' : '' }}
                 </p>
                 
                 <!-- Month Selector -->

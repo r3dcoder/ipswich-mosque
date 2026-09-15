@@ -37,7 +37,16 @@ class RamadanController extends Controller
             'hero_message'     => 'nullable|string|max:1000',
             'countdown_target' => 'nullable|date_format:Y-m-d\TH:i',
             'timetable_image'  => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'iftar_enabled'      => 'nullable|boolean',
+            'iftar_title'        => 'nullable|string|max:255',
+            'iftar_intro'        => 'nullable|string|max:2000',
+            'iftar_sponsor_text' => 'nullable|string|max:2000',
+            'iftar_cost'         => 'nullable|string|max:100',
+            'iftar_items'        => 'nullable|string|max:5000',
+            'iftar_contact'      => 'nullable|string|max:255',
         ]);
+
+        $validated['iftar_enabled'] = $request->boolean('iftar_enabled', true);
 
         if ($request->hasFile('timetable_image')) {
             $path = $request->file('timetable_image')->store('ramadan-timetables', 'public');
@@ -77,7 +86,16 @@ class RamadanController extends Controller
             'hero_message'     => 'nullable|string|max:1000',
             'countdown_target' => 'nullable|date_format:Y-m-d\TH:i',
             'timetable_image'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
+            'iftar_enabled'      => 'nullable|boolean',
+            'iftar_title'        => 'nullable|string|max:255',
+            'iftar_intro'        => 'nullable|string|max:2000',
+            'iftar_sponsor_text' => 'nullable|string|max:2000',
+            'iftar_cost'         => 'nullable|string|max:100',
+            'iftar_items'        => 'nullable|string|max:5000',
+            'iftar_contact'      => 'nullable|string|max:255',
         ]);
+
+        $validated['iftar_enabled'] = $request->boolean('iftar_enabled', true);
 
         if ($request->hasFile('timetable_image')) {
             if ($ramadan->timetable_image) {

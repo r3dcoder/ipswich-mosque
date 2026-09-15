@@ -258,6 +258,18 @@
                             {{ request()->routeIs('admin.funeral-bookings.*') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
                             <span>⚰️</span><span>Funeral Bookings</span>
                         </a>
+
+                        <a href="{{ route('admin.janazah-contents.index') }}"
+                            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition
+                            {{ request()->routeIs('admin.janazah-contents.*') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <span>📝</span><span>Janazah Content</span>
+                        </a>
+
+                        <a href="{{ route('admin.emergency-contacts.index') }}"
+                            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition
+                            {{ request()->routeIs('admin.emergency-contacts.*') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <span>📞</span><span>Emergency Contacts</span>
+                        </a>
                     </div>
 
                     <a href="{{ route('admin.ramadan.index') }}"
@@ -302,6 +314,12 @@
                             {{ request()->routeIs('admin.mosque-settings.*') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
                             <span>⚙️</span><span>Mosque Settings</span>
                         </a>
+                        <a href="{{ route('admin.stripe-settings.edit') }}"
+                            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition
+                            {{ request()->routeIs('admin.stripe-settings.*') ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <span>💳</span><span>Stripe Settings</span>
+                        </a>
+
 
                         <a href="{{ route('admin.menu-items.index', ['group' => 'services']) }}"
                             class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition

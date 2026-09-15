@@ -56,6 +56,7 @@ class NoticeController extends Controller
             'category' => 'required|in:' . implode(',', array_keys(Notice::CATEGORIES)),
             'is_active' => 'boolean',
             'is_pinned' => 'boolean',
+            'show_on_homepage' => 'boolean',
             'send_email_notification' => 'boolean',
             'published_at' => 'nullable|date',
             'expires_at' => 'nullable|date|after:published_at',
@@ -65,6 +66,7 @@ class NoticeController extends Controller
         $data = array_merge($validated, [
             'is_active' => $request->has('is_active'),
             'is_pinned' => $request->has('is_pinned'),
+            'show_on_homepage' => $request->has('show_on_homepage'),
             'send_email_notification' => $request->has('send_email_notification'),
             'published_at' => $request->filled('published_at') ? $request->published_at : now(),
         ]);
@@ -114,6 +116,7 @@ class NoticeController extends Controller
             'category' => 'required|in:' . implode(',', array_keys(Notice::CATEGORIES)),
             'is_active' => 'boolean',
             'is_pinned' => 'boolean',
+            'show_on_homepage' => 'boolean',
             'send_email_notification' => 'boolean',
             'published_at' => 'nullable|date',
             'expires_at' => 'nullable|date|after:published_at',
@@ -123,6 +126,7 @@ class NoticeController extends Controller
         $data = array_merge($validated, [
             'is_active' => $request->has('is_active'),
             'is_pinned' => $request->has('is_pinned'),
+            'show_on_homepage' => $request->has('show_on_homepage'),
             'send_email_notification' => $request->has('send_email_notification'),
         ]);
 

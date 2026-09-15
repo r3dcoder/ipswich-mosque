@@ -16,6 +16,7 @@ class Notice extends Model
         'category',
         'is_active',
         'is_pinned',
+        'show_on_homepage',
         'send_email_notification',
         'published_at',
         'expires_at',
@@ -26,6 +27,7 @@ class Notice extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'is_pinned' => 'boolean',
+        'show_on_homepage' => 'boolean',
         'send_email_notification' => 'boolean',
         'published_at' => 'datetime',
         'expires_at' => 'datetime',
@@ -61,6 +63,11 @@ class Notice extends Model
     public function scopeCategory($query, $category)
     {
         return $query->where('category', $category);
+    }
+
+    public function scopeHomepage($query)
+    {
+        return $query->where('show_on_homepage', true);
     }
 
     public function incrementViewCount()

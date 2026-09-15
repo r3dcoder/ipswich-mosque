@@ -88,6 +88,75 @@
                 </div>
             </div>
 
+
+            <div class="p-6 bg-amber-50 rounded-2xl border border-amber-100">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-amber-900">Iftar Sponsorship Section</h2>
+                        <p class="text-xs text-amber-800/70 mt-1">Shown on the public Ramadan page. Leave fields blank to hide parts.</p>
+                    </div>
+                    <label class="inline-flex items-center gap-2 text-sm font-medium text-amber-900">
+                        <input type="hidden" name="iftar_enabled" value="0">
+                        <input type="checkbox" name="iftar_enabled" value="1"
+                               {{ old('iftar_enabled', $ramadan->iftar_enabled ?? true) ? 'checked' : '' }}
+                               class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                        Show on public page
+                    </label>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Section title</label>
+                        <input type="text" name="iftar_title"
+                               value="{{ old('iftar_title', $ramadan->iftar_title ?? 'IFTAR') }}"
+                               placeholder="IFTAR"
+                               class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-teal-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Intro message</label>
+                        <textarea name="iftar_intro" rows="2"
+                                  placeholder="If anyone wish to provide Iftar or pay for an Iftar, please contact Mosque committee."
+                                  class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-teal-500">{{ old('iftar_intro', $ramadan->iftar_intro) }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Sponsor / arrange Iftar text</label>
+                        <textarea name="iftar_sponsor_text" rows="3"
+                                  placeholder="IFTAR at Ipswich Mosque - you can be part of this blessing!..."
+                                  class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-teal-500">{{ old('iftar_sponsor_text', $ramadan->iftar_sponsor_text) }}</textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Cost for one day Iftar (£)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">£</span>
+                                <input type="text" name="iftar_cost"
+                                       value="{{ old('iftar_cost', $ramadan->iftar_cost) }}"
+                                       placeholder="e.g. 150"
+                                       class="w-full border border-gray-300 rounded-2xl pl-10 pr-5 py-4 focus:ring-2 focus:ring-teal-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Contact</label>
+                            <input type="text" name="iftar_contact"
+                                   value="{{ old('iftar_contact', $ramadan->iftar_contact ?? 'Mosque Committee') }}"
+                                   placeholder="Mosque Committee"
+                                   class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-teal-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Iftar contribution items</label>
+                        <textarea name="iftar_items" rows="6"
+                                  placeholder="One item per line, e.g.&#10;Dates&#10;Plates&#10;Cups"
+                                  class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-teal-500 font-mono text-sm">{{ old('iftar_items', $ramadan->iftar_items) }}</textarea>
+                        <p class="text-xs text-gray-500 mt-1">Enter one item per line (or comma-separated). Shown as a checklist on the public page.</p>
+                    </div>
+                </div>
+            </div>
+
             {{-- Hero Message --}}
             <div>
                 <label class="block text-sm font-medium mb-2">Hero Message</label>

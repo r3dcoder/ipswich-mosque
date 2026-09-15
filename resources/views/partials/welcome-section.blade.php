@@ -1,13 +1,95 @@
 <div class="welcome-section py-12 bg-gray-100 z-0" id="welcome-section">
     <div class="container mx-auto px-4 text-center  ">
-        <h2 class="text-3xl font-bold text-green-700 mb-4">Our Activities</h2>
+        <h2 class="text-3xl font-bold text-green-700 mb-4">Welcome to the Ipswich Mosque</h2>
         <p class="text-lg text-gray-600 mb-6">
             Ipswich & Suffolk Bangladeshi Muslim Community Centre and Mosque.
             The Ipswich Mosque offers a wide range of services; in addition to the Daily Prayers.
             We also offer counselling; education for children and adults; services related to birth, marriage and death
             and more.
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6  ">
+
+        @if(isset($generalNotices) && $generalNotices->count() > 0)
+        <!-- General Information / Newsletter Section -->
+        <div class="mb-8">
+            <h3 class="text-2xl font-bold text-green-700 mb-6">General Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                @foreach($generalNotices as $notice)
+                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                    @if($notice->image_path)
+                    <img src="{{ asset('storage/' . $notice->image_path) }}" alt="{{ $notice->title }}" class="w-full h-40 object-cover rounded-md mb-4">
+                    @endif
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                        @if($notice->is_pinned)
+                        <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full mr-2">Pinned</span>
+                        @endif
+                        {{ $notice->title }}
+                    </h4>
+                    <p class="text-gray-600 mb-4">
+                        {{ Str::limit($notice->summary ?? strip_tags($notice->content), 150) }}
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">
+                            @if($notice->published_at)
+                                {{ $notice->published_at->format('d M Y') }}
+                            @endif
+                        </span>
+                        <a href="{{ route('notices.show', $notice->id) }}" class="text-green-600 hover:text-green-800 font-medium text-sm inline-flex items-center">
+                            Read More
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            <div class="mt-6 text-center">
+                <a href="{{ route('notices.index') }}" class="inline-flex items-center text-green-600 hover:text-green-800 font-medium">
+                    View All Information
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+        @endif
+
+        <!-- Quick Links Section (Database-driven) -->
+        @if(isset($quickLinks) && $quickLinks->count() > 0)
+        <div class="mb-8">
+            <h3 class="text-2xl font-bold text-green-700 mb-6">Learn & Explore</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                @foreach($quickLinks as $link)
+                <a href="{{ url($link->url) }}" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow transform hover:scale-105 duration-300 text-center border-t-4 border-{{ $link->color }}-500">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-{{ $link->color }}-100 rounded-full flex items-center justify-center overflow-hidden">
+                        @if($link->icon_type === 'image' && $link->image_path)
+                        <img src="{{ asset('storage/' . $link->image_path) }}" alt="{{ $link->title }}" class="w-12 h-12 object-contain">
+                        @elseif($link->icon === 'book')
+                        <svg class="w-8 h-8 text-{{ $link->color }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        @elseif($link->icon === 'heart')
+                        <svg class="w-8 h-8 text-{{ $link->color }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        @elseif($link->icon === 'building')
+                        <svg class="w-8 h-8 text-{{ $link->color }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        @else
+                        <svg class="w-8 h-8 text-{{ $link->color }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        @endif
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">{{ $link->title }}</h4>
+                    <p class="text-gray-600">{{ $link->description ?? 'Click to learn more' }}</p>
+                </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+        <!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6  ">
             <div
                 class="feature-card p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow transform hover:scale-105 duration-300">
                 <svg class="w-12 h-12 mx-auto mb-4 text-green-500 custom-prayer-icon"
@@ -169,10 +251,10 @@
   aria-label="Ramadan Icon"
 >
   <!-- Star -->
-  <path d="m1329.9 351.998 70.06 217.015 228.04-.437-184.75 133.684 70.89 216.743-184.24-134.394-184.23 134.394 70.89-216.743-184.75-133.684 228.04.437z"/>
+  <!-- <path d="m1329.9 351.998 70.06 217.015 228.04-.437-184.75 133.684 70.89 216.743-184.24-134.394-184.23 134.394 70.89-216.743-184.75-133.684 228.04.437z"/> -->
   
   <!-- Crescent -->
-  <path d="M1024 255.999c18.47 0 36.777.692 54.921 1.975-329.459 25.718-588.798 301.198-588.798 637.26 0 353.039 286.197 639.236 639.234 639.236 353.04 0 639.236-286.197 639.236-639.236 0-26.321-1.625-52.26-4.716-77.748C1782.181 883.201 1792 952.45 1792 1024c0 424.154-343.846 768.001-768 768.001-424.155 0-768.002-343.846-768.002-768 0-424.155 343.846-768.002 768.001-768.002z"/>
+  <!-- <path d="M1024 255.999c18.47 0 36.777.692 54.921 1.975-329.459 25.718-588.798 301.198-588.798 637.26 0 353.039 286.197 639.236 639.234 639.236 353.04 0 639.236-286.197 639.236-639.236 0-26.321-1.625-52.26-4.716-77.748C1782.181 883.201 1792 952.45 1792 1024c0 424.154-343.846 768.001-768 768.001-424.155 0-768.002-343.846-768.002-768 0-424.155 343.846-768.002 768.001-768.002z"/>
 </svg>
 
                 <h3 class="text-xl font-semibold text-gray-700 mb-2">Ramadan Service</h3>
@@ -186,7 +268,7 @@
                 <h3 class="text-xl font-semibold text-gray-700 mb-2">Life Events</h3>
                 <p class="text-gray-500">Support and services for various life milestones.</p>
             </div>
-        </div>
+        </div>  -->
     </div>
 </div>
  

@@ -98,6 +98,99 @@
     </section>
     @endif
 
+
+    @php
+        $iftarEnabled = $setting && ($setting->iftar_enabled ?? true);
+        $iftarItems = $setting ? $setting->iftarItemsList() : [];
+        $hasIftarContent = $setting && (
+            $setting->iftar_title
+            || $setting->iftar_intro
+            || $setting->iftar_sponsor_text
+            || $setting->iftar_cost
+            || count($iftarItems)
+            || $setting->iftar_contact
+        );
+    @endphp
+
+    @if($iftarEnabled && $hasIftarContent)
+    <section class="py-20 md:py-24" style="background: linear-gradient(180deg, #fffbeb 0%, #ffffff 55%);">
+        <div class="container mx-auto px-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <p class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 text-amber-900 text-xs font-black tracking-widest uppercase mb-4">
+                        🍽️ Community blessing
+                    </p>
+                    <h2 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">
+                        {{ $setting->iftar_title ?? 'IFTAR' }}
+                    </h2>
+                    <div class="w-24 h-1.5 mx-auto rounded-full mt-5" style="background-color: #d97706;"></div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8 items-stretch">
+                    <div class="bg-white border border-amber-100 shadow-xl p-8 md:p-10 flex flex-col" style="border-radius: 32px;">
+                        @if($setting->iftar_intro)
+                            <p class="text-lg text-gray-700 font-medium leading-relaxed mb-6">
+                                {{ $setting->iftar_intro }}
+                            </p>
+                        @endif
+
+                        @if($setting->iftar_sponsor_text)
+                            <div class="p-6 mb-6 border-2 border-dashed" style="background-color: #f0fdfa; border-color: #5eead4; border-radius: 24px;">
+                                <h3 class="text-xl font-black mb-3 uppercase tracking-tight" style="color: #134e4a;">
+                                    Be part of this blessing
+                                </h3>
+                                <p class="text-base font-semibold leading-relaxed" style="color: #115e59;">
+                                    {!! nl2br(e($setting->iftar_sponsor_text)) !!}
+                                </p>
+                            </div>
+                        @endif
+
+                        @if($setting->iftar_cost)
+                            <div class="mt-auto flex items-center justify-between gap-4 p-5 rounded-2xl" style="background-color: #134e4a;">
+                                <div>
+                                    <p class="text-teal-100 text-xs font-bold uppercase tracking-widest mb-1">Cost for one day</p>
+                                    <p class="text-white font-black text-lg">Provide Iftar for a day</p>
+                                </div>
+                                <div class="text-4xl md:text-5xl font-black text-white whitespace-nowrap" style="color: #5eead4;">
+                                    £{{ ltrim($setting->iftar_cost, '£') }}
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="bg-gray-900 text-white shadow-xl p-8 md:p-10 flex flex-col" style="border-radius: 32px;">
+                        <h3 class="text-2xl font-black uppercase tracking-tight mb-2">Contribute Iftar items</h3>
+                        <p class="text-gray-300 font-medium mb-8">
+                            Anyone wanting to contribute for Iftar items such as:
+                        </p>
+
+                        @if(count($iftarItems))
+                            <ul class="grid sm:grid-cols-2 gap-3 mb-10">
+                                @foreach($iftarItems as $item)
+                                    <li class="flex items-center gap-3 rounded-2xl px-4 py-3 border border-white/10" style="background-color: rgba(255,255,255,0.06);">
+                                        <span class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-black" style="background-color: #0d9488;">✓</span>
+                                        <span class="font-bold tracking-wide uppercase text-sm">{{ $item }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p class="text-gray-400 mb-10 italic">Items list coming soon.</p>
+                        @endif
+
+                        <div class="mt-auto p-6 rounded-2xl border border-amber-400/30" style="background: linear-gradient(135deg, rgba(217,119,6,0.25), rgba(13,148,136,0.25));">
+                            <p class="text-xs font-black uppercase tracking-widest text-amber-200 mb-2">Please contact</p>
+                            <p class="text-2xl md:text-3xl font-black text-white">
+                                {{ $setting->iftar_contact ?? 'Mosque Committee' }}
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+
     <section class="py-24 bg-white">
         <div class="container mx-auto px-6">
             <div class="grid lg:grid-cols-12 gap-16 items-start">

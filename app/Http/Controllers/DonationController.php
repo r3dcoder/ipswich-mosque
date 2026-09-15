@@ -11,6 +11,7 @@ use Stripe\Price;
 use Stripe\Stripe;
 use Stripe\Subscription;
 use Stripe\Customer;
+use App\Services\StripeConfig;
 
 class DonationController extends Controller
 {
@@ -19,7 +20,7 @@ class DonationController extends Controller
      */
     public function createPaymentIntent(Request $request)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+        StripeConfig::configure();
 
         try {
             $amount = floatval($request->amount);
@@ -287,7 +288,7 @@ class DonationController extends Controller
      */
     public function confirmPayment(Request $request)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+        StripeConfig::configure();
 
         try {
             $paymentIntentId = $request->payment_intent_id;
@@ -336,7 +337,7 @@ class DonationController extends Controller
 
     public function createCheckoutSession(Request $request)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+        StripeConfig::configure();
 
         try {
             $session = Session::create([
@@ -367,8 +368,8 @@ class DonationController extends Controller
      */
     public function handleWebhook(Request $request)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET'));
-        $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
+        StripeConfig::configure();
+        $endpoint_secret = StripeConfig::webhookSecret();
 
         $payload = $request->getContent();
         $sig_header = $request->header('Stripe-Signature');

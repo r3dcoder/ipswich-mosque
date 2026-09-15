@@ -167,7 +167,7 @@
                 </div>
 
                 <!-- Office Hours -->
-                <div class="bg-white rounded-2xl p-8 border border-gray-100">
+                <!-- <div class="bg-white rounded-2xl p-8 border border-gray-100">
                     <h3 class="text-2xl font-bold text-gray-900 mb-6">Office Hours</h3>
                     <div class="space-y-3">
                         <div class="flex justify-between">
@@ -186,7 +186,7 @@
                     <div class="mt-6 p-4 bg-green-50 rounded-lg">
                         <p class="text-sm text-green-700">For urgent matters during prayer times, please contact the office directly.</p>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

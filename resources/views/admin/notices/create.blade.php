@@ -94,6 +94,15 @@
                     </label>
                 </div>
 
+                <div class="flex items-center">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="show_on_homepage" name="show_on_homepage" value="1" {{ old('show_on_homepage') ? 'checked' : '' }}
+                            class="sr-only peer">
+                        <div class="w-14 h-8 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:bg-emerald-500"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-700">Show on homepage (General Information section)</span>
+                    </label>
+                </div>
+
                 <div class="flex items-center md:col-span-2">
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="send_email_notification" name="send_email_notification" value="1" {{ old('send_email_notification') ? 'checked' : '' }}

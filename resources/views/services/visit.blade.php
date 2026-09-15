@@ -117,65 +117,6 @@
         </div>
     </section>
 
-    <section class="py-20 bg-white">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold">Frequently Asked Questions</h2>
-                <div class="h-1 w-20 bg-emerald-600 mx-auto mt-4 rounded-full"></div>
-            </div>
-
-            <div class="space-y-4">
-                <details class="group border border-gray-100 bg-gray-50 rounded-2xl p-6 transition-all open:ring-2 open:ring-emerald-500/20">
-                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none text-slate-800">
-                        Where do the women pray?
-                        <span class="text-emerald-600 transition group-open:rotate-180">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
-                    </summary>
-                    <p class="mt-4 text-gray-600 text-sm leading-relaxed">
-                        Women offer prayers towards the back of the prayer hall or in the upstairs gallery that provides them privacy and comfort.
-                    </p>
-                </details>
-
-                <details class="group border border-gray-100 bg-gray-50 rounded-2xl p-6 transition-all open:ring-2 open:ring-emerald-500/20">
-                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none text-slate-800">
-                        What are the foot sinks in the bathroom for?
-                        <span class="text-emerald-600 transition group-open:rotate-180">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
-                    </summary>
-                    <p class="mt-4 text-gray-600 text-sm leading-relaxed">
-                        Muslims are supposed to be in a state of physical purification (Wudu) before making the prayer, which includes washing the feet to ensure cleanliness before standing before Allah.
-                    </p>
-                </details>
-
-                <details class="group border border-gray-100 bg-gray-50 rounded-2xl p-6 transition-all open:ring-2 open:ring-emerald-500/20">
-                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none text-slate-800">
-                        What happens when people join the prayer late?
-                        <span class="text-emerald-600 transition group-open:rotate-180">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
-                    </summary>
-                    <p class="mt-4 text-gray-600 text-sm leading-relaxed">
-                        They join the prayer already in progress. After the imam has finished the prayer with the final 'Salam', latecomers stand up to complete whatever cycles (Rak'ahs) they missed individually.
-                    </p>
-                </details>
-
-                <details class="group border border-gray-100 bg-gray-50 rounded-2xl p-6 transition-all open:ring-2 open:ring-emerald-500/20">
-                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none text-slate-800">
-                        How do Friday prayers work?
-                        <span class="text-emerald-600 transition group-open:rotate-180">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </span>
-                    </summary>
-                    <div class="mt-4 text-gray-600 text-sm leading-relaxed space-y-2">
-                        <p>Friday is the day of congregational prayers. The service begins with the call to prayer (Adhan), followed by a sermon (Khutbah) which consists of two short lectures with a brief pause in the middle.</p>
-                        <p>After the sermon, the congregation stands to follow the Imam in a short prayer.</p>
-                    </div>
-                </details>
-            </div>
-        </div>
-    </section>
 
     <section class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4">

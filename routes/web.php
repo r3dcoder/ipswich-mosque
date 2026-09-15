@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\JummahScheduleController;
 use App\Http\Controllers\Admin\KhutbahController as AdminKhutbahController;
 use App\Http\Controllers\Admin\MarriageBookingController as AdminMarriageBookingController;
 use App\Http\Controllers\Admin\MosqueSettingController;
+use App\Http\Controllers\Admin\StripeSettingController;
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\PageBlockController;
@@ -35,6 +36,8 @@ use App\Models\PrayerTime;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Admin\DuaCategoryController;
+use App\Http\Controllers\Admin\JanazahContentController;
+use App\Http\Controllers\Admin\EmergencyContactController;
  
  
 Route::get('/', [HomeController::class, 'index']);
@@ -116,6 +119,11 @@ Route::get('/prayer-timing-screen', [PrayerTimesController::class, 'timingScreen
 Route::get('/duas', [DuaController::class, 'index'])->name('duas.index');
 Route::get('/duas/{id}', [DuaController::class, 'show'])->name('duas.show');
 Route::get('/duas/category/{id}', [DuaController::class, 'category'])->name('duas.category');
+
+// Principles of Islam Page
+Route::get('/principles-of-islam', function () {
+    return view('principles-of-islam');
+})->name('principles-of-islam');
 
 // Public Notice Board Routes
 Route::get('/notices', [App\Http\Controllers\NewsletterSubscriptionController::class, 'notices'])->name('notices.index');
@@ -372,6 +380,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('mosque-settings', [MosqueSettingController::class, 'edit'])->name('mosque-settings.edit');
     Route::put('mosque-settings', [MosqueSettingController::class, 'update'])->name('mosque-settings.update');
+
+    Route::get('stripe-settings', [StripeSettingController::class, 'edit'])->name('stripe-settings.edit');
+    Route::put('stripe-settings', [StripeSettingController::class, 'update'])->name('stripe-settings.update');
+    Route::post('stripe-settings/toggle-mode', [StripeSettingController::class, 'toggleMode'])->name('stripe-settings.toggle-mode');
 });
 
 // Admin Notice Board Routes
@@ -411,6 +423,27 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('menu-items/{menuItem}', [MenuItemController::class, 'update'])->name('menu-items.update');
     Route::delete('menu-items/{menuItem}', [MenuItemController::class, 'destroy'])->name('menu-items.destroy');
     Route::post('menu-items/{menuItem}/toggle-active', [MenuItemController::class, 'toggleActive'])->name('menu-items.toggle-active');
+});
+
+// Admin Quick Links Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('quick-links', \App\Http\Controllers\Admin\QuickLinkController::class)->except(['show']);
+    Route::post('quick-links/reorder', [\App\Http\Controllers\Admin\QuickLinkController::class, 'reorder'])->name('quick-links.reorder');
+});
+
+// Admin Janazah Content & Emergency Contacts Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('janazah-contents/section/{sectionKey}/edit', [JanazahContentController::class, 'editSection'])
+        ->name('janazah-contents.edit-section');
+    Route::put('janazah-contents/section/{sectionKey}', [JanazahContentController::class, 'updateSection'])
+        ->name('janazah-contents.update-section');
+    Route::resource('janazah-contents', JanazahContentController::class)->except(['show']);
+    Route::post('janazah-contents/{janazahContent}/toggle-visible', [JanazahContentController::class, 'toggleVisible'])
+        ->name('janazah-contents.toggle-visible');
+
+    Route::resource('emergency-contacts', EmergencyContactController::class)->except(['show']);
+    Route::post('emergency-contacts/{emergencyContact}/toggle-visible', [EmergencyContactController::class, 'toggleVisible'])
+        ->name('emergency-contacts.toggle-visible');
 });
 
 require __DIR__.'/auth.php';

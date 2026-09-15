@@ -141,7 +141,7 @@ class PrayerTimeController extends Controller
 
     public function update(Request $request, PrayerTime $prayer_time)
     {
-        $data = $this->validated($request);
+        $data = $this->validated($request, $prayer_time);
         $prayer_time->update($data);
 
         return redirect()->route('admin.prayer-times.index')->with('success', 'Prayer time updated.');
@@ -153,12 +153,20 @@ class PrayerTimeController extends Controller
         return redirect()->route('admin.prayer-times.index')->with('success', 'Prayer time deleted.');
     }
 
-    private function validated(Request $request): array
+    private function validated(Request $request, ?PrayerTime $existing = null): array
     {
+        // Build unique rule for (month, date) combination
+        $uniqueRule = 'unique:prayer_times,date,NULL,id,month,' . $request->input('month', '');
+        if ($existing) {
+            $uniqueRule = \Illuminate\Validation\Rule::unique('prayer_times', 'date')
+                ->where('month', $request->input('month', ''))
+                ->ignore($existing->id);
+        }
+
         return $request->validate([
-            'date' => ['required','integer','min:1','max:31'],
-            'month' => ['nullable','string','max:255'],
-            'day' => ['required','string','max:255'],
+            'date' => ['required', 'integer', 'min:1', 'max:31', $uniqueRule],
+            'month' => ['required', 'string', 'max:255'],
+            'day' => ['required', 'string', 'max:255'],
 
             'fajr_begins' => ['nullable','string','max:255'],
             'fajr_jamaat' => ['nullable','string','max:255'],

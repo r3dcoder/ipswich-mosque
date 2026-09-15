@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Alkoumi\LaravelHijriDate\Hijri;
 use App\Models\Event;
+use App\Models\Notice;
+use App\Models\QuickLink;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -28,10 +30,10 @@ class HomeController extends Controller
             'جمادى الأولى' => 'Jumada Al-Awwal',
             'جمادى الآخرة' => 'Jumada Al-Thani',
             'رجب' => 'Rajab',
-            'شعبان' => 'Sha’ban',
+            'شعبان' => 'Shaban',
             'رمضان' => 'Ramadan',
             'شوال' => 'Shawwal',
-            'ذو القعدة' => 'Dhul Qa’dah',
+            'ذو القعدة' => 'Dhul Qadah',
             'ذو الحجة' => 'Dhul Hijjah',
         ];
 
@@ -47,6 +49,17 @@ class HomeController extends Controller
             ->take(6)
             ->get();
 
-        return view('welcome', compact('todayGregorian', 'todayHijri', 'events'));
+        // Get active notices marked for homepage display
+        $generalNotices = Notice::active()
+            ->homepage()
+            ->orderBy('is_pinned', 'desc')
+            ->orderBy('published_at', 'desc')
+            ->take(6)
+            ->get();
+
+        // Get active quick links for the "Learn & Explore" section
+        $quickLinks = QuickLink::homepage()->get();
+
+        return view('welcome', compact('todayGregorian', 'todayHijri', 'events', 'generalNotices', 'quickLinks'));
     }
 }
