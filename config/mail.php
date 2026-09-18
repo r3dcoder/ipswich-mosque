@@ -115,4 +115,21 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Newsletter "From" Address
+    |--------------------------------------------------------------------------
+    |
+    | Bulk newsletter and notice emails are sent to the subscriber list from
+    | this address, separately from the global "from" address above. Replies
+    | are directed to the global "from" address so that subscriber responses
+    | still reach a monitored inbox.
+    |
+    */
+
+    'newsletter_from' => [
+        'address' => env('NEWSLETTER_FROM_ADDRESS', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+        'name' => env('NEWSLETTER_FROM_NAME', env('MAIL_FROM_NAME', 'Example')),
+    ],
+
 ];

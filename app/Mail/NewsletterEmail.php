@@ -27,7 +27,13 @@ class NewsletterEmail extends Mailable
 
     public function build()
     {
+        $fromAddress = config('mail.newsletter_from.address');
+        $fromName = config('mail.newsletter_from.name');
+        $replyToAddress = config('mail.from.address');
+
         return $this->subject($this->subject)
+                    ->from($fromAddress, $fromName)
+                    ->replyTo($replyToAddress, $fromName)
                     ->view('emails.newsletter')
                     ->with([
                         'subject' => $this->subject,

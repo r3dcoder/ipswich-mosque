@@ -19,7 +19,7 @@
         </div>
     </section>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         @php
             // Fetch all people, no longer grouping by role
             $people = \App\Models\People::orderBy('name')->get();
@@ -31,55 +31,42 @@
                 <p class="text-gray-500 mt-2">Please check back shortly.</p>
             </div>
         @else
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
-                @foreach($people as $person)
-                    <div class="group">
-                        <div class="relative aspect-[4/5] mb-6 overflow-hidden rounded-2xl bg-gray-100 shadow-sm transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-1">
-                            @if($person->image_url)
-                                <img src="{{ $person->image_url }}" 
-                                     alt="{{ $person->name }}"
-                                     class="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-110">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100">
-                                    <span class="text-5xl font-light text-green-300">{{ substr($person->name, 0, 1) }}</span>
+            <div class="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
+                <div class="divide-y divide-gray-100">
+                    @foreach($people as $person)
+                        <div class="group flex flex-col gap-4 p-6 transition-colors duration-300 hover:bg-gray-50 sm:flex-row sm:items-center sm:justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green-50 to-green-100 text-lg font-semibold text-green-600">
+                                    {{ strtoupper(substr($person->name, 0, 1)) }}
                                 </div>
-                            @endif
 
-                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]">
-                                <div class="flex space-x-4">
-                                    @if($person->email)
-                                        <a href="mailto:{{ $person->email }}" class="p-3 bg-white rounded-full text-green-600 hover:bg-green-600 hover:text-white transition-colors" title="Email {{ $person->name }}">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                        </a>
-                                    @endif
-                                    @if($person->phone)
-                                        <a href="tel:{{ $person->phone }}" class="p-3 bg-white rounded-full text-green-600 hover:bg-green-600 hover:text-white transition-colors" title="Call {{ $person->name }}">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                                        </a>
-                                    @endif
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900 tracking-tight transition-colors group-hover:text-green-600">
+                                        {{ $person->name }}
+                                    </h3>
+                                    <p class="text-xs font-medium uppercase tracking-widest text-green-600">
+                                        {{ $person->role }}
+                                    </p>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="space-y-1">
-                            <h3 class="text-xl font-bold text-gray-900 tracking-tight group-hover:text-green-600 transition-colors">
-                                {{ $person->name }}
-                            </h3>
-                            <p class="text-sm font-medium text-green-600 uppercase tracking-widest">
-                                {{ $person->role }}
-                            </p>
-                            
-                            <div class="flex flex-col space-y-1 mt-3 md:hidden">
+                            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 sm:justify-end">
                                 @if($person->email)
-                                    <span class="text-xs text-gray-500 break-all">{{ $person->email }}</span>
+                                    <a href="mailto:{{ $person->email }}" class="inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-green-600" title="Email {{ $person->name }}">
+                                        <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                        <span class="break-all">{{ $person->email }}</span>
+                                    </a>
                                 @endif
                                 @if($person->phone)
-                                    <span class="text-xs text-gray-500">{{ $person->phone }}</span>
+                                    <a href="tel:{{ $person->phone }}" class="inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-green-600" title="Call {{ $person->name }}">
+                                        <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                        <span>{{ $person->phone }}</span>
+                                    </a>
                                 @endif
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         @endif
     </div>

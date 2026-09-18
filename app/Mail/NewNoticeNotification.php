@@ -23,7 +23,13 @@ class NewNoticeNotification extends Mailable
 
     public function build()
     {
+        $fromAddress = config('mail.newsletter_from.address');
+        $fromName = config('mail.newsletter_from.name');
+        $replyToAddress = config('mail.from.address');
+
         return $this->subject('New Notice from Ipswich Mosque: ' . $this->notice->title)
+                    ->from($fromAddress, $fromName)
+                    ->replyTo($replyToAddress, $fromName)
                     ->view('emails.new-notice-notification')
                     ->with([
                         'notice' => $this->notice,
