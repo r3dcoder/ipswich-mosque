@@ -30,5 +30,15 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <!--
+            Stripe credentials must never leak from the developer's real .env into
+            tests. These are set before dotenv loads, and Laravel's dotenv
+            repository is immutable, so the .env values are ignored during testing.
+            Empty values make StripeSetting fall back to "not configured", which is
+            exactly the state the encryption-recovery tests assert against.
+        -->
+        <env name="STRIPE_KEY" value=""/>
+        <env name="STRIPE_SECRET" value=""/>
+        <env name="STRIPE_WEBHOOK_SECRET" value=""/>
     </php>
 </phpunit>

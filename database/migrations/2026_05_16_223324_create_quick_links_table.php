@@ -8,9 +8,24 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * Three migrations were committed for the same `quick_links` table.
+     * This one is the authoritative definition: it carries every column the
+     * QuickLink model declares. The sibling stubs
+     * (2026_05_16_223321 / 2026_05_16_223608) are intentionally inert so a
+     * fresh database is not created twice.
+     *
+     * The hasTable() guard keeps the migration re-runnable: environments that
+     * already have `quick_links` (from an older deployment of one of the other
+     * two migrations) skip the create instead of failing with
+     * "table quick_links already exists".
      */
     public function up(): void
     {
+        if (Schema::hasTable('quick_links')) {
+            return;
+        }
+
         Schema::create('quick_links', function (Blueprint $table) {
             $table->id();
             $table->string('title');

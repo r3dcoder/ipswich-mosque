@@ -3,10 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\Donation;
+use App\Services\StripeConfig;
 use Illuminate\Console\Command;
 use Stripe\PaymentIntent;
 use Stripe\Subscription;
-use Stripe\Stripe;
 
 class SyncDonationStatuses extends Command
 {
@@ -29,7 +29,31 @@ class SyncDonationStatuses extends Command
      */
     public function handle()
     {
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+        // Uses the admin-managed keys (with .env fallback) instead of reading
+        // STRIPE_SECRET directly, so scheduled syncs keep working when keys are stored
+        // in the database. Fails gracefully rather than calling Stripe with no key.
+        try {
+            StripeConfig::configure();
+        } catch (\Throwable $e) {
+            $this->error('Stripe is not configured: ' . $e->getMessage());
+
+            $unreadable = StripeConfig::unreadableFields();
+
+            if ($unreadable !== []) {
+                $this->line('');
+                $this->warn('These stored values are encrypted with a previous APP_KEY and cannot be read:');
+
+                foreach ($unreadable as $field) {
+                    $this->line("  - {$field}");
+                }
+
+                $this->line('');
+                $this->info('Re-enter them in Admin → Stripe Settings, or restore the previous APP_KEY in .env.');
+                $this->info('Run "php artisan stripe:check-encryption --clear" to remove the unreadable values.');
+            }
+
+            return Command::FAILURE;
+        }
 
         $limit = $this->option('limit');
         $donations = Donation::where('status', 'pending')

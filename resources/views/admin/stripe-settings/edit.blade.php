@@ -4,6 +4,10 @@
 @section('header', 'Stripe Settings')
 
 @section('content')
+@php
+    $unreadableFields = $unreadableFields ?? [];
+    $isUnreadable = fn(string $field): bool => in_array($field, $unreadableFields, true);
+@endphp
 <div class="container mx-auto px-4 py-6 max-w-5xl">
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
@@ -34,6 +38,36 @@
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-4">
             {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('warning'))
+        <div class="bg-amber-100 border border-amber-400 text-amber-800 px-4 py-3 rounded-xl mb-4">
+            {{ session('warning') }}
+        </div>
+    @endif
+
+    @if($unreadableFields !== [])
+        <div class="bg-red-50 border border-red-300 text-red-800 px-4 py-4 rounded-xl mb-4">
+            <p class="font-semibold flex items-center gap-2">
+                <span>⚠️</span> Encrypted Stripe keys could not be read
+            </p>
+            <p class="text-sm mt-2">
+                The following stored values are unreadable with the current <code>APP_KEY</code> and
+                <strong>must be re-entered</strong> below. This happens when <code>APP_KEY</code> is
+                regenerated or the <code>.env</code> is replaced, because the old ciphertext can no
+                longer be decrypted:
+            </p>
+            <ul class="list-disc list-inside text-sm mt-2 font-mono">
+                @foreach($unreadableFields as $field)
+                    <li>{{ $field }}</li>
+                @endforeach
+            </ul>
+            <p class="text-xs mt-3 text-red-700">
+                Recovering the old values requires the previous <code>APP_KEY</code>. Otherwise, paste
+                fresh keys from your Stripe dashboard and save. You can also inspect or clear these
+                with <code>php artisan stripe:check-encryption</code>.
+            </p>
         </div>
     @endif
 
@@ -98,23 +132,31 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Secret key</label>
-                        @if($settings->test_secret_key)
+                        @if($isUnreadable('test_secret_key'))
+                            <p class="text-xs text-red-600 mb-1 font-medium">
+                                Unreadable (encrypted with an old APP_KEY) — please re-enter.
+                            </p>
+                        @elseif($settings->test_secret_key)
                             <p class="text-xs text-gray-500 mb-1">Saved: <span class="font-mono">{{ $settings->maskedTestSecret() }}</span> (encrypted)</p>
                         @endif
                         <input type="password" name="test_secret_key" value=""
-                               placeholder="{{ $settings->test_secret_key ? 'Leave blank to keep current' : 'sk_test_...' }}"
+                               placeholder="{{ $isUnreadable('test_secret_key') ? 'Re-enter sk_test_...' : ($settings->test_secret_key ? 'Leave blank to keep current' : 'sk_test_...') }}"
                                autocomplete="new-password"
-                               class="w-full border border-gray-300 rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-amber-400 focus:outline-none">
+                               class="w-full border {{ $isUnreadable('test_secret_key') ? 'border-red-400' : 'border-gray-300' }} rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-amber-400 focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Webhook secret</label>
-                        @if($settings->test_webhook_secret)
+                        @if($isUnreadable('test_webhook_secret'))
+                            <p class="text-xs text-red-600 mb-1 font-medium">
+                                Unreadable (encrypted with an old APP_KEY) — please re-enter.
+                            </p>
+                        @elseif($settings->test_webhook_secret)
                             <p class="text-xs text-gray-500 mb-1">Saved: <span class="font-mono">{{ $settings->maskedTestWebhook() }}</span> (encrypted)</p>
                         @endif
                         <input type="password" name="test_webhook_secret" value=""
-                               placeholder="{{ $settings->test_webhook_secret ? 'Leave blank to keep current' : 'whsec_...' }}"
+                               placeholder="{{ $isUnreadable('test_webhook_secret') ? 'Re-enter whsec_...' : ($settings->test_webhook_secret ? 'Leave blank to keep current' : 'whsec_...') }}"
                                autocomplete="new-password"
-                               class="w-full border border-gray-300 rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-amber-400 focus:outline-none">
+                               class="w-full border {{ $isUnreadable('test_webhook_secret') ? 'border-red-400' : 'border-gray-300' }} rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-amber-400 focus:outline-none">
                     </div>
                 </div>
             </div>
@@ -140,23 +182,31 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Secret key</label>
-                        @if($settings->live_secret_key)
+                        @if($isUnreadable('live_secret_key'))
+                            <p class="text-xs text-red-600 mb-1 font-medium">
+                                Unreadable (encrypted with an old APP_KEY) — please re-enter.
+                            </p>
+                        @elseif($settings->live_secret_key)
                             <p class="text-xs text-gray-500 mb-1">Saved: <span class="font-mono">{{ $settings->maskedLiveSecret() }}</span> (encrypted)</p>
                         @endif
                         <input type="password" name="live_secret_key" value=""
-                               placeholder="{{ $settings->live_secret_key ? 'Leave blank to keep current' : 'sk_live_...' }}"
+                               placeholder="{{ $isUnreadable('live_secret_key') ? 'Re-enter sk_live_...' : ($settings->live_secret_key ? 'Leave blank to keep current' : 'sk_live_...') }}"
                                autocomplete="new-password"
-                               class="w-full border border-gray-300 rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                               class="w-full border {{ $isUnreadable('live_secret_key') ? 'border-red-400' : 'border-gray-300' }} rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Webhook secret</label>
-                        @if($settings->live_webhook_secret)
+                        @if($isUnreadable('live_webhook_secret'))
+                            <p class="text-xs text-red-600 mb-1 font-medium">
+                                Unreadable (encrypted with an old APP_KEY) — please re-enter.
+                            </p>
+                        @elseif($settings->live_webhook_secret)
                             <p class="text-xs text-gray-500 mb-1">Saved: <span class="font-mono">{{ $settings->maskedLiveWebhook() }}</span> (encrypted)</p>
                         @endif
                         <input type="password" name="live_webhook_secret" value=""
-                               placeholder="{{ $settings->live_webhook_secret ? 'Leave blank to keep current' : 'whsec_...' }}"
+                               placeholder="{{ $isUnreadable('live_webhook_secret') ? 'Re-enter whsec_...' : ($settings->live_webhook_secret ? 'Leave blank to keep current' : 'whsec_...') }}"
                                autocomplete="new-password"
-                               class="w-full border border-gray-300 rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                               class="w-full border {{ $isUnreadable('live_webhook_secret') ? 'border-red-400' : 'border-gray-300' }} rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                     </div>
                 </div>
             </div>

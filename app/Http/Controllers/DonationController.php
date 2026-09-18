@@ -20,9 +20,9 @@ class DonationController extends Controller
      */
     public function createPaymentIntent(Request $request)
     {
-        StripeConfig::configure();
-
         try {
+            StripeConfig::configure();
+
             $amount = floatval($request->amount);
             $donationType = $request->donation_type;
             $frequency = $request->frequency ?? 'one-off';
@@ -45,8 +45,32 @@ class DonationController extends Controller
                 return $this->createOneOffPayment($amount, $giftAid, $category, $donorName, $donorEmail, $donorAddress, $donorPostcode, $donorPhone);
             }
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $this->stripeErrorMessage($e)], 500);
         }
+    }
+
+    /**
+     * A donor-facing message for Stripe failures.
+     *
+     * Configuration problems (including unreadable encrypted keys after an APP_KEY
+     * change) are logged in full but reported to the visitor in plain language, so the
+     * internal column names and key material never leak into the API response.
+     */
+    private function stripeErrorMessage(\Throwable $e): string
+    {
+        if ($e instanceof \RuntimeException) {
+            \Log::error('Stripe is not configured.', [
+                'error' => $e->getMessage(),
+                'unreadable_fields' => StripeConfig::unreadableFields(),
+            ]);
+
+            return 'Online donations are temporarily unavailable. Please try again later or '
+                .'contact the mosque directly.';
+        }
+
+        \Log::error('Stripe payment failed.', ['error' => $e->getMessage()]);
+
+        return 'We could not process your donation. Please try again later.';
     }
 
     /**
@@ -288,9 +312,9 @@ class DonationController extends Controller
      */
     public function confirmPayment(Request $request)
     {
-        StripeConfig::configure();
-
         try {
+            StripeConfig::configure();
+
             $paymentIntentId = $request->payment_intent_id;
             $donationId = $request->donation_id;
 
@@ -309,7 +333,7 @@ class DonationController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Payment not completed'], 400);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $this->stripeErrorMessage($e)], 500);
         }
     }
 
@@ -337,9 +361,9 @@ class DonationController extends Controller
 
     public function createCheckoutSession(Request $request)
     {
-        StripeConfig::configure();
-
         try {
+            StripeConfig::configure();
+
             $session = Session::create([
                 'payment_method_types' => ['card'],
                 'line_items' => [[
@@ -359,17 +383,46 @@ class DonationController extends Controller
 
             return response()->json(['id' => $session->id]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $this->stripeErrorMessage($e)], 500);
         }
     }
 
     /**
-     * Handle Stripe webhooks
+     * Handle Stripe webhooks.
+     *
+     * Never throws: a missing or unreadable webhook signing secret (for example after
+     * an APP_KEY change) returns 503 so Stripe retries later instead of producing an
+     * unhandled exception in the logs.
      */
     public function handleWebhook(Request $request)
     {
-        StripeConfig::configure();
+        try {
+            StripeConfig::configure();
+        } catch (\Throwable $e) {
+            \Log::error('Stripe webhook skipped: secret key unavailable.', [
+                'error' => $e->getMessage(),
+                'unreadable_fields' => StripeConfig::unreadableFields(),
+            ]);
+
+            return response('Stripe is not configured', 503);
+        }
+
         $endpoint_secret = StripeConfig::webhookSecret();
+
+        if (!$endpoint_secret) {
+            $settings = StripeConfig::settings();
+            [$secretField, $webhookField] = $settings->activeKeyFields();
+
+            \Log::error('Stripe webhook skipped: signing secret unavailable.', [
+                'mode' => $settings->mode,
+                'field' => $webhookField,
+                'unreadable' => $settings->isFieldUnreadable($webhookField),
+                'secret_field_unreadable' => $settings->isFieldUnreadable($secretField),
+            ]);
+
+            // 503 rather than 400 so Stripe retries once the admin re-enters the secret.
+            return response('Webhook signing secret is not configured', 503);
+        }
 
         $payload = $request->getContent();
         $sig_header = $request->header('Stripe-Signature');
@@ -380,9 +433,13 @@ class DonationController extends Controller
             );
         } catch (\UnexpectedValueException $e) {
             // Invalid payload
+            \Log::warning('Stripe webhook rejected: invalid payload.', ['error' => $e->getMessage()]);
+
             return response('Invalid payload', 400);
-        } catch (\Stripe\Error\SignatureVerification $e) {
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
             // Invalid signature
+            \Log::warning('Stripe webhook rejected: invalid signature.', ['error' => $e->getMessage()]);
+
             return response('Invalid signature', 400);
         }
 
