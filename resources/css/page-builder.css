@@ -308,8 +308,11 @@
         flex-direction: column;
     }
 
+    /* max-width must be overridden too: the inline style emitted by
+       blocks/columns.blade.php caps each column at its desktop width. */
     .pb-columns.pb-columns--stack .pb-col {
         width: 100% !important;
+        max-width: 100% !important;
         flex: 1 1 auto !important;
     }
 
@@ -373,9 +376,12 @@
         align-items: stretch;
     }
 
+    /* flex and max-width need !important: the inline style emitted by
+       blocks/image_text.blade.php pins the media column to its desktop width. */
     .pb-image-text__media {
         width: 100% !important;
-        flex: 1 1 auto;
+        max-width: 100% !important;
+        flex: 1 1 auto !important;
         margin-bottom: 1.25rem;
     }
 }
