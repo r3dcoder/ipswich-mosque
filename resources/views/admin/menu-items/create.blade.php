@@ -60,7 +60,7 @@
                         <option value="">-- None (Top Level) --</option>
                         @foreach($parents as $parent)
                             <option value="{{ $parent->id }}" {{ old('parent_id') == $parent->id ? 'selected' : '' }}>
-                                {{ $parent->title }}
+                                {{ $parent->title }} ({{ ucfirst($parent->menu_group) }})
                             </option>
                         @endforeach
                     </select>

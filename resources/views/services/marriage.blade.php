@@ -11,7 +11,7 @@
         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="max-w-3xl mx-auto text-center">
                 <div>
                     <span class="inline-block px-4 py-1 rounded-full text-sm font-semibold mb-4 border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
                         Sunnah Marriage Services
@@ -23,7 +23,7 @@
                         Ipswich Mosque provides a dignified, serene, and welcoming environment for your Nikah ceremony and family reception, strictly following Islamic traditions.
                     </p>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left mb-10">
                         <div class="flex items-center space-x-3">
                             <div class="p-1 rounded-full bg-emerald-500/20">
                                 <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
@@ -49,95 +49,18 @@
                             <span class="text-gray-200 font-medium">Community Support</span>
                         </div>
                     </div>
-                </div>
 
-                <div class="relative">
-                    <div class="bg-white rounded-3xl p-8 lg:p-10 shadow-2xl border border-gray-100">
-                        <div class="text-center mb-8">
-                            <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg" style="background-color: rgba(10, 81, 52, 0.1);">
-                                <svg class="w-8 h-8" style="color: var(--brand-green);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                            </div>
-                            <h3 class="text-2xl font-bold text-gray-900">Inquire for Booking</h3>
-                            <p class="text-gray-500">Fill the details below to check availability</p>
-                        </div>
-
-                        @if(session('success'))
-                            <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl mb-6 flex items-center gap-2">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
-                                {{ session('success') }}
-                            </div>
-                        @endif
-
-                        <form action="{{ route('marriage.booking.store') }}" method="POST" class="space-y-5">
-                            @csrf
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div>
-                                    <label for="name" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name</label>
-                                    <input type="text" id="name" name="name" required placeholder="Full Name"
-                                           class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all">
-                                </div>
-                                <div>
-                                    <label for="email" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Email Address</label>
-                                    <input type="email" id="email" name="email" required placeholder="email@example.com"
-                                           class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all">
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div>
-                                    <label for="phone" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Phone Number</label>
-                                    <input type="tel" id="phone" name="phone" placeholder="07123 456789"
-                                           class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all">
-                                </div>
-                                <div>
-                                    <label for="service_type" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Service Type</label>
-                                    <select id="service_type" name="service_type" required
-                                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-white">
-                                        <option value="">Select type</option>
-                                        <option value="nikah">Nikah Only</option>
-                                        <option value="reception">Reception Only</option>
-                                        <option value="both">Nikah & Reception</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div>
-                                    <label for="proposed_date" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Proposed Date</label>
-                                    <input type="date" id="proposed_date" name="proposed_date"
-                                           class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all">
-                                </div>
-                                <div>
-                                    <label for="proposed_time" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Proposed Time</label>
-                                    <input type="time" id="proposed_time" name="proposed_time"
-                                           class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all">
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-1 gap-5">
-                                <div>
-                                    <label for="expected_guests" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Number of Guests</label>
-                                    <input type="number" id="expected_guests" name="expected_guests" min="1" placeholder="e.g. 50"
-                                           class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label for="message" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Additional Requirements</label>
-                                <textarea id="message" name="message" rows="3" placeholder="Tell us about special requirements..."
-                                          class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"></textarea>
-                            </div>
-
-                            <button type="submit" 
-                                    class="w-full text-white font-bold py-4 px-6 rounded-xl transition duration-300 transform hover:scale-[1.02] active:scale-95 shadow-lg"
-                                    style="background-color: var(--brand-green);">
-                                Submit Booking Request
-                            </button>
-                        </form>
+                    <div class="mt-10">
+                        <a href="{{ route('contact.index') }}"
+                           class="inline-flex items-center justify-center gap-2 text-white font-bold py-4 px-8 rounded-xl transition duration-300 transform hover:scale-[1.02] active:scale-95 shadow-lg"
+                           style="background-color: var(--brand-green);">
+                            Inquire for Booking
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                        <p class="text-gray-400 text-sm mt-4">Contact us to check availability for your Nikah ceremony.</p>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>

@@ -32,9 +32,11 @@ class MenuItemController extends Controller
     public function create(Request $request)
     {
         $group = $request->get('group', 'services');
-        
-        $parents = MenuItem::where('menu_group', $group)
-            ->parents()
+
+        // List every top-level item across all menu groups. Filtering this by a
+        // single group hid most items from the "Parent Item" dropdown.
+        $parents = MenuItem::parents()
+            ->orderBy('menu_group')
             ->orderBy('sort_order')
             ->get();
 
@@ -81,9 +83,11 @@ class MenuItemController extends Controller
      */
     public function edit(MenuItem $menuItem)
     {
-        $parents = MenuItem::where('menu_group', $menuItem->menu_group)
-            ->parents()
+        // List every top-level item across all menu groups, excluding the item
+        // being edited so it cannot be made its own parent.
+        $parents = MenuItem::parents()
             ->where('id', '!=', $menuItem->id)
+            ->orderBy('menu_group')
             ->orderBy('sort_order')
             ->get();
 
